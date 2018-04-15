@@ -1,0 +1,447 @@
+.imgIframe{
+	width:100%;position:relative; height:100%;border: 1px solid #7C7474;
+}
+.imgIframePanel{
+	position:absolute; 
+	top:30px;
+	bottom:0px;
+	right:0px;
+	left:0px;
+	background:#f6f6f6;
+	overflow:auto;
+}
+.imgIframePanel a:active ,imgIframePanel a:hover ,imgIframePanel a:visited {
+	background-color: #FF0000;
+}
+.treeFramePanel{
+	position:absolute;
+	left:0px;
+	/* background:#DDEEFA; */
+	top:30px;
+	bottom:0px;
+	overflow:auto;
+	border:1px solid #AED0EA;
+	margin:2px;
+	width:140px;
+}
+.preBtn , .nextBtn{
+  width: 27px;
+  height: 45px;
+  position: absolute;
+  top: 50%;
+  margin-top: -25px;
+  background: url("icon/icon.png");
+  z-index: 100;
+  display: block;
+}
+
+.preBtn:active,.nextBtn :active{
+	background:url("icon/icon_.png"); 
+}
+.preBtn{
+	left: 5px;
+  	background-position: -0px -40px;
+}
+.nextBtn{
+	right: 10px;
+  	background-position: -27px -40px;
+}
+
+.pptPreBtn , .pptNextBtn{
+	position: absolute;
+  top: 50%;
+  width: 10px;
+  height: 20px;
+  margin-top: -10px;
+  background: url("icon/icon.png");
+  z-index: 100;
+  display: block;
+}
+.pptPreBtn:active , .pptNextBtn:active{
+	background:url("icon/icon_.png"); 
+}
+
+.pptPreBtn{
+  left: 30px;
+  background-position: -0px -141px;
+}
+.scalePanel{
+  display: block;
+  float: right;
+  padding: 5px;
+  font-size: 14px;
+  font-weight: bold;
+}
+.downLoadPanel{
+  float: right;
+  height: 30px;
+  width: 30px;
+  margin-top: 1px;
+}
+
+.pptNextBtn{
+  right: 30px;
+  background-position: -13px -141px;
+}
+
+.toolPanel{
+  width: 100%;
+  position: absolute;
+  height: 32px;
+  background: rgba(236, 236, 236, 1);
+  display: block;
+  z-index: 100;
+  text-align: left;
+  border-bottom: 1px solid #AAA5A5;
+}
+.modelChangePanel{
+	width: 35px;
+	position: absolute;
+	top: 40px;
+	left: 4px;
+	height: 120px;
+	background: rgba(236, 238, 233, 1);
+	z-index: 101;
+	text-align: center;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	border-radius: 10px;
+	text-align: auto;
+	border: 1px solid #D3C3C3;
+}
+.modelChangePanel span{
+	width: 23px;
+	height: 23px;
+	display:block;
+	margin:3px 5px;
+	float:left;
+	background:url("icon/display.png"); 
+}
+.modelChangePanel .bigImg{
+	background-position: -109px -10px;
+}
+
+.modelChangePanel .pptImg{
+	background-position: -137px -10px;
+}
+
+.modelChangePanel .treeImg{
+	background-position: -165px -10px;
+}
+
+.modelChangePanel .listImg{
+	background-position: -78px -10px;
+}
+
+.bigImgPanel{
+	margin:auto;position:absolute;text-align:center;width:100%;
+	overflow:hidden;
+	display:list-item;
+	top:0px;
+	left:0px;
+	right:0px;
+	bottom:0px;
+}
+
+.bigImgPanel .bigPdf,.bigImgPanel .bigMp3{
+	margin-top:0px;
+	position:absolute;
+	top:0px;
+	left:30px;
+	right:30px;
+	bottom:2px;
+}
+.bigImgPanel img,.bigImgPanel .bigImgShadow{
+	vertical-align:middle;
+	max-2width:100%;
+	max-h2eight:100%;
+	margin-top:1px;
+	position:absolute;
+	left:0px;
+	top:0px;
+	bottom:0px;
+	right:0px;
+}
+.bigImgShadow{
+	border:0px solid #ff0000;
+}
+
+.pptPanel{
+	border-top: 1px solid #968E8E;position:absolute;bottom:0px;width:100%;text-align:center;
+	background:#f6f6f6;
+}
+.pptTool{
+	padding: 2px;
+	margin: auto;
+	display: inline-block;
+	list-style-type:none;
+}
+.pptTool li{
+	list-style-type:none;
+}
+.pptToolMinImg{
+	float:left;text-align:center; margin:0px 5px; -moz-border-radius:5px;
+	-webkit-border-radius:5px;border-radius:5px;border:1px solid #c9c9c9;
+	background:#ffffff;
+}
+.pptToolMinImg img{
+	margin:auto;vertical-align: middle;max-width:100%;max-height:100%;margin-top:-3px;
+}
+.toolPanel ul{
+  display: inline-block;
+  margin: 2px;
+  height: 25px;
+  float: left;
+}
+.toolPanel ul li {
+  display: block;
+  float: left;
+  width: 20px;
+  height: 20px;
+  margin: 2px 5px;
+}
+.btnSrc{
+	background:url("icon/icon.png"); 
+}
+.btnOver{
+	background:url("icon/icon.png"); 
+	background-position-y:-21px !important;
+}
+.btnSelected{
+	border:1px solid #ff0000 !important;
+	-webkit-box-shadow: 2px 2px 2px #444444;
+	-moz-box-shadow: 2px 2px 2px #444444;
+	text-shadow: 2px 2px #444444;
+}
+.toolPanel .zoomMax{
+	background-position: 0px -0px;
+}
+.toolPanel .zoomMin{
+	background-position: -21px -0px;
+}
+.toolPanel .leftRounte{
+	  background-position: -42px -0px;
+}
+.toolPanel .rightRounte{
+	  background-position: -63px -0px;
+}
+/*原始比例*/
+.toolPanel .original{
+	background-position: -84px -0px;
+}
+.toolPanel .fullScreen{
+	background-position: -105px -0px;
+}
+
+.toolPanel .selectedBlack{
+	background-position: -126px -0px;
+}
+/*放大镜*/
+.toolPanel .magnifier{
+	background-position: -147px -0px;
+}
+
+.toolPanel .lock{
+	margin-left:50px;
+	background-position: -168px -0px;
+	
+}
+.toolPanel .unLock{
+	margin-left:50px;
+	background-position: -355px -14px;
+}
+.groupImgList{
+	border:1px solid #aed0ea;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	float:left;
+	margin:10px 10px;
+}
+.groupImgList li{
+	list-style-type: none;
+}
+.groupImgList .groupTitle{
+	background:#5BC7C4;
+	padding:6px;
+	color:#333333;
+	font-size:14px;
+	border-bottom:1px solid #05A09C;
+	font-weight: bold;
+}
+.groupImgList .groupText{
+	 
+}
+.groupImgList .imgContent{
+	width:100%;
+	display:inline-block;
+}
+.groupImgList  .imgSwap{
+	float:left;text-align:center; 
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	border-radius:5px;  
+	margin:5px;
+	border:1px solid #D6C4C4;
+
+}
+.groupImgList img{
+	margin:auto;vertical-align:middle;
+}
+
+.magnifierMask{
+	position: absolute;
+	top:2px;
+	left:0px;
+	right:0px;
+	bottom:0px;
+	z-index:10;
+}
+
+.magnifierImg{
+	width:100px;
+	height:100px;
+	background:rgba(252, 250, 250, 0);
+	position: absolute;
+	top:0px;
+	left:0px;
+	z-index:9;
+	display:none;
+	overflow:hidden;
+}
+.magnifierImg img{
+	position:absolute;
+	left:0px;
+	top:0px;
+}
+
+
+
+.blockArea{
+	border:2px solid #FF0000;
+	position: absolute;
+	color:#00FF00;
+	text-align:left;
+	background: rgba(50, 79, 195, 0.1);
+}
+
+
+.selectArea{
+	border:1px solid #FF0000;
+	position: absolute;
+	color:#00FF00;
+	text-align:left;
+}
+
+.selectAreaSelected{
+	background: rgba(20, 20, 21, 0.22);
+}
+
+.SelectedLine{
+	border:1px dashed #FFFFFF;
+	position: absolute;
+}
+.selectArea .tipName{
+	position: absolute;
+	display:inline-block;
+	background:#000000;
+	height:15px;
+	padding:0px 2px;
+	left:0px;
+	top:-16px;
+	font-size:12px;
+}
+
+.anchor{
+	width:6px;
+	height:6px;
+	position: absolute;
+	background:#00F0f0;
+}
+
+.editWinIframe{
+  width: 200px;
+  /* height: 600px; */
+  border: 1px solid #8EA4D3;
+  /* padding: 1px; */
+  left: 10px;
+  top: 10px;
+  bottom: 10px;
+  position: absolute;
+}
+.editWinIframe .winTitle{
+  padding: 4px;
+  border-bottom: 1px solid #8EA4D3;
+  font-size: 14px;
+  font-weight: bold;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  /* height: 25px; */
+  color: #1273C5;
+  background: #ECECEC;
+}
+
+.editWinIframe .winContent{
+	position: absolute;
+  overflow: auto;
+  top: 30px;
+  left: 3px;
+  right: 3px;
+  bottom: 3px;
+}
+.winContent ul li{
+	margin:5px;
+	border:1px solid #D7DCDF;
+}
+.winContent .areaBlackTitle{
+	display: block;
+  	padding: 5px;
+  	border-bottom: 1px solid #ECECEC;
+  	background: #B4C7E5;
+	font-weight: bold;
+	color: #3B3D3D;
+	cursor: pointer;
+}
+
+.winContent .areaBlackContent{
+	width:100%;
+	display:none;
+}
+
+.areaBlackContent table{
+	width:100%;
+}
+
+.areaBlackContent table th{
+	width:50px;
+	text-align:right;
+}
+.areaBlackContent table td{
+	width:140px;
+	text-align:left;
+}
+
+.areaBlackContent table input{
+	width:100px;
+}
+
+
+
+.winSelected{
+	border:1px solid #FF0000 !important;
+}
+
+
+.labelText{
+  display: inline-block;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  color: #ff0000;
+}
+.labelText li {
+	color: #ff0000;
+	font-size:14px;
+}

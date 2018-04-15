@@ -1,0 +1,34 @@
+<process xmlns='http://jbpm.org/4.4/jpdl' key='cg请假流程编码' name='cg请假流程编码' version='1'>
+  <description>cg请假流程</description>
+  <start g='-2,137,48,48' name='start1'>
+    <transition g='-21,-30' to='申请人'/>
+  </start>
+  <task assignee='#{owner}' g='86,133,92,52' name='申请人'>
+    <transition g='-23,-29' name='提交申请' to='isManager'/>
+    <transition name='结束' g='-17,36' to='end 1'/>
+  </task>
+  <task assignee='#{owner}' g='327,65,107,52' name='老板'>
+    <transition g='637,89:-46,-6' name='同意' to='end2'/>
+    <transition g='132,93:78,0' name='返回' to='申请人'/>
+  </task>
+  <decision expr='#{isManager==&apos;Y&apos;?&quot;yes&quot;:&quot;no&quot;}' g='223,138,48,48' name='isManager'>
+    <handler/>
+    <transition g='-17,-6' name='yes' to='老板'/>
+    <transition g='-9,2' name='no' to='部门经理'/>
+  </decision>
+  <end g='804,114,48,48' name='end2'/>
+  <task assignee='#{owner}' g='329,191,115,52' name='部门经理'>
+    <transition g='134,218:84,0' name='返回' to='申请人'/>
+    <transition name='同意' g='-29,6' to='decision 1'/>
+  </task>
+  <end g='107,320,48,48' name='end 1'/>
+  <decision expr='#{day&lt;3?&quot;同意&quot;:&quot;老板审批&quot;}' g='534,197,48,48' name='decision 1'>
+    <handler/>
+    <transition g='656,221:-38,-20' to='end2' name='同意'>
+      <condition expr='#{day&lt;3}'/>
+    </transition>
+    <transition name='老板审批' g='-3,-9' to='老板'>
+      <condition expr='#{day&gt;=3}'/>
+    </transition>
+  </decision>
+</process>

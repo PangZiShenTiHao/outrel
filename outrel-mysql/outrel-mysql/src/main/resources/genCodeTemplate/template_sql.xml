@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="${productCodeDTO.mapperPackageName}.${productCodeDTO.mapperClassName}">
+<resultMap id="${productCodeDTO.dtoClassName}" type="${productCodeDTO.dtoPackageName}.${productCodeDTO.dtoClassName}">
+			<#list dataInfoList as dataInfo>
+				<result property="${dataInfo.DTO_COLUMN_NAME?replace("dto.","")}" column="${dataInfo.COLUMN_NAME?replace(" ","")}" jdbcType="${dataInfo.DATA_TYPE}" />
+			</#list>
+</resultMap>
+				
+<!-- 分页查询 ${table_comment} -->	
+<select id="search${formated_tab_name}ByPaging" parameterType="java.util.Map" resultMap="${productCodeDTO.dtoClassName}">
+    	 		select 
+			    <#list dataInfoList as dataInfo>
+						t1.${dataInfo.FORMAT_COLUMN_NAME}
+					</#list>
+					
+				from ${productCodeDTO.lower_tab_name} 	t1
+				where 1=1
+				and t1.VALIDATE_STATE='1'
+				<#list dataInfoList as dataInfo>
+    			<if test="${dataInfo.DTO_COLUMN_NAME} != null and ${dataInfo.DTO_COLUMN_NAME} != ''">
+						and t1.${dataInfo.COLUMN_NAME} =${'#'}{${dataInfo.DTO_COLUMN_NAME}}
+    			</if>
+				</#list>
+				
+				order by t1.id desc
+</select>
+  
+<!-- 查询列表 ${table_comment}  -->
+<select id="search${formated_tab_name}" parameterType="java.util.Map" resultMap="${productCodeDTO.dtoClassName}">
+    	     select 
+			    	<#list dataInfoList as dataInfo>
+						t1.${dataInfo.FORMAT_COLUMN_NAME}
+					</#list>
+				from ${productCodeDTO.lower_tab_name} 		t1
+				where 1=1
+    		<#list dataInfoList as dataInfo>
+    			<if test="${dataInfo.DTO_COLUMN_NAME} != null and ${dataInfo.DTO_COLUMN_NAME} != ''">
+						and t1.${dataInfo.COLUMN_NAME} = ${'#'}{${dataInfo.DTO_COLUMN_NAME}}
+    			</if>
+			</#list>
+</select>
+  
+<!-- 主键查询对象  ${table_comment} -->
+<select id="find${formated_tab_name}ByPrimaryKey" parameterType="java.util.Map" resultMap="${productCodeDTO.dtoClassName}">
+   	 		select 
+		    	<#list dataInfoList as dataInfo>
+					t1.${dataInfo.FORMAT_COLUMN_NAME}
+				</#list>
+			from ${productCodeDTO.lower_tab_name} 		t1
+			where 
+				t1.id = ${'#'}{id}
+</select>
+  
+<!-- 新增对象 ${table_comment} -->
+<insert id="insert${formated_tab_name}" parameterType="java.util.Map" useGeneratedKeys="true" keyProperty="dto.id">
+			insert into ${productCodeDTO.lower_tab_name}
+			(   		
+				<#list dataInfoList as dataInfo>
+					<#if dataInfo.TEMP_ROWNUM == 'IS_NOT_ID'>
+						${dataInfo.FORMAT_COLUMN_NAME}
+					</#if>
+				</#list>
+			)
+			values(
+				<#list dataInfoList as dataInfo>
+					<#if dataInfo.TEMP_ROWNUM == 'IS_NOT_ID'>
+						<#if dataInfo.FORMAT_COLUMN_NAME ?contains("VALIDATE_STATE")>'1'<#else>${'#'}{${dataInfo.DTO_COLUMN_NAME},jdbcType=${dataInfo.DATA_TYPE}}</#if>
+						<#if dataInfo.IS_LAST=='N'>,</#if>
+					</#if>
+				</#list>
+			)
+</insert>
+    
+<!-- 更新对象 ${table_comment} -->
+<update id="update${formated_tab_name}" parameterType="java.util.Map">
+	     update ${productCodeDTO.lower_tab_name} t1
+	           set 
+	     <#list dataInfoList as dataInfo>
+	    	 	<#if dataInfo.TEMP_ROWNUM == 'IS_NOT_ID'>
+			           t1.${dataInfo.FORMAT_COLUMN_NAME?replace(",","")}=<#if dataInfo.FORMAT_COLUMN_NAME ?contains("VALIDATE_STATE")>'1'<#else>${'#'}{${dataInfo.DTO_COLUMN_NAME},jdbcType=${dataInfo.DATA_TYPE}}</#if><#if dataInfo.IS_LAST == 'N'>,</#if>
+				</#if>
+		 </#list>		
+	     where t1.id = ${'#'}{dto.id}
+</update>
+   
+<!-- 主键删除 ${table_comment} -->
+<delete id="delete${formated_tab_name}ByID" parameterType="java.util.Map">
+    	delete from ${productCodeDTO.lower_tab_name} where id in (${'$'}{ids} )
+</delete>
+<!-- 主键假删除 ${table_comment} -->
+<update id="delete${formated_tab_name}ByPrimaryKey" parameterType="java.util.Map">
+	     update ${productCodeDTO.lower_tab_name} t1
+	           set   t1.VALIDATE_STATE='0'	
+	     where t1.id in( ${'$'}{ids})
+</update>
+</mapper>

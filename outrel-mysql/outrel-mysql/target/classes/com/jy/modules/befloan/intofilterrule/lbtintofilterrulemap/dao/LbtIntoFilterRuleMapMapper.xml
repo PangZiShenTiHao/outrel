@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jy.modules.befloan.intofilterrule.lbtintofilterrulemap.dao.LbtIntoFilterRuleMapDao">
+<resultMap id="LbtIntoFilterRuleMapDTO" type="com.jy.modules.befloan.intofilterrule.lbtintofilterrulemap.dto.LbtIntoFilterRuleMapDTO">
+				<result property="id" column="ID" jdbcType="DECIMAL" />
+				<result property="ruleId" column="RULE_ID" jdbcType="DECIMAL" />
+				<result property="mapType" column="MAP_TYPE" jdbcType="VARCHAR" />
+				<result property="mapCode" column="MAP_CODE" jdbcType="VARCHAR" />
+</resultMap>
+				
+<!-- 分页查询 lbt_into_filter_rule_map -->	
+<select id="searchLbtIntoFilterRuleMapByPaging" parameterType="java.util.Map" resultMap="LbtIntoFilterRuleMapDTO">
+    	 		select 
+						t1.id                             ,
+						t1.rule_id                        ,
+						t1.map_type                       ,
+						t1.map_code                       
+					
+				from lbt_into_filter_rule_map 	t1
+				where 1=1
+    			<if test="dto.id != null and dto.id != ''">
+						and t1.ID =#{dto.id}
+    			</if>
+    			<if test="dto.ruleId != null and dto.ruleId != ''">
+						and t1.RULE_ID =#{dto.ruleId}
+    			</if>
+    			<if test="dto.mapType != null and dto.mapType != ''">
+						and t1.MAP_TYPE =#{dto.mapType}
+    			</if>
+    			<if test="dto.mapCode != null and dto.mapCode != ''">
+						and t1.MAP_CODE =#{dto.mapCode}
+    			</if>
+    			<if test="mapCodeStr != null and mapCodeStr != ''">
+						and t1.MAP_CODE in (${mapCodeStr})
+    			</if>
+				
+				order by t1.id desc
+</select>
+  
+<!-- 查询列表 lbt_into_filter_rule_map  -->
+<select id="searchLbtIntoFilterRuleMap" parameterType="java.util.Map" resultMap="LbtIntoFilterRuleMapDTO">
+    	     select 
+						t1.id                             ,
+						t1.rule_id                        ,
+						t1.map_type                       ,
+						t1.map_code                       
+				from lbt_into_filter_rule_map 		t1
+				where 1=1
+    			<if test="dto.id != null and dto.id != ''">
+						and t1.ID = #{dto.id}
+    			</if>
+    			<if test="dto.ruleId != null and dto.ruleId != ''">
+						and t1.RULE_ID = #{dto.ruleId}
+    			</if>
+    			<if test="dto.mapType != null and dto.mapType != ''">
+						and t1.MAP_TYPE = #{dto.mapType}
+    			</if>
+    			<if test="dto.mapCode != null and dto.mapCode != ''">
+						and t1.MAP_CODE = #{dto.mapCode}
+    			</if>
+    			<if test="mapCodeStr != null and mapCodeStr != ''">
+						and t1.MAP_CODE in (${mapCodeStr})
+    			</if>
+</select>
+  
+<!-- 主键查询对象  lbt_into_filter_rule_map -->
+<select id="findLbtIntoFilterRuleMapByPrimaryKey" parameterType="java.util.Map" resultMap="LbtIntoFilterRuleMapDTO">
+   	 		select 
+					t1.id                             ,
+					t1.rule_id                        ,
+					t1.map_type                       ,
+					t1.map_code                       
+			from lbt_into_filter_rule_map 		t1
+			where 
+				t1.id = #{id}
+</select>
+  
+<!-- 新增对象 lbt_into_filter_rule_map -->
+<insert id="insertLbtIntoFilterRuleMap" parameterType="java.util.Map" useGeneratedKeys="true">
+			insert into lbt_into_filter_rule_map
+			(   		
+					
+					rule_id                        ,
+					map_type                       ,
+					map_code                       
+			)
+			values(
+					#{dto.ruleId,jdbcType=DECIMAL}
+					,#{dto.mapType,jdbcType=VARCHAR}
+					,#{dto.mapCode,jdbcType=VARCHAR}
+			)
+</insert>
+    
+<!-- 更新对象 lbt_into_filter_rule_map -->
+<update id="updateLbtIntoFilterRuleMap" parameterType="java.util.Map">
+	     update lbt_into_filter_rule_map t1
+	           set 
+			           t1.rule_id                        =#{dto.ruleId,jdbcType=DECIMAL},
+			           t1.map_type                       =#{dto.mapType,jdbcType=VARCHAR},
+			           t1.map_code                       =#{dto.mapCode,jdbcType=VARCHAR}
+	     where t1.id = #{dto.id}
+</update>
+   
+<!-- 主键删除 lbt_into_filter_rule_map -->
+<delete id="deleteLbtIntoFilterRuleMapByID" parameterType="java.util.Map">
+    	delete from lbt_into_filter_rule_map t1 where t1.ID in (${ids} )
+</delete>
+<!-- 主键假删除 lbt_into_filter_rule_map -->
+<update id="deleteLbtIntoFilterRuleMapByPrimaryKey" parameterType="java.util.Map">
+	     update lbt_into_filter_rule_map t1
+	           set   t1.validate_state='0'	
+	     where t1.id in( ${ids})
+</update>
+  
+<!-- 批量保存 -->
+<insert id="batchInsertRuleMap" parameterType="java.util.Map">
+
+
+		insert into lbt_into_filter_rule_map
+			(   		
+					
+					rule_id                        ,
+					map_type                       ,
+					map_code                       
+			)
+			values
+	<foreach collection="list" item="mapCode">
+			(
+					#{ruleId}
+					,#{mapType}
+					,#{mapCode}
+			);
+	</foreach>
+
+</insert>
+  
+<!-- 获取指定规则的机构信息 -->
+<select id="queryOrgListByRuleId" parameterType="java.util.Map" resultType="java.util.Map">
+		select t1.id,
+		       t1.rule_id,
+		       t1.map_type,
+		       o1.org_code storeCode,
+		       o1.org_name storeName,
+		       o2.org_code subsectionCode,
+		       o2.org_name subsectionName,
+		       o3.org_code branchCode,
+		       o3.org_name branchName
+		  from lbt_into_filter_rule_map t1
+		  left join sys_org o1
+		    on t1.map_code = o1.org_code
+		  left join sys_org o2
+		    on o2.id = o1.parent_id
+		  left join sys_org o3
+		    on o3.id = o2.parent_id
+		 where t1.rule_id = #{ruleId}
+		   and t1.map_type = 'ORG'
+</select>
+  
+<!-- 获取指定规则的单位地址信息 -->
+<select id="queryJobAddrListByRuleId" parameterType="java.util.Map" resultType="java.util.Map">
+		select t1.id,
+		       t1.rule_id,
+		       t1.map_type,
+		       a1.area_code jobCityCode,
+		       a1.area_name jobCityName,
+		       a2.area_code jobProvinceCode,
+		       a2.area_name jobProvinceName
+		  from lbt_into_filter_rule_map t1
+		  left join sys_area a1
+		    on t1.map_code = a1.area_code
+		  left join sys_area a2
+		    on a1.parent_id = a2.area_code
+		 where t1.rule_id = #{ruleId}
+		   and t1.map_type = 'JOB_ADDR'
+</select>
+   
+<!-- 外键删除 lbt_into_filter_rule_map -->
+<delete id="deleteLbtIntoFilterRuleMapByRuleId" parameterType="java.util.Map">
+    	delete from lbt_into_filter_rule_map t1 where t1.rule_id = #{ruleId}
+</delete>
+</mapper>

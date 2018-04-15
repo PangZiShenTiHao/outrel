@@ -1,0 +1,597 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jy.modules.externalplatform.interfacerest.dao.ExtInterfaceLogDao">
+<resultMap id="ExtInterfaceLogDTO" type="com.jy.modules.externalplatform.interfacerest.dto.ExtInterfaceLogDTO">
+				<result property="id" column="ID" jdbcType="DECIMAL" />
+				<result property="reqOrgCode" column="REQ_ORG_CODE" jdbcType="VARCHAR" />
+				<result property="reqProCode" column="REQ_PRO_CODE" jdbcType="VARCHAR" />
+				<result property="reqFuncCode" column="REQ_FUNC_CODE" jdbcType="VARCHAR" />
+				<result property="reqCardId" column="REQ_CARD_ID" jdbcType="VARCHAR" />				
+				<result property="reqTransNo" column="REQ_TRANS_NO" jdbcType="VARCHAR" />
+				<result property="interfaceNo" column="INTERFACE_NO" jdbcType="VARCHAR" />
+				<result property="businessCode" column="BUSINESS_CODE" jdbcType="VARCHAR" />
+				<result property="reqTime" column="REQ_TIME" jdbcType="TIMESTAMP" />
+				<result property="retCode" column="RET_CODE" jdbcType="VARCHAR" />
+				<result property="retMsg" column="RET_MSG" jdbcType="VARCHAR" />
+				<result property="retTime" column="RET_TIME" jdbcType="TIMESTAMP" />
+				<result property="reqBody" column="REQ_BODY" jdbcType="VARCHAR" />
+				<result property="retBody" column="RET_BODY" jdbcType="VARCHAR" />
+				<result property="parentId" column="PARENT_ID" jdbcType="VARCHAR" />
+				<result property="ext1" column="EXT1" jdbcType="VARCHAR" />
+				<result property="ext2" column="EXT2" jdbcType="VARCHAR" />
+				<result property="ext3" column="EXT3" jdbcType="VARCHAR" />
+				<result property="ext4" column="EXT4" jdbcType="VARCHAR" />
+				<result property="ext5" column="EXT5" jdbcType="VARCHAR" />
+				<result property="ext6" column="EXT6" jdbcType="VARCHAR" />
+				<result property="ext7" column="EXT7" jdbcType="VARCHAR" />
+				<result property="ext8" column="EXT8" jdbcType="VARCHAR" />
+				<result property="ext9" column="EXT9" jdbcType="VARCHAR" />
+				<result property="ext10" column="EXT10" jdbcType="VARCHAR" />
+				<result property="orgName" column="org_name" jdbcType="VARCHAR" />
+				<result property="productName" column="product_name" jdbcType="VARCHAR" />
+				<result property="sysName" column="sys_name" jdbcType="VARCHAR" />
+				<result property="sysCode" column="sys_code" jdbcType="VARCHAR" />
+				<result property="funcTypeName" column="func_type_name" jdbcType="VARCHAR" />
+				<result property="funcTypeCode" column="func_type_code" jdbcType="VARCHAR" />
+				<result property="reqFuncTypeName" column="req_func_type_name" jdbcType="VARCHAR" />
+				<result property="successNum" column="successNum" jdbcType="VARCHAR" />
+				<result property="failNum" column="failNum" jdbcType="VARCHAR" />
+				<result property="total" column="total" jdbcType="VARCHAR" />
+				<result property="errorNum" column="errorNum" jdbcType="VARCHAR" />
+				<result property="successRelNum" column="successRelNum" jdbcType="VARCHAR" />
+				<result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP" />
+				<result property="modifyTime" column="MODIFY_TIME" jdbcType="TIMESTAMP" />
+</resultMap>
+				
+<!-- 分页查询 ext_interface_log -->	
+<select id="searchExtInterfaceLogByPaging" parameterType="java.util.Map" resultMap="ExtInterfaceLogDTO">
+    	 		select 
+						t1.id                             ,
+						t1.req_org_code                   ,
+						t1.req_pro_code                   ,
+						t1.req_func_code                  ,
+						case when length(t1.req_card_id)>13 
+						then replace(t1.req_card_id,substr(REQ_CARD_ID,7,8),'********') 
+						else t1.req_card_id 
+						end req_card_id                   ,
+						t1.req_trans_no                   ,
+						t1.interface_no                   ,
+						t1.business_code                  ,
+						t1.req_time                       ,
+						t1.ret_code                       ,
+						t1.ret_msg                        ,
+						t1.ret_time                       ,
+						t1.req_body                       ,
+						t1.ret_body                       ,
+						t1.parent_id                      ,
+						t1.ext1                           ,
+						t1.ext2                           ,
+						t1.ext3                           ,
+						t1.ext4                           ,
+						t1.ext5                           ,
+						t1.ext6                           ,
+						t1.ext7                           ,
+						t1.ext8                           ,
+						t1.ext9                           ,
+						t1.ext10                          ,
+						t2.org_name						  ,
+						t3.product_name					  ,
+						t4.sys_name						  ,
+						t4.sys_code						  ,
+						t6.func_type_name 				  ,
+						t6.func_type_code 				  ,
+						t5.func_type_name as req_func_type_name
+					
+				from ext_interface_log 	           t1
+					 left join sys_org             t2 on t1.req_org_code = t2.ORG_CODE
+		             left join LB_T_PRODUCT_CONF   t3 on t1.req_pro_code = t3.PRODUCT_CODE
+		             left join ext_function_type   t5 on t1.req_func_code= t5.FUNC_TYPE_CODE
+		             left join ext_sys_management  t4 on t5.sys_code     = t4.sys_code
+		             left join ext_function_type   t6 on t5.parent_id    = t6.id
+				where 1=1
+    			<if test="dto.id != null and dto.id != ''">
+						and t1.ID =#{dto.id}
+    			</if>
+    			<if test="dto.reqOrgCode != null and dto.reqOrgCode != ''">
+						and t1.REQ_ORG_CODE =#{dto.reqOrgCode}
+    			</if>
+    			<if test="dto.reqProCode != null and dto.reqProCode != ''">
+						and t1.REQ_PRO_CODE =#{dto.reqProCode}
+    			</if>
+    			<if test="dto.reqFuncCode != null and dto.reqFuncCode != ''">
+						and t1.REQ_FUNC_CODE =#{dto.reqFuncCode}
+    			</if>
+    			<if test="dto.reqCardId != null and dto.reqCardId != ''">
+						and t1.REQ_CARD_ID =#{dto.reqCardId}
+    			</if>
+    			<if test="dto.reqTransNo != null and dto.reqTransNo != ''">
+						and t1.REQ_TRANS_NO =#{dto.reqTransNo}
+    			</if>
+    			<if test="dto.interfaceNo != null and dto.interfaceNo != ''">
+						and t1.INTERFACE_NO =#{dto.interfaceNo}
+    			</if>
+    			<if test="dto.businessCode != null and dto.businessCode != ''">
+						and t1.BUSINESS_CODE =#{dto.businessCode}
+    			</if>
+    			<if test="dto.reqStartTime != null and dto.reqStartTime != ''">
+						and <![CDATA[t1.REQ_TIME >=#{dto.reqStartTime}]]>
+    			</if>
+    			<if test="dto.reqEndTime != null and dto.reqEndTime != ''">
+						and <![CDATA[t1.REQ_TIME <=#{dto.reqEndTime}+1]]>
+    			</if>
+    			<if test="dto.retCode != null and dto.retCode != ''">
+						and t1.RET_CODE =#{dto.retCode}
+    			</if>
+    			<if test="dto.retMsg != null and dto.retMsg != ''">
+						and t1.RET_MSG =#{dto.retMsg}
+    			</if>
+    			<if test="dto.retTime != null and dto.retTime != ''">
+						and t1.RET_TIME =#{dto.retTime}
+    			</if>
+    			<if test="dto.reqBody != null and dto.reqBody != ''">
+						and t1.REQ_BODY =#{dto.reqBody}
+    			</if>
+    			<if test="dto.retBody != null and dto.retBody != ''">
+						and t1.RET_BODY = #{dto.retBody}
+    			</if>
+    			<if test="dto.parentId != null and dto.parentId != ''">
+						and t1.PARENT_ID =#{dto.parentId}
+    			</if>
+    			<if test="dto.ext1 != null and dto.ext1 != ''">
+						and t1.EXT1 =#{dto.ext1}
+    			</if>
+    			<if test="dto.ext2 != null and dto.ext2 != ''">
+						and t1.EXT2 =#{dto.ext2}
+    			</if>
+    			<if test="dto.ext3 != null and dto.ext3 != ''">
+						and t1.EXT3 =#{dto.ext3}
+    			</if>
+    			<if test="dto.ext4 != null and dto.ext4 != ''">
+						and t1.EXT4 =#{dto.ext4}
+    			</if>
+    			<if test="dto.ext5 != null and dto.ext5 != ''">
+						and t1.EXT5 =#{dto.ext5}
+    			</if>
+    			<if test="dto.ext6 != null and dto.ext6 != ''">
+						and t1.EXT6 =#{dto.ext6}
+    			</if>
+    			<if test="dto.ext7 != null and dto.ext7 != ''">
+						and t1.EXT7 =#{dto.ext7}
+    			</if>
+    			<if test="dto.ext8 != null and dto.ext8 != ''">
+						and t1.EXT8 =#{dto.ext8}
+    			</if>
+    			<if test="dto.ext9 != null and dto.ext9 != ''">
+						and t1.EXT9 =#{dto.ext9}
+    			</if>
+    			<if test="dto.ext10 != null and dto.ext10 != ''">
+						and t1.EXT10 =#{dto.ext10}
+    			</if>
+				<if test="dto.sysName != null and dto.sysName != ''">
+						and t4.sys_name like '%'||#{dto.sysName}||'%'
+    			</if>
+    			<if test="dto.sysCode != null and dto.sysCode != ''">
+						and t4.sys_code =#{dto.sysCode}
+    			</if>
+    			<if test="dto.funcTypeName != null and dto.funcTypeName != ''">
+						and t6.func_type_name like '%'||#{dto.funcTypeName}||'%'
+    			</if>
+    			<if test="dto.funcTypeCode != null and dto.funcTypeCode != ''">
+						and t6.func_type_code =#{dto.funcTypeCode}
+    			</if>
+    			<if test="dto.reqFuncTypeName != null and dto.reqFuncTypeName != ''">
+						and t5.func_type_name like '%'||#{dto.reqFuncTypeName}||'%'
+    			</if>
+    			<if test="dto.orgName != null and dto.orgName != ''">
+						and t2.org_name like '%'||#{dto.orgName}||'%'
+    			</if>
+				order by t1.id desc
+</select>
+  
+<!-- 查询列表 ext_interface_log  -->
+<select id="searchExtInterfaceLog" parameterType="java.util.Map" resultMap="ExtInterfaceLogDTO">
+    	     select 
+						t1.id                             ,
+						t1.req_org_code                   ,
+						t1.req_pro_code                   ,
+						t1.req_func_code                  ,
+						case when length(t1.req_card_id)>13 
+						then replace(t1.req_card_id,substr(REQ_CARD_ID,7,8),'********') 
+						else t1.req_card_id 
+						end req_card_id                   ,
+						t1.req_trans_no                   ,
+						t1.interface_no                   ,
+						t1.business_code                  ,
+						t1.req_time                       ,
+						t1.ret_code                       ,
+						t1.ret_msg                        ,
+						t1.ret_time                       ,
+						t1.req_body                       ,
+						t1.ret_body                       ,
+						t1.parent_id                      ,
+						t1.ext1                           ,
+						t1.ext2                           ,
+						t1.ext3                           ,
+						t1.ext4                           ,
+						t1.ext5                           ,
+						t1.ext6                           ,
+						t1.ext7                           ,
+						t1.ext8                           ,
+						t1.ext9                           ,
+						t1.ext10                          
+				from ext_interface_log 		t1
+				where 1=1
+    			<if test="dto.id != null and dto.id != ''">
+						and t1.ID = #{dto.id}
+    			</if>
+    			<if test="dto.reqOrgCode != null and dto.reqOrgCode != ''">
+						and t1.REQ_ORG_CODE =#{dto.reqOrgCode}
+    			</if>
+    			<if test="dto.reqProCode != null and dto.reqProCode != ''">
+						and t1.REQ_PRO_CODE =#{dto.reqProCode}
+    			</if>
+    			<if test="dto.reqFuncCode != null and dto.reqFuncCode != ''">
+						and t1.REQ_FUNC_CODE =#{dto.reqFuncCode}
+    			</if>
+    			<if test="dto.reqCardId != null and dto.reqCardId != ''">
+						and t1.REQ_CARD_ID =#{dto.reqCardId}
+    			</if>
+    			<if test="dto.reqTransNo != null and dto.reqTransNo != ''">
+						and t1.REQ_TRANS_NO = #{dto.reqTransNo}
+    			</if>
+    			<if test="dto.interfaceNo != null and dto.interfaceNo != ''">
+						and t1.INTERFACE_NO = #{dto.interfaceNo}
+    			</if>
+    			<if test="dto.businessCode != null and dto.businessCode != ''">
+						and t1.BUSINESS_CODE = #{dto.businessCode}
+    			</if>
+    			<if test="dto.reqTime != null and dto.reqTime != ''">
+						and t1.REQ_TIME = #{dto.reqTime}
+    			</if>
+    			<if test="dto.retCode != null and dto.retCode != ''">
+						and t1.RET_CODE = #{dto.retCode}
+    			</if>
+    			<if test="dto.retMsg != null and dto.retMsg != ''">
+						and t1.RET_MSG = #{dto.retMsg}
+    			</if>
+    			<if test="dto.retTime != null and dto.retTime != ''">
+						and t1.RET_TIME = #{dto.retTime}
+    			</if>
+    			<if test="dto.reqBody != null and dto.reqBody != ''">
+						and t1.REQ_BODY = #{dto.reqBody}
+    			</if>
+    			<if test="dto.retBody != null and dto.retBody != ''">
+						and t1.RET_BODY = #{dto.retBody}
+    			</if>
+    			<if test="dto.parentId != null and dto.parentId != ''">
+						and t1.PARENT_ID =#{dto.parentId}
+    			</if>
+    			<if test="dto.ext1 != null and dto.ext1 != ''">
+						and t1.EXT1 = #{dto.ext1}
+    			</if>
+    			<if test="dto.ext2 != null and dto.ext2 != ''">
+						and t1.EXT2 = #{dto.ext2}
+    			</if>
+    			<if test="dto.ext3 != null and dto.ext3 != ''">
+						and t1.EXT3 = #{dto.ext3}
+    			</if>
+    			<if test="dto.ext4 != null and dto.ext4 != ''">
+						and t1.EXT4 = #{dto.ext4}
+    			</if>
+    			<if test="dto.ext5 != null and dto.ext5 != ''">
+						and t1.EXT5 = #{dto.ext5}
+    			</if>
+    			<if test="dto.ext6 != null and dto.ext6 != ''">
+						and t1.EXT6 = #{dto.ext6}
+    			</if>
+    			<if test="dto.ext7 != null and dto.ext7 != ''">
+						and t1.EXT7 = #{dto.ext7}
+    			</if>
+    			<if test="dto.ext8 != null and dto.ext8 != ''">
+						and t1.EXT8 = #{dto.ext8}
+    			</if>
+    			<if test="dto.ext9 != null and dto.ext9 != ''">
+						and t1.EXT9 = #{dto.ext9}
+    			</if>
+    			<if test="dto.ext10 != null and dto.ext10 != ''">
+						and t1.EXT10 = #{dto.ext10}
+    			</if>
+</select>
+  
+<!-- 主键查询对象  ext_interface_log -->
+<select id="findExtInterfaceLogByPrimaryKey" parameterType="java.util.Map" resultMap="ExtInterfaceLogDTO">
+   	 		select 
+					t1.id                             ,
+					t1.req_org_code                   ,
+					t1.req_pro_code                   ,
+					t1.req_func_code                  ,
+					case when length(t1.req_card_id)>13 
+					then replace(t1.req_card_id,substr(REQ_CARD_ID,7,8),'********') 
+					else t1.req_card_id 
+					end req_card_id                   ,
+					t1.req_trans_no                   ,
+					t1.interface_no                   ,
+					t1.business_code                  ,
+					t1.req_time                       ,
+					t1.ret_code                       ,
+					t1.ret_msg                        ,
+					t1.ret_time                       ,
+					t1.req_body                       ,
+					t1.ret_body                       ,
+					t1.parent_id                      ,
+					t1.ext1                           ,
+					t1.ext2                           ,
+					t1.ext3                           ,
+					t1.ext4                           ,
+					t1.ext5                           ,
+					t1.ext6                           ,
+					t1.ext7                           ,
+					t1.ext8                           ,
+					t1.ext9                           ,
+					t1.ext10                          ,
+					t1.create_time                    ,
+					t1.modify_time
+			from ext_interface_log 		t1
+			where 
+				t1.id = #{id}
+</select>
+  
+<!-- 新增对象 ext_interface_log -->
+<insert id="insertExtInterfaceLog" parameterType="java.util.Map" useGeneratedKeys="true">
+
+			insert into ext_interface_log
+			(   		
+
+					req_org_code                	,
+					req_pro_code                	,
+					req_func_code               	,
+					req_card_id                 	,
+					req_trans_no                   ,
+					interface_no                   ,
+					business_code                  ,
+					req_time                       ,
+					ret_code                       ,
+					ret_msg                        ,
+					ret_time                       ,
+					req_body                       ,
+					ret_body                       ,
+					parent_id                      ,
+					ext1                           ,
+					ext2                           ,
+					ext3                           ,
+					ext4                           ,
+					ext5                           ,
+					ext6                           ,
+					ext7                           ,
+					ext8                           ,
+					ext9                           ,
+					ext10                          ,
+					create_time          
+			)
+			values(#{dto.reqOrgCode,jdbcType=VARCHAR}
+					,#{dto.reqProCode,jdbcType=VARCHAR}
+					,#{dto.reqFuncCode,jdbcType=VARCHAR}
+					,#{dto.reqCardId,jdbcType=VARCHAR}
+					,#{dto.reqTransNo,jdbcType=VARCHAR}
+					,#{dto.interfaceNo,jdbcType=VARCHAR}
+					,#{dto.businessCode,jdbcType=VARCHAR}
+					,#{dto.reqTime,jdbcType=TIMESTAMP}
+					,#{dto.retCode,jdbcType=VARCHAR}
+					,#{dto.retMsg,jdbcType=VARCHAR}
+					,#{dto.retTime,jdbcType=TIMESTAMP}
+					,#{dto.reqBody,jdbcType=VARCHAR}
+					,#{dto.retBody,jdbcType=VARCHAR}
+					,#{dto.parentId}
+					,#{dto.ext1,jdbcType=VARCHAR}
+					,#{dto.ext2,jdbcType=VARCHAR}
+					,#{dto.ext3,jdbcType=VARCHAR}
+					,#{dto.ext4,jdbcType=VARCHAR}
+					,#{dto.ext5,jdbcType=VARCHAR}
+					,#{dto.ext6,jdbcType=VARCHAR}
+					,#{dto.ext7,jdbcType=VARCHAR}
+					,#{dto.ext8,jdbcType=VARCHAR}
+					,#{dto.ext9,jdbcType=VARCHAR}
+					,#{dto.ext10,jdbcType=VARCHAR}
+					,sysdate()
+			)
+</insert>
+    
+<!-- 更新对象 ext_interface_log -->
+<update id="updateExtInterfaceLog" parameterType="java.util.Map">
+	     update ext_interface_log t1
+	           set 
+	           		   t1.req_org_code                   =#{dto.reqOrgCode,jdbcType=VARCHAR},
+			           t1.req_pro_code                   =#{dto.reqProCode,jdbcType=VARCHAR},
+			           t1.req_func_code                  =#{dto.reqFuncCode,jdbcType=VARCHAR},
+			           t1.req_card_id                    =#{dto.reqCardId,jdbcType=VARCHAR},			           
+			           t1.req_trans_no                   =#{dto.reqTransNo,jdbcType=VARCHAR},
+			           t1.interface_no                   =#{dto.interfaceNo,jdbcType=VARCHAR},
+			           t1.business_code                  =#{dto.businessCode,jdbcType=VARCHAR},
+			           t1.req_time                       =#{dto.reqTime,jdbcType=TIMESTAMP},
+			           t1.ret_code                       =#{dto.retCode,jdbcType=VARCHAR},
+			           t1.ret_msg                        =#{dto.retMsg,jdbcType=VARCHAR},
+			           t1.ret_time                       =#{dto.retTime,jdbcType=TIMESTAMP},
+			           t1.req_body                       =#{dto.reqBody,jdbcType=VARCHAR},
+			           t1.ret_body                       =#{dto.retBody,jdbcType=VARCHAR},
+			           t1.parent_id                      =#{dto.parentId},
+			           t1.ext1                           =#{dto.ext1,jdbcType=VARCHAR},
+			           t1.ext2                           =#{dto.ext2,jdbcType=VARCHAR},
+			           t1.ext3                           =#{dto.ext3,jdbcType=VARCHAR},
+			           t1.ext4                           =#{dto.ext4,jdbcType=VARCHAR},
+			           t1.ext5                           =#{dto.ext5,jdbcType=VARCHAR},
+			           t1.ext6                           =#{dto.ext6,jdbcType=VARCHAR},
+			           t1.ext7                           =#{dto.ext7,jdbcType=VARCHAR},
+			           t1.ext8                           =#{dto.ext8,jdbcType=VARCHAR},
+			           t1.ext9                           =#{dto.ext9,jdbcType=VARCHAR},
+			           t1.ext10                          =#{dto.ext10,jdbcType=VARCHAR},
+			           t1.modify_time                    =sysdate()
+	     where t1.id = #{dto.id}
+</update>
+   
+<!-- 主键删除 ext_interface_log -->
+<delete id="deleteExtInterfaceLogByID" parameterType="java.util.Map">
+    	delete from ext_interface_log t1 where t1.ID in (${ids} )
+</delete>
+<!-- 主键假删除 ext_interface_log -->
+<update id="deleteExtInterfaceLogByPrimaryKey" parameterType="java.util.Map">
+	     update ext_interface_log t1
+	           set   t1.validate_state='0'	
+	     where t1.id in( ${ids})
+</update>
+<!-- 查询 ext_interface_log 小接口调用次数 -->	
+<select id="queryExtInterfaceLogNum" parameterType="java.util.Map" resultMap="ExtInterfaceLogDTO">
+			select a.req_org_code,a.org_name,a.sys_code,a.sys_name,a.func_type_code,
+			a.func_type_name,a.req_func_code,a.req_func_type_name,sum(a.successNum) successNum,
+			sum(a.failNum) failNum,sum(a.successRelNum) successRelNum,count(a.id) total from 
+		(select t1.req_org_code,t2.org_name,t4.sys_code,t4.sys_name,t6.func_type_code,
+		t6.func_type_name,t1.req_func_code,t5.func_type_name as req_func_type_name,t1.id,
+		case when t1.ret_code in
+		        (select s2.dict_detail_value 
+		        from sys_dict s1 
+		        left join sys_dict_detail s2 on s1.id=s2.dict_id 
+		        where s1.validate_state='1' 
+		        and s2.validate_state='1' 
+		        and s1.dict_code=#{dto.successCode}) 
+		then 1 else 0 end successNum,
+		case when t1.ret_code in
+		     (select s2.dict_detail_value 
+		     from sys_dict s1 
+		     left join sys_dict_detail s2 on s1.id=s2.dict_id 
+		     where s1.validate_state='1' 
+		     and s2.validate_state='1' 
+		     and s1.dict_code=#{dto.failCode}) 
+		then 1 else 0 end failNum,
+		case when t1.ret_code in
+		     (select s2.dict_detail_value 
+		     from sys_dict s1 
+		     left join sys_dict_detail s2 on s1.id=s2.dict_id 
+		     where s1.validate_state='1' 
+		     and s2.validate_state='1' 
+		     and s1.dict_code=#{dto.successRelCode}) 
+		then 1 else 0 end successRelNum 
+		from ext_interface_log t1
+		left join sys_org             t2 on t1.req_org_code = t2.ORG_CODE
+		left join ext_function_type   t5 on t1.req_func_code= t5.FUNC_TYPE_CODE
+		left join ext_sys_management  t4 on t5.sys_code     = t4.sys_code
+		left join ext_function_type   t6 on t5.parent_id    = t6.id
+		where 1=1 			
+  			<if test="dto.reqOrgCode != null and dto.reqOrgCode != ''">
+				and t1.REQ_ORG_CODE =#{dto.reqOrgCode}
+  			</if>
+  			<if test="dto.reqFuncCode != null and dto.reqFuncCode != ''">
+				and t1.REQ_FUNC_CODE =#{dto.reqFuncCode}
+  			</if>
+  			<if test="dto.reqStartTime != null and dto.reqStartTime != ''">
+				and t1.REQ_TIME <![CDATA[>=]]>  #{dto.reqStartTime}
+  			</if>
+  			<if test="dto.reqEndTime != null and dto.reqEndTime != ''">
+				and t1.REQ_TIME <![CDATA[<= ]]> #{dto.reqEndTime}+1
+  			</if>
+			<if test="dto.sysName != null and dto.sysName != ''">
+				and t4.sys_name like '%'||#{dto.sysName}||'%'
+  			</if>
+  			<if test="dto.sysCode != null and dto.sysCode != ''">
+				and t4.sys_code =#{dto.sysCode}
+  			</if>
+  			<if test="dto.funcTypeName != null and dto.funcTypeName != ''">
+				and t6.func_type_name like '%'||#{dto.funcTypeName}||'%'
+  			</if>
+  			<if test="dto.funcTypeCode != null and dto.funcTypeCode != ''">
+				and t6.func_type_code =#{dto.funcTypeCode}
+  			</if>
+  			<if test="dto.reqFuncTypeName != null and dto.reqFuncTypeName != ''">
+				and t5.func_type_name like '%'||#{dto.reqFuncTypeName}||'%'
+  			</if>
+  			<if test="dto.orgName != null and dto.orgName != ''">
+				and t2.org_name like '%'||#{dto.orgName}||'%'
+   			</if>
+  			<if test="dto.parentId != null and dto.parentId != ''">
+				and t1.PARENT_ID =#{dto.parentId}
+   			</if>
+    	) a
+    	 group by a.req_org_code,a.org_name,a.sys_code,a.sys_name,a.func_type_code,
+		 a.func_type_name,a.req_func_code,a.req_func_type_name 		
+</select>
+<!-- 查询 ext_interface_log 小接口调用次数（另一个维度） -->	
+<select id="queryExtInterfaceLogStatus" parameterType="java.util.Map" resultMap="ExtInterfaceLogDTO">
+			select a.req_org_code,a.org_name,a.sys_code,a.sys_name,a.func_type_code,
+			a.func_type_name,a.req_func_code,a.req_func_type_name,sum(a.successNum) successNum,
+			sum(a.failNum) failNum,sum(a.errorNum) errorNum,sum(a.successRelNum) successRelNum,count(a.id) total 
+		from (select t1.req_org_code,t2.org_name,t4.sys_code,t4.sys_name,t6.func_type_code,
+		t6.func_type_name,t1.req_func_code,t5.func_type_name as req_func_type_name,t1.id,
+		case when t1.ret_code in
+		        (select s2.dict_detail_value 
+		        from sys_dict s1 
+		        left join sys_dict_detail s2 on s1.id=s2.dict_id 
+		        where s1.validate_state='1' 
+		        and s2.validate_state='1' 
+		        and s1.dict_code=#{dto.successStatus}) 
+		then 1 else 0 end successNum,
+		case when t1.ret_code in
+		     (select s2.dict_detail_value 
+		     from sys_dict s1 
+		     left join sys_dict_detail s2 on s1.id=s2.dict_id 
+		     where s1.validate_state='1' 
+		     and s2.validate_state='1' 
+		     and s1.dict_code=#{dto.failStatus}) 
+		then 1 else 0 end failNum,
+		case when t1.ret_code in
+		     (select s2.dict_detail_value 
+		     from sys_dict s1 
+		     left join sys_dict_detail s2 on s1.id=s2.dict_id 
+		     where s1.validate_state='1' 
+		     and s2.validate_state='1' 
+		     and s1.dict_code=#{dto.errorStatus}) 
+		then 1 else 0 end errorNum,
+		case when t1.ret_code in
+		     (select s2.dict_detail_value 
+		     from sys_dict s1 
+		     left join sys_dict_detail s2 on s1.id=s2.dict_id 
+		     where s1.validate_state='1' 
+		     and s2.validate_state='1' 
+		     and s1.dict_code=#{dto.successRelStatus}) 
+		then 1 else 0 end successRelNum  
+		from ext_interface_log t1
+		left join sys_org             t2 on t1.req_org_code = t2.ORG_CODE
+		left join ext_function_type   t5 on t1.req_func_code= t5.FUNC_TYPE_CODE
+		left join ext_sys_management  t4 on t5.sys_code     = t4.sys_code
+		left join ext_function_type   t6 on t5.parent_id    = t6.id
+		where 1=1 			
+  			<if test="dto.reqOrgCode != null and dto.reqOrgCode != ''">
+				and t1.REQ_ORG_CODE =#{dto.reqOrgCode}
+  			</if>
+  			<if test="dto.reqFuncCode != null and dto.reqFuncCode != ''">
+				and t1.REQ_FUNC_CODE =#{dto.reqFuncCode}
+  			</if>
+  			<if test="dto.reqStartTime != null and dto.reqStartTime != ''">
+				and t1.REQ_TIME <![CDATA[>=]]> #{dto.reqStartTime}
+  			</if>
+  			<if test="dto.reqEndTime != null and dto.reqEndTime != ''">
+				and t1.REQ_TIME <![CDATA[<=]]> #{dto.reqEndTime}+1
+  			</if>
+			<if test="dto.sysName != null and dto.sysName != ''">
+				and t4.sys_name like '%'||#{dto.sysName}||'%'
+  			</if>
+  			<if test="dto.sysCode != null and dto.sysCode != ''">
+				and t4.sys_code =#{dto.sysCode}
+  			</if>
+  			<if test="dto.funcTypeName != null and dto.funcTypeName != ''">
+				and t6.func_type_name like '%'||#{dto.funcTypeName}||'%'
+  			</if>
+  			<if test="dto.funcTypeCode != null and dto.funcTypeCode != ''">
+				and t6.func_type_code =#{dto.funcTypeCode}
+  			</if>
+  			<if test="dto.reqFuncTypeName != null and dto.reqFuncTypeName != ''">
+				and t5.func_type_name like '%'||#{dto.reqFuncTypeName}||'%'
+  			</if>
+  			<if test="dto.orgName != null and dto.orgName != ''">
+				and t2.org_name like '%'||#{dto.orgName}||'%'
+   			</if>
+  			<if test="dto.parentId != null and dto.parentId != ''">
+				and t1.PARENT_ID =#{dto.parentId}
+   			</if>
+    	) a
+    	 group by a.req_org_code,a.org_name,a.sys_code,a.sys_name,a.func_type_code,
+		 a.func_type_name,a.req_func_code,a.req_func_type_name 		
+</select>
+</mapper>

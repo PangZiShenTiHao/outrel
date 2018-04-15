@@ -1,0 +1,786 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jy.modules.reportbefloan.dao.IntoAppTimeDao">
+
+<!-- 获取最大ID，最小ID -->
+<select id="obtainBizDataMaxIdAndMinId" parameterType="java.util.Map" resultType="java.util.Map">
+    	 		select 
+						 to_char(min(t1.id))	MIN_ID
+        				,to_char(max(t1.id))	MAX_ID
+        				,to_char(count(t1.id))	TOTAL_ROW
+				from lb_t_into_info 	t1
+				where 1=1
+				and t1.validate_state='1'
+				and t1.audite_state<![CDATA[ > ]]>	2000
+				
+</select>
+<select id="queryIntoInfoListByPage" parameterType="java.util.Map" resultType="java.util.Map">
+SELECT TEMP.* FROM (
+    SELECT  ROWNUM ROW_ID,
+    T.*,
+    count(1) over() totalCount
+    FROM(
+    	 		select 
+						 t1.id
+						,t1.into_app_id
+						,t1.fk_cust_code
+						,t1.is_common_borrow
+						,t1.customer_manager
+						,t1.customer_service
+						,t1.accept_store
+						,t1.manage_store
+						,t1.audite_state
+						,t1.current_operator
+						,t1.appr_amount
+						,t1.appr_period
+						,t1.appr_type
+						,t1.is_generat_contract
+						,t1.appr_product_type
+						,t1.is_reaudit
+					
+				from lb_t_into_info 	t1
+				where 1=1
+				and t1.validate_state='1'
+				and t1.audite_state<![CDATA[ > ]]>	2000
+				<if test="minId != null and minId != '' ">
+				and t1.id >=#{minId}
+				</if>
+				<if test="maxId != null and maxId != '' ">
+				and t1.id <![CDATA[ < ]]> #{maxId}
+				</if>
+				
+				order by t1.id asc
+		) T
+    	) TEMP
+    	<if test="page != null" >    
+	            <![CDATA[WHERE TEMP.ROW_ID > #{beginrow} AND ROW_ID <= #{endrow}]]>
+        </if>
+        <if test="cuntNum != null" >    
+	            <![CDATA[WHERE TEMP.ROW_ID =#{cuntNum} ]]>
+        </if>
+</select>
+<!-- 查询进件的 审批结论、产品客群分类、审批通过码 信审一级拒绝原因 信审二级拒绝原因 复议一级拒绝原因 复议二级拒绝原因 -->
+<select id="queryIntoInfoExt1" parameterType="java.util.Map" resultType="java.util.Map">
+    	 		select 
+						 t1.fk_into_app_id
+						,t1.cust_classify
+						,t1.audit_conclusion
+						,t1.agree_code
+						,t1.one_refuse_reason
+						,t1.two_refuse_reason
+				from lb_t_into_audit_result 	t1
+				where 1=1
+				and t1.validate_state='1'
+				and t1.id=(select max(t2.id) from  lb_t_into_audit_result 	t2 where t2.validate_state='1' and t2.fk_into_app_id=to_char(#{intoId}))
+</select>
+
+<!-- 查询进件的 补充材料次数       补充资料用时（4） -->
+<select id="queryIntoInfoExt2" parameterType="java.util.Map" resultType="java.util.Map">
+    	 		
+				select t2.activity_name_
+				       ,to_char(t2.start_ , 'yyyy-MM-dd hh24:mi:ss')                start_time
+               		   ,to_char(case when t2.end_ is null then sysdate else t2.end_ end ,'yyyy-MM-dd hh24:mi:ss')                end_time
+				       ,t2.execution_			execution
+				       ,t2.transition_			transition
+				       ,(select ht.assignee_ from jbpm4_hist_task ht where ht.dbid_ = t2.htask_)   assignee
+				       from jbpm4_hist_actinst t2 
+				where 1=1
+				<if test="tranName != null and tranName != '' ">
+				and t2.transition_ =#{tranName}
+				</if>
+				and instr(t2.activity_name_ ,'客服')>0
+				and t2.type_='task'
+				and t2.execution_ in (select t2.pro_instance_id from jbpm4_biz_tab t2 where t2.validate_state='1' and t2.biz_type in('1000','1001','1002','1012') and t2.biz_inf_name=to_char(#{intoId}))
+				order by t2.start_ asc
+</select>
+<!-- 查询进件的  初审用时（5）  补充调查用时（2） -->
+<select id="queryIntoInfoExt2_1" parameterType="java.util.Map" resultType="java.util.Map">
+				select t2.activity_name_
+				       ,to_char(t2.start_ , 'yyyy-MM-dd hh24:mi:ss')              start_time
+				       ,to_char(case when t2.end_ is null then sysdate else t2.end_ end, 'yyyy-MM-dd hh24:mi:ss')                end_time
+				       ,t2.execution_			execution
+				       ,t2.transition_			transition
+				       ,(select ht.assignee_ from jbpm4_hist_task ht where ht.dbid_ = t2.htask_)   assignee
+				       from jbpm4_hist_actinst t2 
+				where 1=1
+				<if test="tranName != null and tranName != '' ">
+				and t2.transition_ =#{tranName}
+				</if>
+				and instr(t2.activity_name_ ,'信审专员') > 0
+				and t2.type_='task'
+				and t2.execution_ in (select t2.pro_instance_id from jbpm4_biz_tab t2 where t2.validate_state='1' and t2.biz_type in('1000','1001','1002','1012','1015') and t2.biz_inf_name=to_char(#{intoId}))
+				order by t2.start_ asc
+</select>
+<!-- 查询进件的  终审用时（4） -->
+<select id="queryIntoInfoExt2_2" parameterType="java.util.Map" resultType="java.util.Map">
+				select t2.activity_name_
+				       ,to_char(t2.start_ , 'yyyy-MM-dd hh24:mi:ss')              start_time
+				       ,to_char(case when t2.end_ is null then sysdate else t2.end_ end, 'yyyy-MM-dd hh24:mi:ss')               	end_time
+				       ,t2.execution_			execution
+				       ,t2.transition_			transition
+				       ,(select ht.assignee_ from jbpm4_hist_task ht where ht.dbid_ = t2.htask_)   assignee
+				       from jbpm4_hist_actinst t2 
+				where 1=1
+				and (    instr(t2.activity_name_ ,'主管')>0 
+		              or instr(t2.activity_name_ ,'复议经理')>0
+		              or instr(t2.activity_name_ ,'信审经理')>0 
+		              or instr(t2.activity_name_ ,'首席')>0 
+		              or instr(t2.activity_name_ ,'总监')>0
+		        )
+				and t2.type_='task'
+				and t2.execution_ in (select t2.pro_instance_id from jbpm4_biz_tab t2 where t2.validate_state='1' and t2.biz_type in('1000','1001','1002','1012') and t2.biz_inf_name=to_char(#{intoId}))
+				order by t2.start_ asc
+</select>
+
+<!-- 查询进件的  流程节点信息 -->
+<select id="queryIntoInfoActNameInfo" parameterType="java.util.Map" resultType="java.util.Map">
+				select t2.activity_name_
+				       ,to_char(t2.start_ , 'yyyy-MM-dd hh24:mi:ss')              start_time
+				       ,to_char(case when t2.end_ is null then sysdate else t2.end_ end, 'yyyy-MM-dd hh24:mi:ss')               	end_time
+				       ,t2.execution_			execution
+				       ,t2.transition_			transition
+				       ,(select ht.assignee_ from jbpm4_hist_task ht where ht.dbid_ = t2.htask_)   assignee
+				       from jbpm4_hist_actinst t2 
+				where 1=1
+				and (    instr(t2.activity_name_ ,'${actName}')>0  
+		        )
+				and t2.type_='task'
+				and t2.execution_ in (select t2.pro_instance_id from jbpm4_biz_tab t2 where t2.validate_state='1' and t2.biz_type in('1000','1001','1002','1012') and t2.biz_inf_name=to_char(#{intoId}))
+				order by t2.start_ asc
+</select>
+
+
+<!-- 查询进件的 流程信息 审批结束时间 审批结束日期-->
+<select id="queryIntoProInfo" parameterType="java.util.Map" resultType="java.util.Map">
+select  
+		to_char(case when t3.end_ is null then sysdate else t3.end_ end,'yyyy-MM-dd hh24:mi:ss') 	end_time
+ 
+        from jbpm4_hist_procinst 	t3
+        where 1=1
+        and exists (
+      	select  t1.pro_instance_id 
+                from jbpm4_biz_tab t1
+		        where  1=1
+		        and t1.pro_instance_id= t3.id_
+		        and t1.id= ( select max(t2.id) from jbpm4_biz_tab t2 where t2.validate_state='1' and t2.biz_type in('1000','1001','1002','1012') and t2.biz_inf_name=to_char(#{intoId}) )
+        )
+
+</select>
+<!-- 查询进件的 流程信息当前环节  当前办理人-->
+<select id="queryIntoProInfoExt1" parameterType="java.util.Map" resultType="java.util.Map">
+		select  t3.execution_id_
+		       ,t3.activity_name_ 	cur_act_name
+		       ,t3.assignee_		cur_user_id
+		       
+	       from jbpm4_task 		t3 
+	       where 1=1 
+	       and exists (
+	      	select  t1.pro_instance_id 
+	                from jbpm4_biz_tab t1
+			        where  1=1
+			        and t1.pro_instance_id= t3.execution_id_
+			        and t1.id= ( select max(t2.id) from jbpm4_biz_tab t2 where t2.validate_state='1' and t2.biz_type in('1000','1001','1002','1012') and t2.biz_inf_name=to_char(#{intoId}) )
+	        )
+</select>
+
+<!-- 查询进件的 办理初审人员  办理终审人员 办理信审室 办理复议终审人员  -->
+<select id="queryIntoAuditPersonOrgInfo" parameterType="java.util.Map" resultType="java.util.Map">
+				 select to_char(t.assignee_ )     			create_by
+				       ,(select to_char(u.org_id)  
+				       		from sys_org_user  u 
+					       where u.validate_state='1' 
+					       and u.user_id = t.assignee_ 
+					       and rownum <![CDATA[ < ]]> 2)     org_id
+				       ,'信审初审'	my_type
+				       from jbpm4_hist_task t 
+				where t.dbid_ =(
+				select ha1.htask_       
+				       from jbpm4_hist_actinst ha1 where 1=1
+				       and ha1.execution_ = (select t2.pro_instance_id from jbpm4_biz_tab t2 where t2.biz_inf_name=to_char(#{intoId}) and t2.biz_type in('1000','1012'))
+				       and ha1.start_  =(select max(ha.start_ ) from jbpm4_hist_actinst ha 
+				       where 1=1
+				       and instr(ha.activity_name_ ,'信审专员') >0 
+				       and ha.execution_ =(select t2.pro_instance_id from jbpm4_biz_tab t2 where t2.biz_inf_name=to_char(#{intoId}) and t2.biz_type in('1000','1012')))
+				)
+				 
+				 union all
+				 
+				 select to_char(t.assignee_ )     			create_by
+				       ,(select to_char(u.org_id)  
+				       		from sys_org_user  u 
+					       where u.validate_state='1' 
+					       and u.user_id = t.assignee_ 
+					       and rownum <![CDATA[ < ]]> 2)     org_id
+				       ,'信审终审'	my_type
+				       from jbpm4_hist_task t 
+				where t.dbid_ =(
+				select ha1.htask_       
+				       from jbpm4_hist_actinst ha1 where 1=1
+				       and ha1.execution_ = (select t2.pro_instance_id from jbpm4_biz_tab t2 where t2.biz_inf_name=to_char(#{intoId}) and t2.biz_type in('1000','1012'))
+				       and ha1.start_  =(select max(ha.start_ ) from jbpm4_hist_actinst ha 
+				       where 1=1
+				       and (    instr(ha.activity_name_ ,'主管')>0 
+				                or instr(ha.activity_name_ ,'信审经理')>0 
+				                or instr(ha.activity_name_ ,'首席')>0 
+				                or instr(ha.activity_name_ ,'总监')>0
+									  )
+				       and ha.execution_ =(select t2.pro_instance_id from jbpm4_biz_tab t2 where t2.biz_inf_name=to_char(#{intoId}) and t2.biz_type in('1000','1012')))
+				)
+							
+				 union all
+				 
+				 select to_char(t.assignee_ )     			create_by
+				       ,(select to_char(u.org_id)  
+				       		from sys_org_user  u 
+					       where u.validate_state='1' 
+					       and u.user_id = t.assignee_ 
+					       and rownum <![CDATA[ < ]]> 2)     org_id
+				       ,'复议终审'	my_type
+				       from jbpm4_hist_task t 
+				where t.dbid_ =(
+				select ha1.htask_       
+				       from jbpm4_hist_actinst ha1 where 1=1
+				       and ha1.execution_ in (select t2.pro_instance_id from jbpm4_biz_tab t2 where t2.biz_inf_name=to_char(#{intoId}) and t2.biz_type='1001')
+				       and ha1.start_  =(select max(ha.start_ ) from jbpm4_hist_actinst ha 
+				       where 1=1
+				       and (    instr(ha.activity_name_ ,'主管')>0 
+				                or instr(ha.activity_name_ ,'复议经理')>0 
+				                or instr(ha.activity_name_ ,'首席')>0 
+				                or instr(ha.activity_name_ ,'总监')>0
+									  )
+				       and ha.execution_ in (select t2.pro_instance_id from jbpm4_biz_tab t2 where t2.biz_inf_name=to_char(#{intoId}) and t2.biz_type='1001'))/*复议*/
+				)
+
+</select>
+
+<!-- 查询审核意见的相关信息 -->
+<select id="queryAuditResulInfo" parameterType="java.util.Map" resultType="java.util.Map">
+    	 		select t1.fk_into_app_id,
+				       t1.cust_classify,
+				       t1.audit_conclusion,
+				       t1.agree_code,
+				       t1.one_refuse_reason,
+				       t1.two_refuse_reason,
+				       t1.audit_amount,
+				       t1.loan_period
+				  from lb_t_into_audit_result t1
+				 where 1 = 1
+				   and t1.validate_state = '1'
+				   and t1.id = (select max(t2.id)
+				                  from lb_t_into_audit_result t2
+				                 where t2.validate_state = '1'
+				                 <if test="bizType != null and bizType != ''">
+										and t2.BIZ_TYPE =#{bizType}
+				    			</if>
+				                   and t2.fk_into_app_id = to_char(#{intoId}))
+
+</select>
+<!-- 批量保存进件审批时效统计信息 -->
+<update id="batchInsertIntoAppTimeInfo">
+	begin
+		<foreach collection="dataList" item="dto">
+			insert into rpt_into_app_time
+			(   		
+					id                             ,
+					into_app_id                    ,
+					fk_cust_code                   ,
+					is_common_borrow               ,
+					customer_manager               ,
+					customer_service               ,
+					accept_store                   ,
+					manage_store                   ,
+					audite_state                   ,
+					current_operator               ,
+					appr_amount                    ,
+					appr_period                    ,
+					appr_type                      ,
+					is_generat_contract            ,
+					appr_product_type              ,
+					is_reaudit                     ,
+					cust_classify                  ,
+					audit_conclusion               ,
+					agree_code                     ,
+					rec_one_refuse_reason          ,
+					rec_two_refuse_reason          ,
+					cre_one_refuse_reason          ,
+					cre_two_refuse_reason          ,
+					autdit_end_time                ,
+					cur_act_name                   ,
+					cur_user_id                    ,
+					attach_number                  ,
+					att_num_1                      ,
+					att_num_2                      ,
+					att_num_3                      ,
+					att_num_4                      ,
+					att_num_5                      ,
+					first_audit_1                  ,
+					first_audit_2                  ,
+					first_audit_3                  ,
+					first_audit_4                  ,
+					first_audit_5                  ,
+					first_audit_6                  ,
+					examen_1                       ,
+					examen_2                       ,
+					examen_3                       ,
+					examen_4                       ,
+					examen_5                       ,
+					last_audit_1                   ,
+					last_audit_2                   ,
+					last_audit_3                   ,
+					last_audit_4                   ,
+					last_audit_5                   ,
+					cre_org_id                     ,
+					cre_fisrt_user                 ,
+					cre_last_user                  ,
+					rec_audit_user                 ,
+					ext1                           ,
+					ext2                           ,
+					ext3                           ,
+					create_time    
+					,ST_ATT_NUM_1 
+					,ET_ATT_NUM_1  
+					,ST_ATT_NUM_2 
+					,ET_ATT_NUM_2  
+					,ST_ATT_NUM_3 
+					,ET_ATT_NUM_3  
+					,ST_ATT_NUM_4 
+					,ET_ATT_NUM_4  
+					,ST_ATT_NUM_5 
+					,ET_ATT_NUM_5  
+					,ST_FIRST_AUDIT_1 
+					,ET_FIRST_AUDIT_1  
+					,ST_FIRST_AUDIT_2 
+					,ET_FIRST_AUDIT_2 
+					,ST_FIRST_AUDIT_3 
+					,ET_FIRST_AUDIT_3 
+					,ST_FIRST_AUDIT_4 
+					,ET_FIRST_AUDIT_4 
+					,ST_FIRST_AUDIT_5 
+					,ET_FIRST_AUDIT_5 
+					,st_FIRST_AUDIT_6
+					,et_FIRST_AUDIT_6
+					,st_EXAMEN_1
+					,et_EXAMEN_1
+					,st_EXAMEN_2
+					,et_EXAMEN_2
+					,st_EXAMEN_3
+					,et_EXAMEN_3
+					,st_EXAMEN_4
+					,et_EXAMEN_4
+					,st_EXAMEN_5
+					,et_EXAMEN_5
+					,st_LAST_AUDIT_1
+					,et_LAST_AUDIT_1
+					,st_LAST_AUDIT_2
+					,et_LAST_AUDIT_2
+					,st_LAST_AUDIT_3
+					,et_LAST_AUDIT_3
+					,st_LAST_AUDIT_4
+					,et_LAST_AUDIT_4
+					,st_LAST_AUDIT_5
+					,et_LAST_AUDIT_5
+					,antifraud_time
+					,st_antifraud
+					,et_antifraud
+					,ST_ONLINE
+					,ET_ONLINE
+					,ONLINE_TIME
+					,NAME_LAST_AUDIT_1
+					,NAME_LAST_AUDIT_2
+					
+					,ONLINE_LAST_1
+					,ST_ONLINE_LAST_1
+					,ET_ONLINE_LAST_1
+					,TIME_ONLINE_LAST_1
+			)
+			values(#{dto.ID}
+					,#{dto.INTO_APP_ID,jdbcType=VARCHAR}
+					,#{dto.FK_CUST_CODE,jdbcType=VARCHAR}
+					,#{dto.IS_COMMON_BORROW,jdbcType=VARCHAR}
+					,#{dto.CUSTOMER_MANAGER,jdbcType=VARCHAR}
+					,#{dto.CUSTOMER_SERVICE,jdbcType=VARCHAR}
+					,#{dto.ACCEPT_STORE,jdbcType=VARCHAR}
+					,#{dto.MANAGE_STORE,jdbcType=VARCHAR}
+					,#{dto.AUDITE_STATE,jdbcType=VARCHAR}
+					,#{dto.CURRENT_OPERATOR,jdbcType=DECIMAL}
+					,#{dto.APPR_AMOUNT,jdbcType=DECIMAL}
+					,#{dto.APPR_PERIOD,jdbcType=VARCHAR}
+					,#{dto.APPR_TYPE,jdbcType=VARCHAR}
+					,#{dto.IS_GENERAT_CONTRACT,jdbcType=VARCHAR}
+					,#{dto.APPR_PRODUCT_TYPE,jdbcType=VARCHAR}
+					,#{dto.IS_REAUDIT,jdbcType=VARCHAR}
+					,#{dto.CUST_CLASSIFY,jdbcType=VARCHAR}
+					,#{dto.AUDIT_CONCLUSION,jdbcType=VARCHAR}
+					,#{dto.AGREE_CODE,jdbcType=VARCHAR}
+					,#{dto.REC_ONE_REFUSE_REASON,jdbcType=VARCHAR}
+					,#{dto.REC_TWO_REFUSE_REASON,jdbcType=VARCHAR}
+					,#{dto.CRE_ONE_REFUSE_REASON,jdbcType=VARCHAR}
+					,#{dto.CRE_TWO_REFUSE_REASON,jdbcType=VARCHAR}
+					,#{dto.AUTDIT_END_TIME,jdbcType=VARCHAR}
+					,#{dto.CUR_ACT_NAME,jdbcType=VARCHAR}
+					,#{dto.CUR_USER_ID,jdbcType=VARCHAR}
+					,#{dto.ATTACH_NUMBER,jdbcType=VARCHAR}
+					,#{dto.ATT_NUM_1,jdbcType=VARCHAR}
+					,#{dto.ATT_NUM_2,jdbcType=VARCHAR}
+					,#{dto.ATT_NUM_3,jdbcType=VARCHAR}
+					,#{dto.ATT_NUM_4,jdbcType=VARCHAR}
+					,#{dto.ATT_NUM_5,jdbcType=VARCHAR}
+					,#{dto.FIRST_AUDIT_1,jdbcType=VARCHAR}
+					,#{dto.FIRST_AUDIT_2,jdbcType=VARCHAR}
+					,#{dto.FIRST_AUDIT_3,jdbcType=VARCHAR}
+					,#{dto.FIRST_AUDIT_4,jdbcType=VARCHAR}
+					,#{dto.FIRST_AUDIT_5,jdbcType=VARCHAR}
+					,#{dto.FIRST_AUDIT_6,jdbcType=VARCHAR}
+					,#{dto.EXAMEN_1,jdbcType=VARCHAR}
+					,#{dto.EXAMEN_2,jdbcType=VARCHAR}
+					,#{dto.EXAMEN_3,jdbcType=VARCHAR}
+					,#{dto.EXAMEN_4,jdbcType=VARCHAR}
+					,#{dto.EXAMEN_5,jdbcType=VARCHAR}
+					,#{dto.LAST_AUDIT_1,jdbcType=VARCHAR}
+					,#{dto.LAST_AUDIT_2,jdbcType=VARCHAR}
+					,#{dto.LAST_AUDIT_3,jdbcType=VARCHAR}
+					,#{dto.LAST_AUDIT_4,jdbcType=VARCHAR}
+					,#{dto.LAST_AUDIT_5,jdbcType=VARCHAR}
+					,#{dto.CRE_ORG_ID,jdbcType=VARCHAR}
+					,#{dto.CRE_FISRT_USER,jdbcType=VARCHAR}
+					,#{dto.CRE_LAST_USER,jdbcType=VARCHAR}
+					,#{dto.REC_AUDIT_USER,jdbcType=VARCHAR}
+					,#{dto.EXT1,jdbcType=VARCHAR}
+					,#{dto.EXT2,jdbcType=VARCHAR}
+					,#{dto.EXT3,jdbcType=VARCHAR}
+					,sysdate
+					,#{dto.ST_ATT_NUM_1     ,jdbcType=VARCHAR}
+					,#{dto.ET_ATT_NUM_1     ,jdbcType=VARCHAR}
+					,#{dto.ST_ATT_NUM_2     ,jdbcType=VARCHAR}
+					,#{dto.ET_ATT_NUM_2     ,jdbcType=VARCHAR}
+					,#{dto.ST_ATT_NUM_3     ,jdbcType=VARCHAR}
+					,#{dto.ET_ATT_NUM_3     ,jdbcType=VARCHAR}
+					,#{dto.ST_ATT_NUM_4     ,jdbcType=VARCHAR}
+					,#{dto.ET_ATT_NUM_4     ,jdbcType=VARCHAR}
+					,#{dto.ST_ATT_NUM_5     ,jdbcType=VARCHAR}
+					,#{dto.ET_ATT_NUM_5     ,jdbcType=VARCHAR}
+					,#{dto.ST_FIRST_AUDIT_1 ,jdbcType=VARCHAR}
+					,#{dto.ET_FIRST_AUDIT_1 ,jdbcType=VARCHAR}
+					,#{dto.ST_FIRST_AUDIT_2 ,jdbcType=VARCHAR}
+					,#{dto.ET_FIRST_AUDIT_2 ,jdbcType=VARCHAR}
+					,#{dto.ST_FIRST_AUDIT_3 ,jdbcType=VARCHAR}
+					,#{dto.ET_FIRST_AUDIT_3 ,jdbcType=VARCHAR}
+					,#{dto.ST_FIRST_AUDIT_4 ,jdbcType=VARCHAR}
+					,#{dto.ET_FIRST_AUDIT_4 ,jdbcType=VARCHAR}
+					,#{dto.ST_FIRST_AUDIT_5 ,jdbcType=VARCHAR}
+					,#{dto.ET_FIRST_AUDIT_5 ,jdbcType=VARCHAR}
+					,#{dto.ST_FIRST_AUDIT_6 ,jdbcType=VARCHAR}
+					,#{dto.ET_FIRST_AUDIT_6 ,jdbcType=VARCHAR}
+					,#{dto.ST_EXAMEN_1      ,jdbcType=VARCHAR}
+					,#{dto.ET_EXAMEN_1      ,jdbcType=VARCHAR}
+					,#{dto.ST_EXAMEN_2      ,jdbcType=VARCHAR}
+					,#{dto.ET_EXAMEN_2      ,jdbcType=VARCHAR}
+					,#{dto.ST_EXAMEN_3      ,jdbcType=VARCHAR}
+					,#{dto.ET_EXAMEN_3      ,jdbcType=VARCHAR}
+					,#{dto.ST_EXAMEN_4      ,jdbcType=VARCHAR}
+					,#{dto.ET_EXAMEN_4      ,jdbcType=VARCHAR}
+					,#{dto.ST_EXAMEN_5      ,jdbcType=VARCHAR}
+					,#{dto.ET_EXAMEN_5      ,jdbcType=VARCHAR}
+					,#{dto.ST_LAST_AUDIT_1  ,jdbcType=VARCHAR}
+					,#{dto.ET_LAST_AUDIT_1  ,jdbcType=VARCHAR}
+					,#{dto.ST_LAST_AUDIT_2  ,jdbcType=VARCHAR}
+					,#{dto.ET_LAST_AUDIT_2  ,jdbcType=VARCHAR}
+					,#{dto.ST_LAST_AUDIT_3  ,jdbcType=VARCHAR}
+					,#{dto.ET_LAST_AUDIT_3  ,jdbcType=VARCHAR}
+					,#{dto.ST_LAST_AUDIT_4  ,jdbcType=VARCHAR}
+					,#{dto.ET_LAST_AUDIT_4  ,jdbcType=VARCHAR}
+					,#{dto.ST_LAST_AUDIT_5  ,jdbcType=VARCHAR}
+					,#{dto.ET_LAST_AUDIT_5  ,jdbcType=VARCHAR}
+					,#{dto.ANTIFRAUD_TIME   ,jdbcType=VARCHAR}
+					,#{dto.ST_ANTIFRAUD     ,jdbcType=VARCHAR}
+					,#{dto.ET_ANTIFRAUD     ,jdbcType=VARCHAR}
+					
+					,#{dto.ST_ONLINE   		,jdbcType=VARCHAR}
+					,#{dto.ET_ONLINE     	,jdbcType=VARCHAR}
+					,#{dto.ONLINE_TIME     	,jdbcType=VARCHAR}
+					,#{dto.NAME_LAST_AUDIT_1    ,jdbcType=VARCHAR}
+					,#{dto.NAME_LAST_AUDIT_2    ,jdbcType=VARCHAR}
+					,#{dto.ONLINE_LAST_1   		,jdbcType=VARCHAR}
+					,#{dto.ST_ONLINE_LAST_1     ,jdbcType=VARCHAR}
+					,#{dto.ET_ONLINE_LAST_1     ,jdbcType=VARCHAR}
+					,#{dto.TIME_ONLINE_LAST_1   ,jdbcType=VARCHAR}
+					
+			);
+		</foreach>
+	
+	end;
+</update>
+
+
+<!-- 批量保存进件审批时效统计信息 -->
+<insert id="insertIntoAppTimeInfo">
+	insert into rpt_into_app_time
+			(   		
+					
+					into_app_id                    ,
+					fk_cust_code                   ,
+					is_common_borrow               ,
+					customer_manager               ,
+					customer_service               ,
+					accept_store                   ,
+					manage_store                   ,
+					audite_state                   ,
+					current_operator               ,
+					appr_amount                    ,
+					appr_period                    ,
+					appr_type                      ,
+					is_generat_contract            ,
+					appr_product_type              ,
+					is_reaudit                     ,
+					cust_classify                  ,
+					audit_conclusion               ,
+					agree_code                     ,
+					rec_one_refuse_reason          ,
+					rec_two_refuse_reason          ,
+					cre_one_refuse_reason          ,
+					cre_two_refuse_reason          ,
+					autdit_end_time                ,
+					cur_act_name                   ,
+					cur_user_id                    ,
+					attach_number                  ,
+					att_num_1                      ,
+					att_num_2                      ,
+					att_num_3                      ,
+					att_num_4                      ,
+					att_num_5                      ,
+					first_audit_1                  ,
+					first_audit_2                  ,
+					first_audit_3                  ,
+					first_audit_4                  ,
+					first_audit_5                  ,
+					first_audit_6                  ,
+					examen_1                       ,
+					examen_2                       ,
+					examen_3                       ,
+					examen_4                       ,
+					examen_5                       ,
+					last_audit_1                   ,
+					last_audit_2                   ,
+					last_audit_3                   ,
+					last_audit_4                   ,
+					last_audit_5                   ,
+					cre_org_id                     ,
+					cre_fisrt_user                 ,
+					cre_last_user                  ,
+					rec_audit_user                 ,
+					ext1                           ,
+					ext2                           ,
+					ext3                           ,
+					create_time    
+					,ST_ATT_NUM_1 
+					,ET_ATT_NUM_1  
+					,ST_ATT_NUM_2 
+					,ET_ATT_NUM_2  
+					,ST_ATT_NUM_3 
+					,ET_ATT_NUM_3  
+					,ST_ATT_NUM_4 
+					,ET_ATT_NUM_4  
+					,ST_ATT_NUM_5 
+					,ET_ATT_NUM_5  
+					,ST_FIRST_AUDIT_1 
+					,ET_FIRST_AUDIT_1  
+					,ST_FIRST_AUDIT_2 
+					,ET_FIRST_AUDIT_2 
+					,ST_FIRST_AUDIT_3 
+					,ET_FIRST_AUDIT_3 
+					,ST_FIRST_AUDIT_4 
+					,ET_FIRST_AUDIT_4 
+					,ST_FIRST_AUDIT_5 
+					,ET_FIRST_AUDIT_5 
+					,st_FIRST_AUDIT_6
+					,et_FIRST_AUDIT_6
+					,st_EXAMEN_1
+					,et_EXAMEN_1
+					,st_EXAMEN_2
+					,et_EXAMEN_2
+					,st_EXAMEN_3
+					,et_EXAMEN_3
+					,st_EXAMEN_4
+					,et_EXAMEN_4
+					,st_EXAMEN_5
+					,et_EXAMEN_5
+					,st_LAST_AUDIT_1
+					,et_LAST_AUDIT_1
+					,st_LAST_AUDIT_2
+					,et_LAST_AUDIT_2
+					,st_LAST_AUDIT_3
+					,et_LAST_AUDIT_3
+					,st_LAST_AUDIT_4
+					,et_LAST_AUDIT_4
+					,st_LAST_AUDIT_5
+					,et_LAST_AUDIT_5
+					,antifraud_time
+					,st_antifraud
+					,et_antifraud
+					,ST_ONLINE
+					,ET_ONLINE
+					,ONLINE_TIME
+					,NAME_LAST_AUDIT_1
+					,NAME_LAST_AUDIT_2                
+					,ONLINE_LAST_1
+					,ST_ONLINE_LAST_1
+					,ET_ONLINE_LAST_1
+					,TIME_ONLINE_LAST_1
+					,ONE_AUDIT_CONCLUSION
+					,ONE_APPR_AMOUNT
+					,ONE_APPR_PERIOD
+					,REC_AUDIT_CONCLUSION
+					,REC_APPR_AMOUNT
+					,REC_APPR_PERIOD
+					,ST_REC_AUDIT_USER
+					,ET_REC_AUDIT_USER
+					,REC_AUDIT_USER_TIME
+					,REC_AUDIT_FIRST_USER
+					,ST_REC_AUDIT_FIRST_USER
+					,ET_REC_AUDIT_FIRST_USER
+					,REC_AUDIT_FIRST_USER_TIME
+			)
+			values( #{dto.INTO_APP_ID,jdbcType=VARCHAR}
+					,#{dto.FK_CUST_CODE,jdbcType=VARCHAR}
+					,#{dto.IS_COMMON_BORROW,jdbcType=VARCHAR}
+					,#{dto.CUSTOMER_MANAGER,jdbcType=VARCHAR}
+					,#{dto.CUSTOMER_SERVICE,jdbcType=VARCHAR}
+					,#{dto.ACCEPT_STORE,jdbcType=VARCHAR}
+					,#{dto.MANAGE_STORE,jdbcType=VARCHAR}
+					,#{dto.AUDITE_STATE,jdbcType=VARCHAR}
+					,#{dto.CURRENT_OPERATOR,jdbcType=DECIMAL}
+					,#{dto.APPR_AMOUNT,jdbcType=DECIMAL}
+					,#{dto.APPR_PERIOD,jdbcType=VARCHAR}
+					,#{dto.APPR_TYPE,jdbcType=VARCHAR}
+					,#{dto.IS_GENERAT_CONTRACT,jdbcType=VARCHAR}
+					,#{dto.APPR_PRODUCT_TYPE,jdbcType=VARCHAR}
+					,#{dto.IS_REAUDIT,jdbcType=VARCHAR}
+					,#{dto.CUST_CLASSIFY,jdbcType=VARCHAR}
+					,#{dto.AUDIT_CONCLUSION,jdbcType=VARCHAR}
+					,#{dto.AGREE_CODE,jdbcType=VARCHAR}
+					,#{dto.REC_ONE_REFUSE_REASON,jdbcType=VARCHAR}
+					,#{dto.REC_TWO_REFUSE_REASON,jdbcType=VARCHAR}
+					,#{dto.CRE_ONE_REFUSE_REASON,jdbcType=VARCHAR}
+					,#{dto.CRE_TWO_REFUSE_REASON,jdbcType=VARCHAR}
+					,#{dto.AUTDIT_END_TIME,jdbcType=VARCHAR}
+					,#{dto.CUR_ACT_NAME,jdbcType=VARCHAR}
+					,#{dto.CUR_USER_ID,jdbcType=VARCHAR}
+					,#{dto.ATTACH_NUMBER,jdbcType=VARCHAR}
+					,#{dto.ATT_NUM_1,jdbcType=VARCHAR}
+					,#{dto.ATT_NUM_2,jdbcType=VARCHAR}
+					,#{dto.ATT_NUM_3,jdbcType=VARCHAR}
+					,#{dto.ATT_NUM_4,jdbcType=VARCHAR}
+					,#{dto.ATT_NUM_5,jdbcType=VARCHAR}
+					,#{dto.FIRST_AUDIT_1,jdbcType=VARCHAR}
+					,#{dto.FIRST_AUDIT_2,jdbcType=VARCHAR}
+					,#{dto.FIRST_AUDIT_3,jdbcType=VARCHAR}
+					,#{dto.FIRST_AUDIT_4,jdbcType=VARCHAR}
+					,#{dto.FIRST_AUDIT_5,jdbcType=VARCHAR}
+					,#{dto.FIRST_AUDIT_6,jdbcType=VARCHAR}
+					,#{dto.EXAMEN_1,jdbcType=VARCHAR}
+					,#{dto.EXAMEN_2,jdbcType=VARCHAR}
+					,#{dto.EXAMEN_3,jdbcType=VARCHAR}
+					,#{dto.EXAMEN_4,jdbcType=VARCHAR}
+					,#{dto.EXAMEN_5,jdbcType=VARCHAR}
+					,#{dto.LAST_AUDIT_1,jdbcType=VARCHAR}
+					,#{dto.LAST_AUDIT_2,jdbcType=VARCHAR}
+					,#{dto.LAST_AUDIT_3,jdbcType=VARCHAR}
+					,#{dto.LAST_AUDIT_4,jdbcType=VARCHAR}
+					,#{dto.LAST_AUDIT_5,jdbcType=VARCHAR}
+					,#{dto.CRE_ORG_ID,jdbcType=VARCHAR}
+					,#{dto.CRE_FISRT_USER,jdbcType=VARCHAR}
+					,#{dto.CRE_LAST_USER,jdbcType=VARCHAR}
+					,#{dto.REC_AUDIT_USER,jdbcType=VARCHAR}
+					,#{dto.EXT1,jdbcType=VARCHAR}
+					,#{dto.EXT2,jdbcType=VARCHAR}
+					,#{dto.EXT3,jdbcType=VARCHAR}
+					,sysdate
+					,#{dto.ST_ATT_NUM_1     ,jdbcType=VARCHAR}
+					,#{dto.ET_ATT_NUM_1     ,jdbcType=VARCHAR}
+					,#{dto.ST_ATT_NUM_2     ,jdbcType=VARCHAR}
+					,#{dto.ET_ATT_NUM_2     ,jdbcType=VARCHAR}
+					,#{dto.ST_ATT_NUM_3     ,jdbcType=VARCHAR}
+					,#{dto.ET_ATT_NUM_3     ,jdbcType=VARCHAR}
+					,#{dto.ST_ATT_NUM_4     ,jdbcType=VARCHAR}
+					,#{dto.ET_ATT_NUM_4     ,jdbcType=VARCHAR}
+					,#{dto.ST_ATT_NUM_5     ,jdbcType=VARCHAR}
+					,#{dto.ET_ATT_NUM_5     ,jdbcType=VARCHAR}
+					,#{dto.ST_FIRST_AUDIT_1 ,jdbcType=VARCHAR}
+					,#{dto.ET_FIRST_AUDIT_1 ,jdbcType=VARCHAR}
+					,#{dto.ST_FIRST_AUDIT_2 ,jdbcType=VARCHAR}
+					,#{dto.ET_FIRST_AUDIT_2 ,jdbcType=VARCHAR}
+					,#{dto.ST_FIRST_AUDIT_3 ,jdbcType=VARCHAR}
+					,#{dto.ET_FIRST_AUDIT_3 ,jdbcType=VARCHAR}
+					,#{dto.ST_FIRST_AUDIT_4 ,jdbcType=VARCHAR}
+					,#{dto.ET_FIRST_AUDIT_4 ,jdbcType=VARCHAR}
+					,#{dto.ST_FIRST_AUDIT_5 ,jdbcType=VARCHAR}
+					,#{dto.ET_FIRST_AUDIT_5 ,jdbcType=VARCHAR}
+					,#{dto.ST_FIRST_AUDIT_6 ,jdbcType=VARCHAR}
+					,#{dto.ET_FIRST_AUDIT_6 ,jdbcType=VARCHAR}
+					,#{dto.ST_EXAMEN_1      ,jdbcType=VARCHAR}
+					,#{dto.ET_EXAMEN_1      ,jdbcType=VARCHAR}
+					,#{dto.ST_EXAMEN_2      ,jdbcType=VARCHAR}
+					,#{dto.ET_EXAMEN_2      ,jdbcType=VARCHAR}
+					,#{dto.ST_EXAMEN_3      ,jdbcType=VARCHAR}
+					,#{dto.ET_EXAMEN_3      ,jdbcType=VARCHAR}
+					,#{dto.ST_EXAMEN_4      ,jdbcType=VARCHAR}
+					,#{dto.ET_EXAMEN_4      ,jdbcType=VARCHAR}
+					,#{dto.ST_EXAMEN_5      ,jdbcType=VARCHAR}
+					,#{dto.ET_EXAMEN_5      ,jdbcType=VARCHAR}
+					,#{dto.ST_LAST_AUDIT_1  ,jdbcType=VARCHAR}
+					,#{dto.ET_LAST_AUDIT_1  ,jdbcType=VARCHAR}
+					,#{dto.ST_LAST_AUDIT_2  ,jdbcType=VARCHAR}
+					,#{dto.ET_LAST_AUDIT_2  ,jdbcType=VARCHAR}
+					,#{dto.ST_LAST_AUDIT_3  ,jdbcType=VARCHAR}
+					,#{dto.ET_LAST_AUDIT_3  ,jdbcType=VARCHAR}
+					,#{dto.ST_LAST_AUDIT_4  ,jdbcType=VARCHAR}
+					,#{dto.ET_LAST_AUDIT_4  ,jdbcType=VARCHAR}
+					,#{dto.ST_LAST_AUDIT_5  ,jdbcType=VARCHAR}
+					,#{dto.ET_LAST_AUDIT_5  ,jdbcType=VARCHAR}
+					,#{dto.ANTIFRAUD_TIME   ,jdbcType=VARCHAR}
+					,#{dto.ST_ANTIFRAUD     ,jdbcType=VARCHAR}
+					,#{dto.ET_ANTIFRAUD     ,jdbcType=VARCHAR}
+					
+					,#{dto.ST_ONLINE   		,jdbcType=VARCHAR}
+					,#{dto.ET_ONLINE     	,jdbcType=VARCHAR}
+					,#{dto.ONLINE_TIME     	,jdbcType=VARCHAR}
+					,#{dto.NAME_LAST_AUDIT_1    ,jdbcType=VARCHAR}
+					,#{dto.NAME_LAST_AUDIT_2    ,jdbcType=VARCHAR}
+					,#{dto.ONLINE_LAST_1   		,jdbcType=VARCHAR}
+					,#{dto.ST_ONLINE_LAST_1     ,jdbcType=VARCHAR}
+					,#{dto.ET_ONLINE_LAST_1     ,jdbcType=VARCHAR}
+					,#{dto.TIME_ONLINE_LAST_1   ,jdbcType=VARCHAR}
+					,#{dto.ONE_AUDIT_CONCLUSION      ,jdbcType=VARCHAR}         
+					,#{dto.ONE_APPR_AMOUNT           ,jdbcType=VARCHAR}
+					,#{dto.ONE_APPR_PERIOD           ,jdbcType=VARCHAR}
+					,#{dto.REC_AUDIT_CONCLUSION      ,jdbcType=VARCHAR}
+					,#{dto.REC_APPR_AMOUNT           ,jdbcType=VARCHAR}
+					,#{dto.REC_APPR_PERIOD           ,jdbcType=VARCHAR}
+					,#{dto.ST_REC_AUDIT_USER         ,jdbcType=VARCHAR}
+					,#{dto.ET_REC_AUDIT_USER         ,jdbcType=VARCHAR}
+					,#{dto.REC_AUDIT_USER_TIME       ,jdbcType=VARCHAR}
+					,#{dto.REC_AUDIT_FIRST_USER      ,jdbcType=VARCHAR}
+					,#{dto.ST_REC_AUDIT_FIRST_USER   ,jdbcType=VARCHAR}
+					,#{dto.ET_REC_AUDIT_FIRST_USER   ,jdbcType=VARCHAR}
+					,#{dto.REC_AUDIT_FIRST_USER_TIME ,jdbcType=VARCHAR}
+			)
+</insert>
+<!-- 批量保存进件审批时效统计信息 -->
+<update id="truncateRptIntoAppTimeTable">
+	truncate table rpt_into_app_time
+</update>
+
+<!-- 客户跨门店转移 查询数据权限表  -->
+<select id="queryVmdataPriv" parameterType="java.util.Map" resultType="java.util.Map">
+select 
+		to_char(t.org_id)	org_id
+       ,(select t1.org_name from vmtree_info t1 where t1.org_id=t.org_id and t1.org_type=t.org_type) 	org_name
+       ,t.org_type
+from loan_vmdata_priv t 
+
+where t.org_type='LOAN'
+and t.org_id is not null
+and t.user_id=#{curUserId}
+ 
+</select>
+</mapper>

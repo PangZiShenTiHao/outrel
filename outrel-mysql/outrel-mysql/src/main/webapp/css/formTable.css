@@ -1,0 +1,117 @@
+
+	.formPageSwap{
+			width:90%; text-align:center;
+			margin:auto;
+			max-width:800px;
+			padding:5px;
+		}
+	.formTableSwap{
+			margin:auto;
+			width:100%;
+			background: #D9D8DF;
+		}
+   .formTableSwap th{
+			background: #F9F9F9;
+			text-align:right;
+			//padding:3px 5px;
+			vertical-align: middle;
+			font-size:12px;
+			min-width:80px;
+		}
+	.formTableSwap tr{
+			background:#FFFFFF;
+		}
+		
+	.formTableSwap td{
+			text-align:left;
+			padding:6px 5px;
+			vertical-align: middle;
+			font-size:12px;
+			min-width:80px;
+		}
+	.formTableSwap input{
+			bor1der:0px;
+			bo1rder-bottom:1px solid #CAC8C8;
+			padding:4px;
+	}
+	
+	
+	
+	
+	.expandSwap {
+   		width: 99%;
+		border: 1px solid #E8ECEC;
+		background: #FAFCFC;
+		margin: 10px auto;
+		/* -webkit-box-shadow: 0 1px 0 #fff; */
+		-moz-box-shadow: 0 1px 0 #fff;
+		/* text-shadow: 0 1px #fff; */
+		-moz-border-radius: 5px;
+		-webkit-border-radius: 5px;
+		border-radius: 5px;
+   	}
+   	.expandSwap .expandTitle{
+   		margin: auto;
+		padding: 9px;
+		background: #b6daf4;
+		border-left: 5px solid #76a8bf;
+   	}
+   	.expandSwap .expandTitle .text{
+   		display:inline-block;
+   		font-size: 14px;
+   		font-weight:700;
+   		color: #3B8389;
+   	}
+   	
+   	.expandSwap .expandContent{
+   		width:99%;margin:auto;padding:10px;
+   	}
+   	.expandSwap .expandBtn{
+   		float:right;
+   		width:16px;
+   		height:9px;
+   		background: url(../images/expand.png) 0px 0px;
+   		display:inline-block;
+   		margin-right:10px;
+   		margin-top:5px;
+   		cursor: pointer;
+   	}
+   	
+   	.expandSwap .expandOver{
+   		background-position: 0px -9px;
+   	}
+
+	.expandToolbar{
+		text-align: center;
+		margin-top: 8px;
+		display: inline-block;
+		width: 100%;
+	}
+	.expandToolbar .saveBtn,.expandToolbar .submitBtn{
+		padding:6px 30px;
+		background:#FF0550;
+		color:#998877;
+		-webkit-box-shadow: 0 1px 0 #fff;
+		-moz-box-shadow: 0 1px 0 #fff;
+		text-shadow: 0 1px #fff;
+		-moz-border-radius: 5px;
+		-webkit-border-radius: 5px;
+		border-radius: 5px;
+		font-size:16px;
+		color:#ffffff;
+		margin:10px;
+	}
+	.expandToolbar .saveBtn{
+		background:#60ac62;
+	}
+	.expandToolbar .saveBtn:hover{
+		background:#418743;
+	}
+	.expandToolbar .submitBtn{
+		background:#4c80a7;
+	}
+	.expandToolbar .submitBtn:hover{
+		background:#3e6887;
+	}
+<!-- 组合伸缩结束 -->
+	.emcls{color:red}	

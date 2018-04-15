@@ -1,0 +1,27 @@
+.menu-two  a,.menu-two  a:link,.menu-two  a:visited {color: #ccc; text-decoration: none;}
+.menu-two > li {list-style: none; height: auto;  margin: auto; overflow: hidden; border-bottom: 1px solid #fff;}
+.menu-two > li.firstChild {border: 0;}
+.menu-two .two-header {height: 35px; background: #e8f6f6; line-height: 34px; text-indent: 15px; cursor: pointer;margin-bottom: 2px}
+.menu-two .two-header:hover,
+.menu-show .two-header {background: #5bc7c4;}
+.menu-two .two-header > span {display: block;}
+.menu-two .two-header .txt {float: left; color: #1e557b;margin-left: 20px}
+.menu-two .two-header:hover .txt ,.menu-two .menu-show-li .txt { color: #fff;}
+.menu-two .two-header .arrow { width: 35px; height: 35px; background: url(icon/arrow-up.png) no-repeat center center;}
+.menu-three {display: none;  height: auto;}
+.menu-three li { height:35px; background: #f1f1f1;margin-bottom: 2px; color: #333;
+    cursor: pointer;
+    line-height: 34px; text-indent: 40px;}
+.menu-three li.firstChild {border: 0;}
+.menu-three li a {display: block; color: #888;}
+.menu-three li:hover,
+.menu-three li.menu-show-li {background: #e7e5e5;}
+.menu-show .two-header .arrow {background-image: url(icon/arrow-down.png);}
+.ui-accordion .ui-accordion-header{
+    margin-top: 5px;
+}
+.ui-widget-content{
+    border: 1px solid #c6eded;
+    background: #fff;
+}
+

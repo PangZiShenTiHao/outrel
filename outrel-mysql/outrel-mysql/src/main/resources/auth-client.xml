@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<auth>
+	<authlist>
+		<authinfo appid = "ptpt" apppwd = "xx" validtime="2099-12-01" serviceurl="http://127.0.0.1:8080/outrel" />
+	</authlist>
+</auth>

@@ -1,0 +1,151 @@
+
+
+.cims_childIframe{
+	height:100%; 
+	width:100%; 
+	border:none;
+	margin-top:-42px;
+	z-index:-1;
+	position: absolute;
+}
+
+.cims_childIframe1{
+	height:100%; 
+	width:100%; 
+	border:none;
+	margin-top:0px;
+	z-index:-1;
+	position: absolute;
+	margin-top:-6px;
+}
+
+.inputTop{
+	margin-top:100px;
+}
+
+.mouseName{
+	cursor:pointer;
+}
+
+.aa{
+	width:800px;
+}
+
+.tableTop{
+	margin-top: 225px;
+}
+
+.thTop{
+	font-weight: bold;
+	border: 1px solid #aed0ea;
+	background: #deedf7 url("default/images/buttonbar/ui-bg_highlight-soft_100_deedf7_1x100.png") 50% 50% repeat-x;
+
+}
+
+.thTop1{
+	font-weight: bold;
+	border: 1px solid #aed0ea;
+	background: #deedf7 url("default/images/buttonbar/buttonbar-bg.png") 50% 50% repeat-x;
+
+}
+
+.cims_inline_menu{
+	margin-top:10px;
+	border:4px solid;
+	background:#70B4DF;
+	color:white;	
+}
+
+.cims_inline_menu ul:after{
+	clear:both;
+	content:'.';
+	display:block;
+	line-height:0;
+	font-size:0;
+}
+
+.cims_inline_menu li{
+	float:left;
+	margin:10px;
+	list-style: none;
+	color:#F9FFFF;
+	font-size:8px;
+}
+
+.cims_inline_menu li a{
+	color:#F9FFFF;
+	font-size: 14px;
+	text-decoration:none;
+	font-weight: bold;
+}
+
+#ecportFields,#ecportCostomFields,#ecportSelectedCostomFields,#ecportSelectedFields{
+	height:160px;
+}
+
+.inputHere{
+	margin-left:0px;
+	font-weight: bold;
+	
+}
+#CreditValueSum span{
+	margin-right:10px;
+}
+.textRight{
+	text-align:right;
+}
+
+#templateCode,#fileName,#templateType{
+	width:163px;
+}
+
+#spanCode{
+	margin-left: 1170px;
+	height: 22px;
+	margin-top: -20px;
+	display: block;
+	margin-bottom: 0px;
+}
+
+.aColor{
+	display: block;
+	color: green;
+	text-align: left;
+	padding: 6px 5px;
+	font-size: 13px;
+	vertical-align: middle;
+	min-width: 80px;
+
+}
+
+.textareField{
+	width:80%;
+}
+
+.selectedCreditValueWindow{
+	display: inline-block; 
+	position: absolute; 
+	top: 0px;  
+	left: 0px;
+	right: 0px;
+	bottom: 40px;
+	overflow-y: auto; 
+	overflow-x: hidden;
+}
+
+.selectedCreditValuePanal{
+	position: absolute;
+	left: 0px;right: 0px;
+	bottom: 0px; 
+	text-align: right;
+	width: 100%;
+}
+
+.selectedCreditValueLeft{
+	position: absolute;
+	left: 0px;right: 0px;
+	bottom: 0px; 
+	width: 100%;
+}
+
+

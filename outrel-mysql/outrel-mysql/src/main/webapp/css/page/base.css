@@ -1,0 +1,29 @@
+.pageSwap{
+		width:90%; text-align:center;
+		margin:auto;
+		max-width:800px;
+		padding:5px;
+}
+.tableSwap{
+	margin:auto;
+	width:100%;
+	background: #D9D8DF;
+}
+.tableSwap th{
+	background: #EEEEF0;
+	text-align:right;
+	padding:3px 5px;
+	vertical-align: middle;
+	font-size:12px;
+}
+.tableSwap tr{
+	background:#FFFFFF;
+	
+}
+
+.tableSwap td{
+	
+	text-align:left;
+	padding:3px 5px;
+	vertical-align: middle;
+}

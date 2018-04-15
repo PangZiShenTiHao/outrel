@@ -1,0 +1,12 @@
+  package rule.fraud.r001
+  import com.jy.modules.externalplatform.drools.InputParam; 
+  import com.jy.modules.externalplatform.drools.util.entity.DroolsResultDTO;
+  global DroolsResultDTO droolsResultDTO
+  rule "rule.fraud.r001"
+         date-effective "12-Apr-2018" 
+         date-expires  "12-Apr-2099"        
+  when
+      m: InputParam ();
+  then
+      droolsResultDTO.setRetStatus(true);
+  end

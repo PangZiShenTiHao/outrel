@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+	<bean id="jedisSentinelPool" class="com.fintech.platform.core.redis.JedisSentinelPool">
+		<constructor-arg index="0" ref="jedisPoolConfig" />
+		<constructor-arg index="1">
+			<list>
+				<value>mymaster</value>
+			</list>
+		</constructor-arg>
+		<constructor-arg index="2">
+			<set>
+				<value>172.18.100.169:26379</value>
+				<value>172.18.100.169:26379</value>
+			</set>
+		</constructor-arg>
+		<!-- <constructor-arg index="3">
+				<value>PWD</value>
+		</constructor-arg> -->
+	</bean>
+
+	<bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+		<property name="maxTotal" value="200" />
+		<property name="maxIdle" value="100" />
+		<property name="maxWaitMillis" value="50000" />
+		<property name="testOnBorrow" value="true" />
+	</bean>
+	<!-- 
+	<bean id="jedisShardInfoDefault" class="redis.clients.jedis.JedisShardInfo">  
+        <constructor-arg index="0" value="127.0.0.1" />
+        <constructor-arg index="1" type="int" value="6379" />
+        <constructor-arg index="2" type="java.lang.String" value="127.0.0.1" />
+        <property name="password" value="000000aA"/>
+    </bean>  
+     
+    <bean id="jedisSentinelPool" class="redis.clients.jedis.ShardedJedisPool">  
+        <constructor-arg index="0" ref="jedisPoolConfig" />  
+        <constructor-arg index="1">  
+            <list>  
+                <ref bean="jedisShardInfoDefault" />  
+            </list>  
+        </constructor-arg>
+    </bean> 
+    -->
+	 <!-- 采用redis的进行缓存配置  start -->
+    <bean id="methodCacheInterceptor" class="com.fintech.platform.core.ehcache.MethodRedisCacheInterceptor">  
+      <property name="pool" ref="jedisSentinelPool" />  
+    </bean>  
+    <!--  flush cache拦截器   -->
+    <bean id="methodCacheAfterAdvice" class="com.fintech.platform.core.ehcache.MethodRedisCacheAfterAdvice">  
+      <property name="pool" ref="jedisSentinelPool" />  
+    </bean>  
+    <bean id="methodCachePointCut" class="org.springframework.aop.support.RegexpMethodPointcutAdvisor">  
+      <property name="advice" ref="methodCacheInterceptor"/>  
+      <property name="patterns">  
+        <list>
+            <value>com.fintech.modules.platform.sysorg.service.*query.*</value>
+            <value>com.fintech.modules.platform.sysorg.service.*find.*</value>
+            <!--    
+            <value>com.fintech.modules.platform.sysorg.service.*search.*</value>  
+            -->
+            <value>com.fintech.modules.platform.sysconfig.service.*query.*</value>  
+            <value>com.fintech.modules.platform.sysconfig.service.*find.*</value>  
+            <value>com.fintech.modules.platform.sysconfig.service.*search.*</value>  
+            <value>com.fintech.modules.platform.sysdict.service.*query.*</value>  
+            <value>com.fintech.modules.platform.sysdict.service.*find.*</value>  
+            <value>com.fintech.modules.platform.sysdict.service.*search.*</value>  
+            
+            <value>com.fintech.modules.platform.sysauth.service.SysResourceService.*getSysResourceUrl*</value>
+            <value>com.fintech.modules.platform.sysauth.service.SysResourceService.*getSysResourceRole*</value>
+            <value>com.fintech.modules.platform.sysauth.service.SysResourceService.*getSysResourcePermission*</value>
+            <value>com.fintech.modules.platform.sysauth.service.SysResourceService.*getSysResourceAllUrl*</value>
+        </list>  
+      </property>  
+    </bean>  
+    <bean id="methodCachePointCutAdvice" class="org.springframework.aop.support.RegexpMethodPointcutAdvisor">  
+      <property name="advice" ref="methodCacheAfterAdvice"/>  
+      <property name="patterns">  
+        <list>  
+          <value>com.fintech.modules.platform.sysorg.service.*update.*</value>  
+          <value>com.fintech.modules.platform.sysorg.service.*modify.*</value>
+          <value>com.fintech.modules.platform.sysorg.service.*modify*</value>  
+          <value>com.fintech.modules.platform.sysorg.service.*delete.*</value>  
+          <value>com.fintech.modules.platform.sysorg.service.*insert.*</value>  
+          <value>com.fintech.modules.platform.sysconfig.service.*update.*</value>  
+          <value>com.fintech.modules.platform.sysconfig.service.*delete.*</value>  
+          <value>com.fintech.modules.platform.sysconfig.service.*insert.*</value>
+          <value>com.fintech.modules.platform.sysdict.service.*update.*</value>  
+          <value>com.fintech.modules.platform.sysdict.service.*delete.*</value>  
+          <value>com.fintech.modules.platform.sysdict.service.*insert.*</value>
+          
+          <value>com.fintech.modules.platform.sysauth.service.SysAclService.*insert*</value>
+          <value>com.fintech.modules.platform.sysauth.service.SysAclService.*update*</value>
+          <value>com.fintech.modules.platform.sysauth.service.SysAclService.*delete*</value>
+          <value>com.fintech.modules.platform.sysauth.service.SysResourceService.*insert*</value>
+          <value>com.fintech.modules.platform.sysauth.service.SysResourceService.*update*</value>
+          <value>com.fintech.modules.platform.sysauth.service.SysResourceService.*delete*</value>
+          <value>com.fintech.modules.platform.sysauth.service.SysRoleService.*insert*</value>
+          <value>com.fintech.modules.platform.sysauth.service.SysRoleService.*update*</value>
+          <value>com.fintech.modules.platform.sysauth.service.SysRoleService.*delete*</value>
+          <value>com.fintech.modules.platform.sysauth.service.SysRoleUserService.*insert*</value>
+          <value>com.fintech.modules.platform.sysauth.service.SysRoleUserService.*update*</value>
+          <value>com.fintech.modules.platform.sysauth.service.SysRoleUserService.*delete*</value>
+        </list>  
+      </property>  
+    </bean> 
+    
+    
+    <!-- redis菜单资源缓存 start-->
+    <bean id="menuMethodCacheInterceptor" class="com.fintech.platform.core.ehcache.MenuMethodRedisCacheInterceptor">
+       <property name="pool" ref="jedisSentinelPool"></property> 
+    </bean>
+    <bean id="menuMethodCacheAfterAdvice" class="com.fintech.platform.core.ehcache.MenuMethodRedisCacheAfterAdvice">
+      <property name="pool" ref="jedisSentinelPool"></property> 
+    </bean>
+    <bean id="menuMethodCachePointCut" class="org.springframework.aop.support.RegexpMethodPointcutAdvisor">  
+      <property name="advice" ref="menuMethodCacheInterceptor"/>  
+      <property name="patterns">  
+        <list>
+            <value>com.fintech.modules.platform.sysMenu.service.SysMenuService.*searchSysMenuForHome*</value>
+        </list>  
+      </property>  
+    </bean>  
+    <bean id="menuMethodCachePointCutAdvice" class="org.springframework.aop.support.RegexpMethodPointcutAdvisor">  
+      <property name="advice" ref="menuMethodCacheAfterAdvice"/>  
+      <property name="patterns">  
+        <list>  
+          <value>com.fintech.modules.platform.sysauth.service.SysResourceService.*update*</value>
+          <value>com.fintech.modules.platform.sysauth.service.SysResourceService.*insert*</value>
+          <value>com.fintech.modules.platform.sysauth.service.SysResourceService.*delete*</value>
+          <value>com.fintech.modules.platform.sysMenu.service.SysMenuService.*update*</value>
+          <value>com.fintech.modules.platform.sysMenu.service.SysMenuService.*insert*</value>
+          <value>com.fintech.modules.platform.sysMenu.service.SysMenuService.*delete*</value>
+        </list>  
+      </property>  
+    </bean> 
+    <!-- redis菜单资源缓存 end-->
+</beans>

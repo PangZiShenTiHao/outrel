@@ -1,0 +1,2 @@
+Updated:E:/workspace/com-portal-platform-portal/src/main/webapp/js/loan/loanapplication/queryLoanApplication.js
+Updated:E:/workspace/com-portal-platform-portal/src/main/java/com/portal/modules/loan/loanapplication/controller/LoanApplicationController.java

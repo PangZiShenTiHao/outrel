@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+
+	<!-- 自动扫描且只扫描@Controller -->
+	<context:component-scan base-package="com.fintech.platform,com.fintech.modules,com.portal.modules,com.jy.modules" use-default-filters="false">
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+		<context:include-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
+	</context:component-scan>
+	<mvc:annotation-driven>
+	    <mvc:message-converters register-defaults="true">
+	    	<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+                <property name="prettyPrint" value="true"/>
+            </bean>
+	        <bean class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter" scope="prototype">
+	            <property name="supportedMediaTypes">
+	                <list>
+	                    <value>text/html;charset=UTF-8</value>
+	                    <value>application/json</value>
+	                </list>
+	            </property>
+	            <property name="features">
+	                <list>
+	                    <value>WriteMapNullValue</value>
+	                    <value>QuoteFieldNames</value>
+	                </list>
+	            </property>
+	        </bean>
+	    </mvc:message-converters>
+	</mvc:annotation-driven>
+
+		<!-- 容器默认的DefaultServletHandler处理 所有静态内容与无RequestMapping处理的URL-->	
+	<mvc:default-servlet-handler/>
+	<mvc:resources mapping="/js/**" location="/js/" />
+	<mvc:resources mapping="/threeJs/**" location="/threeJs/" />
+	<mvc:resources mapping="/uploadFile/**" location="/uploadFile/" />
+	<mvc:resources mapping="/css/**" location="/css/" />
+	<mvc:resources mapping="/images/**" location="/images/" />
+	<mvc:resources mapping="/static/**" location="/static/" />
+	<mvc:resources mapping="/testImg/**" location="/testImg/" />
+	<mvc:resources mapping="/component/jbpm/**" location="/component/jbpm/" />
+	
+	 <!-- 拦截器 	-->  
+     <mvc:interceptors>  
+            <bean class="com.fintech.modules.platform.sysauth.interceptor.ResourceInterceptor">
+            		<!-- log=true 记录日志 -->
+            		<property name="log" value="true"/>
+            </bean>  
+         <!-- 定义URL拦截器输出用户URL访问日志及耗时 -->
+         <bean class="com.fintech.modules.platform.common.interceptor.URLInterceptor" scope="prototype">
+          	<property name="logURL" value="true"/>
+         </bean>
+         <!-- 定义 按模块并发量控制 保证线程安全-->
+         <bean id="sysApp" class="com.fintech.modules.platform.common.interceptor.LimitURLInterceptor" scope="prototype">
+         </bean>
+         
+         <!-- 审计拦截器 -->
+         <bean class="com.fintech.modules.platform.common.interceptor.AuditURLInterceptor" scope="prototype">
+         </bean>
+     </mvc:interceptors>
+	
+	
+	<!-- Resolves views selected for rendering by @Controllers to .jsp resources 
+		in the /WEB-INF/views directory -->
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/jsp/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+	
+</beans>

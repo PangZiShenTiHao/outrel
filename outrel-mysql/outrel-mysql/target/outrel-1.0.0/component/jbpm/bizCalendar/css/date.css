@@ -1,0 +1,104 @@
+.topPanel{
+	background: url('image/header-bg.gif') repeat-x scroll 0 0 transparent;
+	padding:5px;
+}
+.nextMonth,.prevMonth,.nextYear,.prevYear,.selectObj{
+		display:inline-block;
+}
+.nextMonth a{
+		display:block;
+		background: url('image/icon-next.gif') no-repeat scroll 0 0 transparent;
+		width:20px;
+		height:16px;
+}
+.nextMonth a:hover{
+		background: url('image/icon-next.gif') no-repeat scroll 0 -16px transparent;
+}
+ 
+.prevMonth a{
+		display:block;
+		background: url('image/icon-prev.gif') no-repeat scroll 0 0 transparent;
+		width:20px;
+		height:16px;
+}
+.prevMonth a:hover{
+		background: url('image/icon-prev.gif') no-repeat scroll 0 -16px transparent;
+}
+
+
+ 
+.nextYear a{
+		display:block;
+		background: url('image/icon-last.gif') no-repeat scroll 0 1px transparent;
+		width:20px;
+		height:16px;
+}
+.nextYear a:hover{
+		background: url('image/icon-last.gif') no-repeat scroll 0 -16px transparent;
+}
+ 
+.prevYear a{
+		display:block;
+		background: url('image/icon-first.gif') no-repeat scroll 0 1px transparent;
+		width:20px;
+		height:16px;
+}
+.prevYear a:hover{
+		background: url('image/icon-first.gif') no-repeat scroll -0px -16px transparent;
+}
+
+.trCss{
+	background-color:#FFFBF0;
+	height:16px;
+}
+.weekend{
+	font-family: "Î¢ÈíÑÅºÚ","ËÎÌå",Arial,sans-serif; 
+	font-size:12px;
+	color:#D40000;
+	font-weight:bold;
+}
+.trCss td{
+	width:90px;
+	height:70px;
+	text-align:center;
+	font-size:18px;
+}
+.trCss .tdOver{
+	background-color: #53790E !important;
+	text-align: center;
+	color: #FFFF21;
+}
+.trCss .tdDayOver{
+	background-color: #C5C5BF;
+	text-align: center;
+	color: #E4143E;
+	font-size: 20px !important;
+	font-weight: bold;
+}
+.today{
+	width:49%;
+	float:left;
+}
+.today a{
+	display:block;
+	text-decoration:none;
+	background: url('image/button-bg.gif') repeat-x scroll 0 0 transparent;
+	text-align:center;
+	margin:0px 1px;
+	font-family: "Î¢ÈíÑÅºÚ","ËÎÌå",Arial,sans-serif; 
+	font-size:12px;
+	color:#D40000;
+	font-weight:bold;
+	
+}
+.today a:link , .today a:visited{
+	display:block;
+	text-decoration:none;
+	background: url('image/button-bg.gif') repeat-x scroll 0 0 transparent;
+}
+.today a:hover{
+	background: url('image/button-bg-over.gif') repeat-x scroll 0 0 transparent;
+}
+.close{
+	margin-left:3px;
+}

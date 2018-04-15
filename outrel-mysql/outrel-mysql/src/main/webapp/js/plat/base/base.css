@@ -1,0 +1,344 @@
+﻿html, body, ul, li, ol, dl, dd, dt, p, h1, h2, h3, h4, h5, h6, form, fieldset, legend, img {
+	margin: 0;
+	padding: 0;
+	font-family:"微软雅黑","宋体",Arial,sans-serif;
+	font-size:12px;
+	scrollbar-arrow-color: #AED0EA;  /*图6,三角箭头的颜色*/
+	scrollbar-face-color: #0078ae;  /*图5,立体滚动条的颜色*/
+	scrollbar-shadow-color: #0099CC;  /*图3,立体滚动条阴影的颜色*/
+	scrollbar-darkshadow-color: #dfdfdf;  /*图4,立体滚动条强阴影的颜色*/
+	scrollbar-track-color: #dfdfdf;  /*图7,立体滚动条背景颜色*/
+	scrollbar-base-color:#f8f8f8;  /*滚动条的基本颜色*/
+	Cursor:url(mouse.cur);  /*自定义个性鼠标*/
+}
+ 
+.ui-tabs{
+	padding:0px;
+}
+.ui-tabs .ui-tabs-nav {
+  padding: 4px 4px 0px 4px;
+}
+::-webkit-scrollbar {
+	width: 12px;
+	height:12px;
+}
+
+::-webkit-scrollbar-track {
+	 background:#bcbcbc;
+	 border: thin solid lightgray;
+	 box-shadow: 0px 0px 3px #dfdfdf inset;
+	 border-radius:10px;
+}
+::-webkit-scrollbar-thumb {
+	 background:#dddddd;
+	 border: thin solid gray;
+	 border-radius:10px;
+}
+::-webkit-scrollbar-thumb:hover {
+	background:#d3d3d3;
+}
+select{
+	min-width:50px;
+}
+.loading{
+	width:25px;
+	font-size:12px;
+	float: left;
+	margin: 2px; 
+	height:25px;
+	background:url('icon/loading.gif') no-repeat right 1px !important;
+}
+.ui-widget {
+	font-size:14px !important;	
+}
+	
+.ui-selectmenu-button span.ui-selectmenu-text {
+    text-align: left;
+    padding: 3px 10px 4px 5px !important;
+	font-weight:normal !important;
+	font-size:12px;
+}
+.ui-button-text-only .ui-button-text{
+	padding:4px 10px !important;
+	font-size:14px;
+}
+
+.treeMenu{
+	position: absolute;
+	display:block;
+	z-index:10000;
+	display:none;
+	background:#FFFFFF;
+	border: 1px solid #C3C3C3;
+}
+.treeMenu .treeBtns{
+	text-align:right;
+	padding: 2px;
+	background: #F2F5F7; 
+	border-top: 1px solid #C3C3C3;
+	border-bottom: 1px solid #C3C3C3;
+	color:#ff0000;
+}
+
+
+.checkError,.nullError{
+	border: 1px solid #FF0000 !important;
+  
+}
+.fieldTooltip{
+	position: absolute;
+	background: #ffebda;
+	border:1px solid #ffa454;
+	display:none;
+	padding:3px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	box-shadow:0px 0px 2px #ECECEC;
+	z-index:100000;
+}
+.fieldTooltip .direction{
+	width:23px;
+	height:7px;
+	background:url('icon/errorTipTop.png') no-repeat;
+	position: absolute;
+	top:-7px;
+	left:20px;
+}
+
+.promptMessage{
+	top:0px;
+	display:none;
+	position: absolute;
+	width:100%;
+	 display:none;
+	 text-align:center;
+}
+.message{
+	-moz-border-radius: 0px 0px 25px 25px;     /* Gecko browsers */
+	-webkit-border-radius: 0px 0px 25px 25px;   /* Webkit browsers */
+	 border-radius:0px 0px 25px 25px;
+	 margin:auto;
+	 height:20px;
+	 padding:5px 10px;
+	 line-height:20px;
+	 vertical-align:middle;
+	 display:inline-block;
+}
+.sysMessage{
+	width:300px;  padding:5px; position:absolute; right:3px; bottom:3px;
+	-moz-border-radius: 5px;      /* Gecko browsers */
+	-webkit-border-radius: 5px;   /* Webkit browsers */
+	 border-radius:5px;
+	 display:none;
+	 z-index:100000000;
+}
+.sysMessage .sysMessageContent{
+	max-height:300px;
+	overflow:auto;
+}
+.sysMessage p{
+	width:92%;
+	padding:2%;
+	white-space:normal;
+	word-break:break-all;
+	border:1px solid #BFC3C4;
+	display:block;
+	margin: 5px;
+	 -moz-border-radius: 5px;      /* Gecko browsers */
+	-webkit-border-radius: 5px;   /* Webkit browsers */
+	 border-radius:5px;            /* W3C syntax */
+}
+.sysMessage h3 {
+	padding:3px;	
+	-moz-border-radius: 5px;      /* Gecko browsers */
+	-webkit-border-radius: 5px;   /* Webkit browsers */
+	 border-radius:5px;
+	 text-align:center;
+}
+.tabs{
+	position: absolute;
+	top: 0px;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+}
+.tabContent{
+	position: absolute;
+	top: 40px;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+}
+.readOnlyDiv{
+	width: 100%;
+	border: none;
+	min-height: 20px;
+	word-break: break-all;
+	min-width: 100px;
+	word-wrap: break-word;
+	font-size:12px;
+}
+.borderRadius{
+	-moz-border-radius: 5px;      /* Gecko browsers */
+	-webkit-border-radius: 5px;   /* Webkit browsers */
+	 border-radius:5px;
+}
+
+/**tree��ʱʹ��**/
+.upload{
+	background:url('icon/upload.png') no-repeat 0px 0px !important;
+}
+
+.coverfile{
+	background:url('icon/cover.png') no-repeat 0px 0px !important;
+}
+.downloadfile{
+	background:url('icon/download.png') no-repeat 0px 0px !important;
+}
+
+/**伸缩下拉列表**/
+
+	.formPageSwap{
+			width:90%; text-align:center;
+			margin:auto;
+			max-width:800px;
+			padding:5px;
+		}
+	.formTableSwap{
+			margin:auto;
+			width:100%;
+			background: #D9D8DF;
+		}
+   .formTableSwap th{
+			background: #F9F9F9;
+			text-align: right;
+			vertical-align: middle;
+			font-size: 12px;
+			min-width: 180px;
+			padding:8px 2px;
+		}
+	.formTableSwap tr{
+			background:#FFFFFF;
+			font-size: 12px;
+		}
+		
+	.formTableSwap td{
+			text-align:left;
+			padding:6px 5px;
+			font-size: 12px;
+			vertical-align: middle;
+			min-width:80px;
+		}
+ 
+	.tableSwap{
+		margin: 10px 0px;
+		border: 1px solid #cdcdcd;
+		padding-bottom: 5px;
+	}
+	.thTitle{
+		background: #5bc7c4;
+		font-size: 14px;
+		color: #F9FFFF;
+		font-weight: bold;
+	}
+ 
+	.formTableSwap input[type=text], .formTableSwap select {
+		bor1der: 0px;
+		bo1rder-bottom: 1px solid #CAC8C8;
+		padding: 4px;
+		width:120px;
+		margin:0px 3px;
+	}
+	.formTableSwap select {
+		padding: 3px;
+	}
+	.formTableSwap select {
+		min-width:132px;
+	}
+	
+	
+	
+	.expandSwap {
+   		width: 99%;
+		border: 1px solid #E8ECEC;
+		background: #FAFCFC;
+		margin: 2px 0px 8px 0px;
+		-webkit-box-shadow: 0 1px 0 #fff;
+		-moz-box-shadow: 0 1px 0 #fff;
+		/* text-shadow: 0 1px #fff; */
+		-moz-border-radius: 5px;
+		-webkit-border-radius: 5px;
+		border-radius: 5px;
+   	}
+   	.expandSwap .expandTitle{
+   		margin: auto;
+		padding: 7px;
+		background: #5bc7c4;
+		border-left: 1px solid #76a8bf;
+		
+   	}
+   	.expandSwap .expandTitle .text{
+   		display:inline-block;
+   		font-size: 12px;
+   		color:#ffffff;
+		font-weight:bold;
+   	}
+   	
+   	.expandSwap .expandContent{
+   		 margin:auto;padding:10px;overflow:auto;
+   	}
+   	.expandSwap .expandBtn{
+   		float:right;
+   		width:16px;
+   		height:9px;
+   		background: url(icon/expand.png) 0px 0px;
+   		display:inline-block;
+   		margin-right:10px;
+   		margin-top:5px;
+   		cursor: pointer;
+   	}
+   	.expandSwapOver{
+   		border:1px solid #ff0000 !important;
+   	}
+   	
+   	.expandSwap .expandOver{
+   		background-position: 0px -9px;
+   	}
+   	.expandSwap .descriptionInfo{
+   		color:#ff0000;
+   		margin-left:5px;
+   	}
+	.expandToolbar{
+		text-align: center;
+		margin-top: 8px;
+		display: inline-block;
+		width: 100%;
+	}
+	.expandToolbar .saveBtn,.expandToolbar .submitBtn{
+		padding:6px 30px;
+		background:#FF0550;
+		color:#998877;
+		-webkit-box-shadow: 0 1px 0 #fff;
+		-moz-box-shadow: 0 1px 0 #fff;
+		text-shadow: 0 1px #fff;
+		-moz-border-radius: 5px;
+		-webkit-border-radius: 5px;
+		border-radius: 5px;
+		font-size:16px;
+		color:#ffffff;
+		margin:10px;
+	}
+	.expandToolbar .saveBtn{
+		background:#60ac62;
+	}
+	.expandToolbar .saveBtn:hover{
+		background:#418743;
+	}
+	.expandToolbar .submitBtn{
+		background:#4c80a7;
+	}
+	.expandToolbar .submitBtn:hover{
+		background:#3e6887;
+	}
+	

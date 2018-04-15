@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jy.modules.externalplatform.application.exttransferlog.dao.ExtTransferLogDao">
+<resultMap id="ExtTransferLogDTO" type="com.jy.modules.externalplatform.application.exttransferlog.dto.ExtTransferLogDTO">
+				<result property="id" column="ID" jdbcType="DECIMAL" />
+				<result property="reqTransNo" column="REQ_TRANS_NO" jdbcType="VARCHAR" />
+				<result property="interfaceType" column="INTERFACE_TYPE" jdbcType="VARCHAR" />
+				<result property="interfaceCode" column="INTERFACE_CODE" jdbcType="VARCHAR" />
+				<result property="reqTime" column="REQ_TIME" jdbcType="TIMESTAMP" />
+				<result property="retTransNo" column="RET_TRANS_NO" jdbcType="VARCHAR" />
+				<result property="retCode" column="RET_CODE" jdbcType="VARCHAR" />
+				<result property="retMsg" column="RET_MSG" jdbcType="VARCHAR" />
+				<result property="retTime" column="RET_TIME" jdbcType="TIMESTAMP" />
+				<result property="reqBody" column="REQ_BODY" jdbcType="VARCHAR" />
+				<result property="retBody" column="RET_BODY" jdbcType="VARCHAR" />
+				<result property="ext01" column="EXT_01" jdbcType="VARCHAR" />
+				<result property="ext02" column="EXT_02" jdbcType="VARCHAR" />
+				<result property="ext03" column="EXT_03" jdbcType="VARCHAR" />
+</resultMap>
+				
+<!-- 分页查询 EXT_TRANSFER_LOG -->	
+<select id="searchExtTransferLogByPaging" parameterType="java.util.Map" resultMap="ExtTransferLogDTO">
+    	 		select 
+						t1.id                             ,
+						t1.req_trans_no                   ,
+						t1.interface_type                 ,
+						t1.interface_code                 ,
+						t1.req_time                       ,
+						t1.ret_trans_no                   ,
+						t1.ret_code                       ,
+						t1.ret_msg                        ,
+						t1.ret_time                       ,
+						t1.req_body                       ,
+						t1.ret_body                       ,
+						t1.ext_01                         ,
+						t1.ext_02                         ,
+						t1.ext_03                         
+					
+				from ext_transfer_log 	t1
+				where 1=1
+    			<if test="dto.id != null and dto.id != ''">
+						and t1.ID =#{dto.id}
+    			</if>
+    			<if test="dto.reqTransNo != null and dto.reqTransNo != ''">
+						and t1.REQ_TRANS_NO =#{dto.reqTransNo}
+    			</if>
+    			<if test="dto.interfaceType != null and dto.interfaceType != ''">
+						and t1.INTERFACE_TYPE =#{dto.interfaceType}
+    			</if>
+    			<if test="dto.interfaceCode != null and dto.interfaceCode != ''">
+						and t1.INTERFACE_CODE =#{dto.interfaceCode}
+    			</if>
+    			<if test="dto.reqTime != null and dto.reqTime != ''">
+						and t1.REQ_TIME =#{dto.reqTime}
+    			</if>
+    			<if test="dto.retTransNo != null and dto.retTransNo != ''">
+						and t1.RET_TRANS_NO =#{dto.retTransNo}
+    			</if>
+    			<if test="dto.retCode != null and dto.retCode != ''">
+						and t1.RET_CODE =#{dto.retCode}
+    			</if>
+    			<if test="dto.retMsg != null and dto.retMsg != ''">
+						and t1.RET_MSG =#{dto.retMsg}
+    			</if>
+    			<if test="dto.retTime != null and dto.retTime != ''">
+						and t1.RET_TIME =#{dto.retTime}
+    			</if>
+    			<if test="dto.reqBody != null and dto.reqBody != ''">
+						and t1.REQ_BODY =#{dto.reqBody}
+    			</if>
+    			<if test="dto.retBody != null and dto.retBody != ''">
+						and t1.RET_BODY =#{dto.retBody}
+    			</if>
+    			<if test="dto.ext01 != null and dto.ext01 != ''">
+						and t1.EXT_01 =#{dto.ext01}
+    			</if>
+    			<if test="dto.ext02 != null and dto.ext02 != ''">
+						and t1.EXT_02 =#{dto.ext02}
+    			</if>
+    			<if test="dto.ext03 != null and dto.ext03 != ''">
+						and t1.EXT_03 =#{dto.ext03}
+    			</if>
+				
+				order by t1.id desc
+</select>
+  
+<!-- 查询列表 EXT_TRANSFER_LOG  -->
+<select id="searchExtTransferLog" parameterType="java.util.Map" resultMap="ExtTransferLogDTO">
+    	     select 
+						t1.id                             ,
+						t1.req_trans_no                   ,
+						t1.interface_type                 ,
+						t1.interface_code                 ,
+						t1.req_time                       ,
+						t1.ret_trans_no                   ,
+						t1.ret_code                       ,
+						t1.ret_msg                        ,
+						t1.ret_time                       ,
+						t1.req_body                       ,
+						t1.ret_body                       ,
+						t1.ext_01                         ,
+						t1.ext_02                         ,
+						t1.ext_03                         
+				from ext_transfer_log 		t1
+				where 1=1
+    			<if test="dto.id != null and dto.id != ''">
+						and t1.ID = #{dto.id}
+    			</if>
+    			<if test="dto.reqTransNo != null and dto.reqTransNo != ''">
+						and t1.REQ_TRANS_NO = #{dto.reqTransNo}
+    			</if>
+    			<if test="dto.interfaceType != null and dto.interfaceType != ''">
+						and t1.INTERFACE_TYPE = #{dto.interfaceType}
+    			</if>
+    			<if test="dto.interfaceCode != null and dto.interfaceCode != ''">
+						and t1.INTERFACE_CODE = #{dto.interfaceCode}
+    			</if>
+    			<if test="dto.reqTime != null and dto.reqTime != ''">
+						and t1.REQ_TIME = #{dto.reqTime}
+    			</if>
+    			<if test="dto.retTransNo != null and dto.retTransNo != ''">
+						and t1.RET_TRANS_NO = #{dto.retTransNo}
+    			</if>
+    			<if test="dto.retCode != null and dto.retCode != ''">
+						and t1.RET_CODE = #{dto.retCode}
+    			</if>
+    			<if test="dto.retMsg != null and dto.retMsg != ''">
+						and t1.RET_MSG = #{dto.retMsg}
+    			</if>
+    			<if test="dto.retTime != null and dto.retTime != ''">
+						and t1.RET_TIME = #{dto.retTime}
+    			</if>
+    			<if test="dto.reqBody != null and dto.reqBody != ''">
+						and t1.REQ_BODY = #{dto.reqBody}
+    			</if>
+    			<if test="dto.retBody != null and dto.retBody != ''">
+						and t1.RET_BODY = #{dto.retBody}
+    			</if>
+    			<if test="dto.ext01 != null and dto.ext01 != ''">
+						and t1.EXT_01 = #{dto.ext01}
+    			</if>
+    			<if test="dto.ext02 != null and dto.ext02 != ''">
+						and t1.EXT_02 = #{dto.ext02}
+    			</if>
+    			<if test="dto.ext03 != null and dto.ext03 != ''">
+						and t1.EXT_03 = #{dto.ext03}
+    			</if>
+</select>
+  
+<!-- 主键查询对象  EXT_TRANSFER_LOG -->
+<select id="findExtTransferLogByPrimaryKey" parameterType="java.util.Map" resultMap="ExtTransferLogDTO">
+   	 		select 
+					t1.id                             ,
+					t1.req_trans_no                   ,
+					t1.interface_type                 ,
+					t1.interface_code                 ,
+					t1.req_time                       ,
+					t1.ret_trans_no                   ,
+					t1.ret_code                       ,
+					t1.ret_msg                        ,
+					t1.ret_time                       ,
+					t1.req_body                       ,
+					t1.ret_body                       ,
+					t1.ext_01                         ,
+					t1.ext_02                         ,
+					t1.ext_03                         
+			from ext_transfer_log 		t1
+			where 
+				t1.id = #{id}
+</select>
+  
+<!-- 新增对象 EXT_TRANSFER_LOG -->
+<insert id="insertExtTransferLog" parameterType="java.util.Map" useGeneratedKeys="true">
+	
+			insert into ext_transfer_log
+			(   		
+					
+					req_trans_no                   ,
+					interface_type                 ,
+					interface_code                 ,
+					req_time                       ,
+					ret_trans_no                   ,
+					ret_code                       ,
+					ret_msg                        ,
+					ret_time                       ,
+					req_body                       ,
+					ret_body                       ,
+					validate_state				,
+					ext_01                         ,
+					ext_02                         ,
+					ext_03                         
+			)
+			values( #{dto.reqTransNo,jdbcType=VARCHAR}
+					,#{dto.interfaceType,jdbcType=VARCHAR}
+					,#{dto.interfaceCode,jdbcType=VARCHAR}
+					,#{dto.reqTime,jdbcType=TIMESTAMP}
+					,#{dto.retTransNo,jdbcType=VARCHAR}
+					,#{dto.retCode,jdbcType=VARCHAR}
+					,#{dto.retMsg,jdbcType=VARCHAR}
+					,#{dto.retTime,jdbcType=TIMESTAMP}
+					,#{dto.reqBody,jdbcType=VARCHAR}
+					,#{dto.retBody,jdbcType=VARCHAR}
+					,'1'
+					,#{dto.ext01,jdbcType=VARCHAR}
+					,#{dto.ext02,jdbcType=VARCHAR}
+					,#{dto.ext03,jdbcType=VARCHAR}
+			)
+</insert>
+    
+<!-- 更新对象 EXT_TRANSFER_LOG -->
+<update id="updateExtTransferLog" parameterType="java.util.Map">
+	     update ext_transfer_log t1
+	           set 
+			           t1.req_trans_no                   =#{dto.reqTransNo,jdbcType=VARCHAR},
+			           t1.interface_type                 =#{dto.interfaceType,jdbcType=VARCHAR},
+			           t1.interface_code                 =#{dto.interfaceCode,jdbcType=VARCHAR},
+			           t1.req_time                       =#{dto.reqTime,jdbcType=TIMESTAMP},
+			           t1.ret_trans_no                   =#{dto.retTransNo,jdbcType=VARCHAR},
+			           t1.ret_code                       =#{dto.retCode,jdbcType=VARCHAR},
+			           t1.ret_msg                        =#{dto.retMsg,jdbcType=VARCHAR},
+			           t1.ret_time                       =#{dto.retTime,jdbcType=TIMESTAMP},
+			           t1.req_body                       =#{dto.reqBody,jdbcType=VARCHAR},
+			           t1.ret_body                       =#{dto.retBody,jdbcType=VARCHAR},
+			           t1.ext_01                         =#{dto.ext01,jdbcType=VARCHAR},
+			           t1.ext_02                         =#{dto.ext02,jdbcType=VARCHAR},
+			           t1.ext_03                         =#{dto.ext03,jdbcType=VARCHAR}
+	     where t1.id = #{dto.id}
+</update>
+   
+<!-- 主键删除 EXT_TRANSFER_LOG -->
+<delete id="deleteExtTransferLogByID" parameterType="java.util.Map">
+    	delete from ext_transfer_log t1 where t1.ID in (${ids} )
+</delete>
+<!-- 主键假删除 EXT_TRANSFER_LOG -->
+<update id="deleteExtTransferLogByPrimaryKey" parameterType="java.util.Map">
+	     update ext_transfer_log t1
+	           set   t1.validate_state='0'	
+	     where t1.id in( ${ids})
+</update>
+<!-- 进件编号假删除 EXT_TRANSFER_LOG -->
+<update id="deleteExtTransferLogByIntoId" parameterType="java.util.Map">
+	     update ext_transfer_log t1
+	           set   t1.validate_state='0'	
+	     where t1.ext_02 = #{intoId}
+	     and t1.interface_code =#{tradeType}
+</update>
+</mapper>

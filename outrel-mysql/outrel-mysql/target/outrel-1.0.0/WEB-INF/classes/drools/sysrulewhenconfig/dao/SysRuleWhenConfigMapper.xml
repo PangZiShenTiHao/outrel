@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jy.modules.externalplatform.drools.sysrulewhenconfig.dao.SysRuleWhenConfigDao">
+<resultMap id="SysRuleWhenConfigDTO" type="com.jy.modules.externalplatform.drools.sysrulewhenconfig.dto.SysRuleWhenConfigDTO">
+				<result property="id" column="ID" jdbcType="DECIMAL" />
+				<result property="ruleCode" column="RULE_CODE" jdbcType="VARCHAR" />
+				<result property="ruleNameCh" column="RULE_NAME_CH" jdbcType="VARCHAR" />
+				<result property="ruleNameEn" column="RULE_NAME_EN" jdbcType="VARCHAR" />
+				<result property="sequence" column="SEQUENCE" jdbcType="DECIMAL" />
+				<result property="ruleConfType" column="RULE_CONF_TYPE" jdbcType="VARCHAR" />
+				<result property="preBrackets" column="PRE_BRACKETS" jdbcType="VARCHAR" />
+				<result property="conditionAttrEn" column="CONDITION_ATTR_EN" jdbcType="VARCHAR" />
+				<result property="conditionAttrCh" column="CONDITION_ATTR_CH" jdbcType="VARCHAR" />
+				<result property="arithmeticOperator" column="ARITHMETIC_OPERATOR" jdbcType="VARCHAR" />
+				<result property="operator" column="OPERATOR" jdbcType="VARCHAR" />
+				<result property="compareValueEn" column="COMPARE_VALUE_EN" jdbcType="VARCHAR" />
+				<result property="compareValueCh" column="COMPARE_VALUE_CH" jdbcType="VARCHAR" />
+				<result property="afterBrackets" column="AFTER_BRACKETS" jdbcType="VARCHAR" />
+				<result property="logicalOperator" column="LOGICAL_OPERATOR" jdbcType="VARCHAR" />
+				<result property="manualRule" column="MANUAL_RULE" jdbcType="VARCHAR" />
+				<result property="compilationResult" column="COMPILATION_RESULT" jdbcType="VARCHAR" />
+				<result property="createUser" column="CREATE_USER" jdbcType="VARCHAR" />
+				<result property="createDate" column="CREATE_DATE" jdbcType="DATE" />
+				<result property="updateUser" column="UPDATE_USER" jdbcType="VARCHAR" />
+				<result property="updateDate" column="UPDATE_DATE" jdbcType="DATE" />
+				<result property="versionNum" column="VERSION_NUM" jdbcType="VARCHAR" />
+				<result property="newVersionIsUpdate" column="NEW_VERSION_IS_UPDATE" jdbcType="DECIMAL" />
+				<result property="validateState" column="VALIDATE_STATE" jdbcType="VARCHAR" />
+				<result property="parentCode" column="PARENT_CODE" jdbcType="VARCHAR" />
+</resultMap>
+	
+<!-- 查询列表 SYS_RULE_WHEN_CONFIG  -->
+<select id="searchSysRuleWhenConfig" parameterType="java.util.Map" resultMap="SysRuleWhenConfigDTO">
+    	     select 
+						t1.id                             ,
+						t1.rule_code                      ,
+						t1.rule_name_ch                   ,
+						t1.rule_name_en                   ,
+						t1.sequence                       ,
+						t1.rule_conf_type                 ,
+						t1.pre_brackets                   ,
+						t1.condition_attr_en              ,
+						t1.condition_attr_ch              ,
+						t1.arithmetic_operator            ,
+						t1.operator                       ,
+						t1.compare_value_en               ,
+						t1.compare_value_ch               ,
+						t1.after_brackets                 ,
+						t1.logical_operator               ,
+						t1.manual_rule                    ,
+						t1.compilation_result             ,
+						t1.version_num                    ,
+						t1.new_version_is_update          
+				from sys_rule_when_config 		t1
+				where validate_state = 1 
+    			<if test="dto.ruleCode != null and dto.ruleCode != ''">
+						and t1.RULE_CODE like #{dto.ruleCode}||'___'
+    			</if>
+    			order by t1.sequence
+</select>
+  
+<!-- 主键查询对象  SYS_RULE_WHEN_CONFIG -->
+<select id="findSysRuleWhenConfigByPrimaryKey" parameterType="java.util.Map" resultMap="SysRuleWhenConfigDTO">
+   	 		select 
+					t1.id                             ,
+					t1.rule_code                      ,
+					t1.rule_name_ch                   ,
+					t1.rule_name_en                   ,
+					t1.sequence                       ,
+					t1.rule_conf_type                 ,
+					t1.pre_brackets                   ,
+					t1.condition_attr_en              ,
+					t1.condition_attr_ch              ,
+					t1.arithmetic_operator            ,
+					t1.operator                       ,
+					t1.compare_value_en               ,
+					t1.compare_value_ch               ,
+					t1.after_brackets                 ,
+					t1.logical_operator               ,
+					t1.manual_rule                    ,
+					t1.compilation_result             ,
+					t1.version_num                    ,
+					t1.new_version_is_update          ,   
+			from sys_rule_when_config 		t1
+			where 
+				t1.id = #{id}
+</select>
+<delete id="deleteSysRuleWhenConfigByListKey" parameterType="java.lang.String">
+    	delete from sys_rule_when_config t1 where t1.rule_code like #{ids}||'___'
+
+</delete>
+<!-- 批量插入 -->
+	<insert id="insertSysRuleWhenConfigBith" parameterType="java.util.Map" useGeneratedKeys="true">
+	 begin
+		<selectKey resultType="java.lang.Long" keyProperty="dto.id" order="BEFORE">
+				SELECT seq_sys_rule_when_config.nextval  as id from dual
+		</selectKey>
+		<foreach collection="dtoList" item="dto" >
+			   INSERT INTO sys_rule_when_config (
+	                id                             ,
+					rule_code                      ,
+					sequence                       ,
+					rule_conf_type                 ,
+					pre_brackets                   ,
+					condition_attr_en              ,
+					condition_attr_ch              ,
+					arithmetic_operator            ,
+					operator                       ,
+					compare_value_en               ,
+					compare_value_ch               ,
+					after_brackets                 ,
+					logical_operator               ,
+					manual_rule                    ,
+					compilation_result             ,
+					create_user                    ,
+					create_date
+				)  
+				values(seq_sys_rule_when_config.nextval
+				        ,#{dto.ruleCode,jdbcType=VARCHAR}
+				        ,#{dto.sequence,jdbcType=DECIMAL}
+				        ,#{dto.ruleConfType,jdbcType=VARCHAR}
+				        ,#{dto.preBrackets,jdbcType=VARCHAR}
+				        ,#{dto.conditionAttrEn,jdbcType=VARCHAR}
+					    ,#{dto.conditionAttrCh,jdbcType=VARCHAR}
+					    ,#{dto.arithmeticOperator,jdbcType=VARCHAR}
+				        ,#{dto.operator,jdbcType=VARCHAR}
+				        ,#{dto.compareValueEn,jdbcType=VARCHAR}
+					    ,#{dto.compareValueCh,jdbcType=VARCHAR}
+				        ,#{dto.afterBrackets,jdbcType=VARCHAR}
+					    ,#{dto.logicalOperator,jdbcType=VARCHAR}
+					    ,#{dto.manualRule,jdbcType=VARCHAR}
+					    ,#{dto.compilationResult,jdbcType=VARCHAR}
+					    ,#{optUser}
+					    ,sysdate
+				);
+			</foreach>
+	 end;
+	</insert>
+</mapper>

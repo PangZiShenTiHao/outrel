@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ZH-CN">
+<head>
+  <meta charset="utf-8">
+  <title>web RTC 测试</title>
+  <style>
+    .booth {
+      width:400px;
+     
+      background:#ccc;
+      border: 10px solid #ddd;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="booth">
+    <video id="video" width="400" height="300"></video>
+    <button id='tack'> snap shot</button>
+    <canvas id='canvas' width='400' height='300'></canvas>
+    <img id='img' src=''>
+  </div>
+ 
+ 
+  <script>
+    var video = document.getElementById('video'),
+        canvas = document.getElementById('canvas'),
+        snap = document.getElementById('tack'),
+        img = document.getElementById('img'),
+        vendorUrl = window.URL || window.webkitURL;
+        
+    //媒体对象
+    navigator.getMedia = navigator.getUserMedia ||
+                         navagator.webkitGetUserMedia ||
+                         navigator.mozGetUserMedia ||
+                         navigator.msGetUserMedia;
+    navigator.getMedia({
+        video: true, //使用摄像头对象
+        audio: false  //不适用音频
+    }, function(strem){
+        console.log(strem);
+        video.src = vendorUrl.createObjectURL(strem);
+        video.play();
+        video.onloadedmetadata = function (e) {
+            // Do something with the video here.
+        };
+    }, function(error) {
+        //error.code
+        console.log(error);
+    });
+    snap.addEventListener('click', function(){
+    
+        //绘制canvas图形
+        canvas.getContext('2d').drawImage(video, 0, 0, 400, 300);
+        
+        //把canvas图像转为img图片
+        img.src = canvas.toDataURL("image/png");
+        
+    });
+
+    var image = document.querySelector('#image');
+    var canvas = document.querySelector('#canvas');
+    var ctx = canvas.getContext("2d");
+    var scale = 1;
+    /* image.onload = function () {
+      ctx.drawImage(image,
+        0, 0, image.width, image.height,
+        0, 0, canvas.width, canvas.height);
+      scale = canvas.width / image.width;
+    }; */
+    
+    setTimeout(function () {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(video, 0, 0);
+        image.src = canvas.toDataURL('image/png');
+        image.onload = function() {
+          detect();
+        }
+      }, 60);
+    
+    function detect() {
+        if (window.FaceDetector == undefined) {
+          console.error('Face Detection not supported');
+          return;
+        }
+        var faceDetector = new FaceDetector();
+        console.time('detect');
+        return faceDetector.detect(image)
+          .then(faces => {
+            console.log(faces)
+            // Draw the faces on the <canvas>.
+            var ctx = canvas.getContext("2d");
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = "red";
+            for (var i = 0; i < faces.length; i++) {
+              var item = faces[i].boundingBox;
+              ctx.rect(Math.floor(item.x * scale),
+                Math.floor(item.y * scale),
+                Math.floor(item.width * scale),
+                Math.floor(item.height * scale));
+              ctx.stroke();
+            }
+            console.timeEnd('detect');
+          })
+          .catch((e) => {
+            console.error("Boo, Face Detection failed: " + e);
+          });
+      }
+  </script>
+</body>
+</html>

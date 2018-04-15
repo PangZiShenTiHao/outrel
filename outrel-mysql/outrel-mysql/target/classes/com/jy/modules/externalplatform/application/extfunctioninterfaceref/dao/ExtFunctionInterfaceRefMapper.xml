@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jy.modules.externalplatform.application.extfunctioninterfaceref.dao.ExtFunctionInterfaceRefDao">
+<resultMap id="ExtFunctionInterfaceRefDTO" type="com.jy.modules.externalplatform.application.extfunctioninterfaceref.dto.ExtFunctionInterfaceRefDTO">
+				<result property="id" column="ID" jdbcType="DECIMAL" />
+				<result property="funcModuleType" column="FUNC_MODULE_TYPE" jdbcType="VARCHAR" />
+				<result property="funcModuleName" column="FUNC_MODULE_NAME" jdbcType="VARCHAR" />
+				<result property="funcTypeCode" column="FUNC_TYPE_CODE" jdbcType="VARCHAR" />
+				<result property="funcTypeName" column="FUNC_TYPE_NAME" jdbcType="VARCHAR" />
+				<result property="interfaceNo" column="INTERFACE_NO" jdbcType="VARCHAR" />
+				<result property="interfaceName" column="INTERFACE_NAME" jdbcType="VARCHAR" />
+				<result property="sysName" column="SYS_NAME" jdbcType="VARCHAR" />
+				<result property="sysCode" column="SYS_CODE" jdbcType="VARCHAR" />
+				<result property="confType" column="CONF_TYPE" jdbcType="VARCHAR" />
+				<result property="validateState" column="VALIDATE_STATE" jdbcType="VARCHAR" />
+				<result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP" />
+				<result property="createBy" column="CREATE_BY" jdbcType="VARCHAR" />
+				<result property="modifyTime" column="MODIFY_TIME" jdbcType="TIMESTAMP" />
+				<result property="modifyBy" column="MODIFY_BY" jdbcType="VARCHAR" />
+				<result property="priority" column="PRIORITY" jdbcType="VARCHAR" />
+				<result property="interfaceCode" column="INTERFACE_CODE" jdbcType="VARCHAR" />
+				<result property="businessCode" column="BUSINESS_CODE" jdbcType="VARCHAR" />
+				<result property="interfaceSendType" column="INTERFACE_SEND_TYPE" jdbcType="VARCHAR" />
+				<result property="interfaceParamsType" column="INTERFACE_PARAMS_TYPE" jdbcType="VARCHAR" />				
+				<result property="interfaceUrl" column="INTERFACE_URL" jdbcType="VARCHAR" />
+				<result property="ruleGroupCode" column="RULE_GROUP_CODE" jdbcType="VARCHAR" />
+				<result property="ruleGroupName" column="RULE_GROUP_NAME" jdbcType="VARCHAR" />
+				<result property="className" column="CLASS_NAME" jdbcType="VARCHAR" />
+</resultMap>
+				
+<!-- 分页查询 EXT_FUNCTION_INTERFACE_REF -->	
+<select id="searchExtFunctionInterfaceRefByPaging" parameterType="java.util.Map" resultMap="ExtFunctionInterfaceRefDTO">
+    	 	  select 
+			        t1.id                             ,
+			        (select e.func_type from ext_function_type  e where e.func_type_code = t1.func_type_code) as  func_module_type,  
+                    (select (select e2.func_type_name from ext_function_type e2  where e2.func_type_code = e1.func_type) from ext_function_type  e1 where e1.func_type_code = t1.func_type_code) as  func_module_name,   
+			        t1.func_type_code                 ,
+			        t2.func_type_name                 ,
+			        <if test="dto.confType ==1">
+			         t1.interface_no                  ,
+			         t3.interface_name                ,
+			        </if>
+			        t4.sys_name                       ,
+			        t4.sys_code                       ,
+			        t1.conf_type                      ,
+			        t1.validate_state                 ,
+			        t1.create_time                    ,
+			        t1.create_by                      ,
+			        t1.modify_time                    ,
+			        t1.modify_by                      ,
+			        t1.priority                       ,
+			        t1.rule_group_code                ,
+			        (select s.ch_name from  Sys_Rule_List s WHERE s.rule_code =t1.rule_group_code) rule_group_name
+			  from ext_function_interface_ref t1,
+			       ext_function_type          t2,
+			       <if test="dto.confType ==1">
+			          ext_interface_info      t3,
+			       </if>
+			       ext_sys_management         t4
+			  where t1.validate_state =1
+			     and t2.validate_state =1
+			     <if test="dto.confType ==1">
+			        and t3.validate_state=1
+			     </if>
+			     and t4.validate_state=1
+			     and t1.func_type_code = t2.func_type_code
+			     <if test="dto.confType ==1">
+			        and t1.interface_no = t3.interface_no
+			     </if>
+			     and t2.sys_code=t4.sys_code
+    			<if test="dto.id != null and dto.id != ''">
+						and t1.ID =#{dto.id}
+    			</if>
+    			<if test="dto.priority != null and dto.priority != ''">
+						and t1.PRIORITY =#{dto.priority}
+    			</if>
+    			<if test="dto.funcTypeName != null and dto.funcTypeName != ''">
+						and t2.func_type_name like '%'||#{dto.funcTypeName}||'%'
+    			</if>
+    			<if test="dto.sysName != null and dto.sysName != ''">
+						and t4.sys_name like '%'||#{dto.sysName}||'%'
+    			</if>
+    			<if test="dto.sysCode != null and dto.sysCode != ''">
+						and t2.sys_code =#{dto.sysCode}
+    			</if>
+    			<if test="dto.funcTypeCode != null and dto.funcTypeCode != ''">
+						and t1.FUNC_TYPE_CODE =#{dto.funcTypeCode}
+    			</if>
+    			<if test="dto.funcModuleType != null and dto.funcModuleType != ''">
+						and exists (
+                           select ex.id from   ext_function_type  ex where ex.func_type =#{dto.funcModuleType}  and ex.func_type_code = t1.func_type_code
+                        )
+    			</if>
+    			<if test="dto.interfaceNo != null and dto.interfaceNo != ''">
+						and t1.INTERFACE_NO =#{dto.interfaceNo}
+    			</if>
+    			<if test="dto.confType != null and dto.confType != ''">
+						and t1.CONF_TYPE =#{dto.confType}
+    			</if>
+    			<if test="dto.validateState != null and dto.validateState != ''">
+						and t1.VALIDATE_STATE =#{dto.validateState}
+    			</if>
+    			<if test="dto.createTime != null and dto.createTime != ''">
+						and t1.CREATE_TIME =#{dto.createTime}
+    			</if>
+    			<if test="dto.createBy != null and dto.createBy != ''">
+						and t1.CREATE_BY =#{dto.createBy}
+    			</if>
+    			<if test="dto.priority != null and dto.priority != ''">
+						and t1.PRIORITY =#{dto.priority}
+    			</if>
+    			<if test="dto.ruleGroupCode != null and dto.ruleGroupCode != ''">
+						and t1.rule_group_code =#{dto.ruleGroupCode}
+    			</if>
+
+				
+				order by t1.id desc
+</select>
+  
+<!-- 查询列表 EXT_FUNCTION_INTERFACE_REF  -->
+<select id="searchExtFunctionInterfaceRef" parameterType="java.util.Map" resultMap="ExtFunctionInterfaceRefDTO">
+    	     select 
+			        t1.id                             ,
+			        t1.func_type_code                 ,
+			        t2.func_type_name                 ,
+			        <if test="dto.confType ==1">
+			         t1.interface_no                  ,
+			         t3.interface_name                ,
+			         t3.interface_send_type            ,
+			         t3.interface_params_type          ,
+			         t3.interface_url                  ,
+			         t3.class_name                     ,
+			        </if>
+			        t4.sys_name                       ,
+			        t4.sys_code                       ,
+			        t1.conf_type                      ,
+			        t1.validate_state                 ,
+			        t1.create_time                    ,
+			        t1.create_by                      ,
+			        t1.modify_time                    ,
+			        t1.modify_by                      ,
+			        t1.priority                       ,
+			        t1.rule_group_code
+			  from ext_function_interface_ref t1,
+			       ext_function_type          t2,
+			       <if test="dto.confType ==1">
+			        ext_interface_info        t3,
+			       </if>
+			       ext_sys_management         t4
+			  where t1.validate_state =1
+			     and t2.validate_state =1
+			     <if test="dto.confType ==1">
+			       and t3.validate_state=1
+			     </if>
+			     and t4.validate_state=1
+			     and t1.func_type_code = t2.func_type_code
+			     <if test="dto.confType ==1">
+			       and t1.interface_no = t3.interface_no
+			     </if>
+			     and t2.sys_code=t4.sys_code
+    			<if test="dto.id != null and dto.id != ''">
+						and t1.ID =#{dto.id}
+    			</if>
+    			<if test="dto.priority != null and dto.priority != ''">
+						and t1.PRIORITY =#{dto.priority}
+    			</if>
+    			<if test="dto.funcTypeName != null and dto.funcTypeName != ''">
+						and t2.func_type_name like '%'||#{dto.funcTypeName}||'%'
+    			</if>
+    			<if test="dto.sysName != null and dto.sysName != ''">
+						and t4.sys_name like '%'||#{dto.sysName}||'%'
+    			</if>
+    			<if test="dto.sysCode != null and dto.sysCode != ''">
+						and t4.sys_code =#{dto.sysCode}
+    			</if>
+    			<if test="dto.funcTypeCode != null and dto.funcTypeCode != ''">
+						and t1.FUNC_TYPE_CODE =#{dto.funcTypeCode}
+    			</if>
+    			<if test="dto.interfaceNo != null and dto.interfaceNo != ''">
+						and t1.INTERFACE_NO =#{dto.interfaceNo}
+    			</if>
+    			<if test="dto.confType != null and dto.confType != ''">
+						and t1.CONF_TYPE =#{dto.confType}
+    			</if>
+    			<if test="dto.validateState != null and dto.validateState != ''">
+						and t1.VALIDATE_STATE =#{dto.validateState}
+    			</if>
+    			<if test="dto.priority != null and dto.priority != ''">
+						and t1.PRIORITY =#{dto.priority}
+    			</if>
+    			<if test="dto.ruleGroupCode != null and dto.ruleGroupCode != ''">
+						and t1.rule_group_code =#{dto.ruleGroupCode}
+    			</if>
+				
+				order by t1.PRIORITY
+</select>
+  
+<!-- 主键查询对象  EXT_FUNCTION_INTERFACE_REF -->
+<select id="findExtFunctionInterfaceRefByPrimaryKey" parameterType="java.util.Map" resultMap="ExtFunctionInterfaceRefDTO">
+   	 		select 
+					t1.id                             ,
+					t1.func_type_code                 ,
+					t1.interface_no                   ,
+					t1.conf_type                      ,
+					t1.validate_state                 ,
+					t1.create_time                    ,
+					t1.create_by                      ,
+					t1.modify_time                    ,
+			        t1.modify_by                      ,
+					t1.priority                       
+			from ext_function_interface_ref 		t1
+			where 
+				t1.id = #{id}
+</select>
+  
+<!-- 新增对象 EXT_FUNCTION_INTERFACE_REF -->
+<insert id="insertExtFunctionInterfaceRef" parameterType="java.util.Map" useGeneratedKeys="true">
+	
+			insert into ext_function_interface_ref
+			(   		
+					
+					func_type_code                 ,
+					conf_type                      ,
+					validate_state                 ,
+					create_time                    ,
+					create_by                                  
+			)
+			values(
+					#{dto.funcTypeCode,jdbcType=VARCHAR}
+					,#{dto.confType,jdbcType=VARCHAR}<!-- 配置类型（1-接口分配规则集  2-调用点分配规则集）-->
+					,'1'
+					,sysdate()
+					,#{dto.createBy,jdbcType=VARCHAR}
+			)
+</insert>
+
+<!-- 批量保存功能点接口配置信息   -->
+<!--<insert id="batchInsertExtFuncInterfaceRef" parameterType="java.util.Map">
+    begin
+	<foreach collection="interfaceInfoList" item="interfaceInfo">
+		insert into ext_function_interface_ref
+			(   		
+
+					func_type_code                 ,
+					interface_no                   ,
+					conf_type                      ,
+					validate_state                 ,
+					create_time                    ,
+					create_by                      ,
+					priority                       
+			)
+			values(#{funcTypeCode}
+					,#{interfaceInfo.interfaceNo}
+					,#{confType}&lt;!&ndash; 配置类型（1-接口分配规则集  2-调用点分配规则集）&ndash;&gt;
+					,'1'
+					,sysdate()
+					,#{createBy}
+					,#{interfaceInfo.priority}
+			);
+	</foreach>
+  end;
+</insert>-->
+
+	<insert id="batchInsertExtFuncInterfaceRef" parameterType="java.util.Map">
+
+
+		insert into ext_function_interface_ref
+		(
+
+		func_type_code                 ,
+		interface_no                   ,
+		conf_type                      ,
+		validate_state                 ,
+		create_time                    ,
+		create_by                      ,
+		priority
+		)
+		values
+		<foreach collection="interfaceInfoList" item="interfaceInfo" separator =",">
+			(#{funcTypeCode}
+			,#{interfaceInfo.interfaceNo}
+			,#{confType}<!-- 配置类型（1-接口分配规则集  2-调用点分配规则集）-->
+			,'1'
+			,sysdate()
+			,#{createBy}
+			,#{interfaceInfo.priority}
+			)
+		</foreach>
+
+	</insert>
+    
+<!-- 更新对象 EXT_FUNCTION_INTERFACE_REF -->
+<update id="updateExtFunctionInterfaceRef" parameterType="java.util.Map">
+	     update ext_function_interface_ref t1
+	           set 
+			        t1.rule_group_code         =#{dto.ruleGroupCode,jdbcType=VARCHAR},
+		            t1.modify_by               =#{dto.modifyBy,jdbcType=VARCHAR},
+		            t1.modify_time             =sysdate()
+	     where t1.id = #{dto.id}
+</update>
+   
+<!-- 主键删除 EXT_FUNCTION_INTERFACE_REF -->
+<delete id="deleteExtFunctionInterfaceRefByPrimaryKey" parameterType="java.util.Map">
+	     delete t1 from ext_function_interface_ref t1 where t1.ID in (${ids} )
+</delete>
+
+<delete id="deleteExtFuncInterfaceRefByFuncCode" parameterType="java.util.Map">
+         delete from ext_function_interface_ref  where func_type_code =#{funcTypeCode} and conf_type =#{confType}
+</delete>
+
+</mapper>

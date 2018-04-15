@@ -1,0 +1,12 @@
+  package rule.loan.r001
+  import com.jy.modules.externalplatform.drools.InputParam; 
+  import com.jy.modules.externalplatform.drools.util.entity.DroolsResultDTO;
+  global DroolsResultDTO droolsResultDTO
+  rule "rule.loan.r001"
+         date-effective "13-Apr-2018" 
+         date-expires  "31-Dec-2099"        
+  when
+      m: InputParam (1 == 1);
+  then
+      droolsResultDTO.setRetStatus(true);
+  end

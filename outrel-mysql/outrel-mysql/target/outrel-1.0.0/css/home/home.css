@@ -1,0 +1,184 @@
+
+	body,html{
+		margin:0px;
+		padding:0px;
+		font-size:14px !important;
+		background: #ffffff;
+	}
+	.top {
+		height:46px;
+		position: absolute;
+		top: 0px;
+		width: 100%;
+		background:url("../login/images/bg_banner.png") no-repeat right #8ecbff;;
+	}
+
+	.top .logo{
+	    width: 128px;
+	    height: 40px;
+	    background: url("../../images/homeImg/logo.png") no-repeat;
+	    margin: 2px;
+	    margin-left: 15px;
+	    float: left;
+	}
+	.top .sysName{
+		    float: left;
+		    width: 200px;
+		    margin: 6px 0px 0px -10px;
+		    font-family: "ºÚÌå";
+		    font-size: 22px;
+		    color: #ffffff;
+	}
+	.top .loginInfo{
+		float:right;
+		padding: 5px 30px 5px 0px;
+
+	}
+	.loginInfo ul{
+		display:block;
+		margin:5px 24px 0px 0px;
+	}
+	.loginInfo li a{
+		text-decoration: none;
+		color:#ffffff;
+	}
+	.loginInfo li{
+		display: inline-block;
+		float: right;
+		margin: 5px 10px;
+		font-size: 14px;
+	}
+	.liSplit{
+		border-left: 1px solid #B7EDFF;
+  		height: 23px;
+	}
+	.content {
+		position: absolute;
+		top: 56px;
+		width: 100%;
+		bottom: 5px;
+
+	}
+
+	.bottom {
+		bottom: 0px;
+		left:0px;
+		right:0px;
+		height: 20px;
+		padding:5px;
+		background: #5197CB;
+		position: absolute;
+		text-align:center;
+		color:#CFD8DB;
+	}
+
+	.leftMenu {
+		width: 220px;
+		position: absolute;
+		left:3px;
+		top:-3px;
+		bottom: 0px;
+		background: #fefefe;
+
+		padding:0px 5px;
+		overflow:auto;
+
+	}
+	.moveLeft{
+    width: 2px;
+    position: absolute;
+    top: -10px;
+    left: 234px;
+    bottom: -10px;
+
+
+	}
+	.moveLeft .shrinkIcon{
+		width:44px; height:44px;
+		position: absolute;
+		top:50%;
+		margin-top:-25px;margin-left: -18px;
+		background:url("../../images/homeImg/left_.png") no-repeat;
+		z-index:100;
+		cursor:default;
+		background-position: -0px -0px;
+        cursor: pointer;
+	}
+	.moveLeft .shrinkIconLeft{
+		background:url("../../images/homeImg/right_.png") no-repeat !important;
+	}
+	.mouseLeftOver .shrinkIcon ,.mouseLeftOver .shrinkIconLeft{
+		background-position: -0px -44px !important;
+	}
+
+	.mouseLeftOver{
+		background: #eee !important;
+		cursor: w-resize;
+	}
+	.mainDiv {
+		position: absolute;
+		top: 0px;
+		left: 243px;
+		bottom: 0px;
+		right: 5px;
+		background: #ffffff;
+		-moz-border-radius: 5px;
+		-webkit-border-radius: 5px;
+		border-radius: 5px;
+	}
+	.feedback { font-size: 1.4em; }
+	.selectable .ui-selecting {
+		background:url("../../images/homeImg/selected.jpg") no-repeat;
+		color:red;
+	}
+	.selectable .ui-selected {
+		background:url("../../images/homeImg/selected.jpg") no-repeat;
+		color: #ffffff;
+		border:none !important;
+	 }
+	.selectable { list-style-type: none; margin: 0; padding: 0; width: 100%;}
+	.selectable li {
+	 	margin: 3px;  height: 18px;
+	 	border:none !important;
+	 	padding:5px;
+	 	padding-left:26px !important;
+	 	font-size: 14px !important;
+
+	 }
+	.submenu{padding:5px !important;}
+
+	.tabs{
+		wid1th:100%;
+		heig1ht:100%;
+	}
+	.ui-tabs .ui-tabs-panel {
+		display: block;
+		position: absolute;
+		top: 40px;
+		left: 2px;
+		right: 2px;
+		bottom: 5px;
+		padding:1px;
+	}
+
+	.maskDiv{
+		display: block;
+		position: absolute;
+		z-index:10000;
+		width:100%;
+		height:100%;
+		top:0px;
+		left:0px;
+		right:0px;
+		bottom:0px;
+		background: rgba(248, 248, 247, 0);
+		display:none;
+		cursor: w-resize;
+	}
+	.ui-widget-content{
+		background: #ffffff;
+	}
+
+	.ui-accordion .ui-accordion-header{
+		margin:4px 0 0 0;
+	}

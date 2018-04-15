@@ -1,0 +1,44 @@
+.message-success {
+ background-image: url("icon/success.png");
+
+}
+.message-info {
+    background: url('icon/info.png')  no-repeat;
+
+}
+.message-question {
+    background: url('icon/question.png')  no-repeat;
+
+}
+.message-warn {
+    background: url('icon/warn.png')  no-repeat;
+
+}
+.message-error {
+    background: url('icon/error.png')  no-repeat;
+
+}
+.message-icon{
+    width: 24px;
+    height: 24px;
+    float: left;
+    margin-right: 5px;
+}
+.ui-dialog{
+	padding:0px;	
+}
+.ui-icon-minthick{
+	  background-position: -64px -128px
+}
+.ui-icon-minspread{
+	   background-position: -177px -128px;
+}
+
+.ui-dialog .ui-dialog-titlebar-min {
+  position: absolute;
+  right: 25px;
+  top: 50%;
+  width: 20px;
+  margin: -10px 0 0 0;
+  padding: 1px;
+  height: 20px;

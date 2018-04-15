@@ -1,0 +1,38 @@
+.expendTitle{
+	padding: 2px;
+	height: 24px;
+	background: #459BE4;
+	font-size: 15px;
+	padding-left:5px;
+	border-bottom:1px solid #5588AD;
+}
+.expendTitle .title{
+	float:left;
+	padding:3px;
+}
+.expendTitle .btn{
+	float:right;
+	width:19px;
+	height:19px;
+	background:url("../../images/maxOrMin.png");
+	background-position: 0px 0px;
+}
+
+.expendTitle .editBtn{
+	float:right;
+	margin:2px 15px;
+	display:inline-block;
+}
+
+.bigBtn{
+	background-position: -19px  0px !important;
+}
+.expendContent{
+	position:absolute;
+	top:30px;
+	bottom:2px;
+	left:2px;
+	right:2px;
+	overflow:auto;
+	background: #E8F2F5;
+}

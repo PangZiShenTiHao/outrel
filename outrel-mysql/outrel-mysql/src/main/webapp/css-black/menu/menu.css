@@ -1,0 +1,62 @@
+.menu-two  a,.menu-two  a:link,.menu-two  a:visited {color: #ccc; text-decoration: none;}
+.menu-two > li {   
+	    list-style: none;
+	    height: auto;
+	    margin: auto;
+	    overflow: hidden;
+	    padding: 0;
+}
+.menu-two > li.firstChild {border: 0;}
+.menu-two .two-header {
+	position:relative;
+	height: 45px;
+    background: #1A1C20;
+    line-height: 45px;
+    text-indent: 15px;
+    cursor: pointer;
+    overflow:hidden;
+}
+.menu-two .two-header:hover,
+.menu-show .two-header {background: #272930;}
+.menu-two .two-header > span {display: block;}
+.menu-two .two-header .txt {float: left; color: #b5bedd;margin-left: 40px;font-size: 14px;}
+.menu-two .two-header:hover .txt ,.menu-two .menu-show-li .txt { color: #b5bebc;}
+.menu-two .two-header .arrow { 
+	width: 0;
+    height: 0;
+    display: inline-block;
+    border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+    border-left: 4px solid #3d80b3;
+    position: absolute;
+    top: 20px;
+    left: 38px;
+}
+.menu-three {display: none;  height: auto;}
+.menu-three li { 
+	height: 45px;
+    background: #232121;
+    /* border-bottom: 1px solid #353333; */
+    color: #b5bedd;
+    cursor: pointer;
+    line-height: 45px;
+    text-indent: 40px;
+    padding-left: 25px;
+}
+.menu-three li.firstChild {border: 0;}
+.menu-three li a {display: block; color: #888;}
+.menu-three li:hover,
+.menu-three li.menu-show-li {background: #272930;color:#b5bebc}
+.menu-show .two-header .arrow {
+	border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 4px solid #fff;
+}
+.ui-accordion .ui-accordion-header{
+    margin-top: 5px;
+}
+.ui-widget-content{
+    border: 1px solid #aed0eb;
+    background: #fff;
+}
+

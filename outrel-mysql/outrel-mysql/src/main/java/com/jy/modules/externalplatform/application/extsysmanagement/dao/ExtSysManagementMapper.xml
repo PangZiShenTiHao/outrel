@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jy.modules.externalplatform.application.extsysmanagement.dao.ExtSysManagementDao">
+<resultMap id="ExtSysManagementDTO" type="com.jy.modules.externalplatform.application.extsysmanagement.dto.ExtSysManagementDTO">
+				<result property="id" column="ID" jdbcType="DECIMAL" />
+				<result property="sysCode" column="SYS_CODE" jdbcType="VARCHAR" />
+				<result property="sysName" column="SYS_NAME" jdbcType="VARCHAR" />
+				<result property="validateState" column="VALIDATE_STATE" jdbcType="VARCHAR" />
+				<result property="createBy" column="CREATE_BY" jdbcType="DECIMAL" />
+				<result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP" />
+				<result property="modifyBy" column="MODIFY_BY" jdbcType="DECIMAL" />
+				<result property="modifyTime" column="MODIFY_TIME" jdbcType="TIMESTAMP" />
+</resultMap>
+				
+<!-- 分页查询 EXT_SYS_MANAGEMENT -->	
+<select id="searchExtSysManagementByPaging" parameterType="java.util.Map" resultMap="ExtSysManagementDTO">
+    	 		select 
+						t1.id                             ,
+						t1.sys_code                       ,
+						t1.sys_name                       ,
+						t1.validate_state                 ,
+						t1.create_by                      ,
+						t1.create_time                    ,
+						t1.modify_by                      ,  
+						t1.modify_time         
+				from ext_sys_management 	t1
+				where 1=1
+    			<if test="dto.id != null and dto.id != ''">
+						and t1.ID =#{dto.id}
+    			</if>
+    			<if test="dto.sysCode != null and dto.sysCode != ''">
+						and t1.SYS_CODE =#{dto.sysCode}
+    			</if>
+    			<if test="dto.sysName != null and dto.sysName != ''">
+						and t1.SYS_NAME like '%'||#{dto.sysName}||'%'
+    			</if>
+    			<if test="dto.validateState != null and dto.validateState != ''">
+						and t1.VALIDATE_STATE =#{dto.validateState}
+    			</if>
+				
+				order by t1.id desc
+</select>
+  
+<!-- 查询列表 EXT_SYS_MANAGEMENT  -->
+<select id="searchExtSysManagement" parameterType="java.util.Map" resultMap="ExtSysManagementDTO">
+    	     select 
+						t1.id                             ,
+						t1.sys_code                       ,
+						t1.sys_name                       ,
+						t1.validate_state                 ,
+						t1.create_by                      ,
+						t1.create_time                    ,
+						t1.modify_by                      ,  
+						t1.modify_time     
+				from ext_sys_management 		t1
+				where 1=1
+    			<if test="dto.id != null and dto.id != ''">
+						and t1.ID = #{dto.id}
+    			</if>
+    			<if test="dto.sysCode != null and dto.sysCode != ''">
+						and t1.SYS_CODE = #{dto.sysCode}
+    			</if>
+    			<if test="dto.sysName != null and dto.sysName != ''">
+						and t1.SYS_NAME like '%'||#{dto.sysName}||'%'
+    			</if>
+    			<if test="dto.validateState != null and dto.validateState != ''">
+						and t1.VALIDATE_STATE = #{dto.validateState}
+    			</if>
+</select>
+   
+<!-- 查询处于有效状态的系统类型列表 -->
+<select id="searchExtValidSysManagement" resultMap="ExtSysManagementDTO">
+            SELECT 
+				T1.ID                             ,
+				T1.SYS_CODE                       ,
+				T1.SYS_NAME                       ,
+				T1.VALIDATE_STATE                 
+			FROM EXT_SYS_MANAGEMENT 		T1
+			WHERE T1.VALIDATE_STATE = '1'
+</select>
+
+<!-- 主键查询对象  EXT_SYS_MANAGEMENT -->
+<select id="findExtSysManagementByPrimaryKey" parameterType="java.util.Map" resultMap="ExtSysManagementDTO">
+   	 		select 
+					t1.id                             ,
+					t1.sys_code                       ,
+					t1.sys_name                       ,
+					t1.validate_state                 ,
+					t1.create_by                      ,
+					t1.create_time                    ,
+					t1.modify_by                      ,  
+					t1.modify_time     
+			from ext_sys_management 		t1
+			where 
+				t1.id = #{id}
+</select>
+  
+<!-- 新增对象 EXT_SYS_MANAGEMENT -->
+<insert id="insertExtSysManagement" parameterType="java.util.Map" useGeneratedKeys="true">
+
+			insert into ext_sys_management
+			(   		
+
+					sys_code                       ,
+					sys_name                       ,
+					validate_state                 ,	
+					create_by                      ,
+					create_time                    
+					
+			)
+			values(#{dto.sysCode,jdbcType=VARCHAR}
+					,#{dto.sysName,jdbcType=VARCHAR}
+					,'1'
+					,#{dto.createBy,jdbcType=DECIMAL}
+					,sysdate()
+			)
+</insert>
+    
+<!-- 更新对象 EXT_SYS_MANAGEMENT -->
+<update id="updateExtSysManagement" parameterType="java.util.Map">
+	     update ext_sys_management t1
+	           set 
+			           t1.sys_code                       =#{dto.sysCode,jdbcType=VARCHAR},
+			           t1.sys_name                       =#{dto.sysName,jdbcType=VARCHAR},
+			           t1.validate_state                 =#{dto.validateState,jdbcType=VARCHAR},
+			           t1.modify_by                      =#{dto.modifyBy,jdbcType=DECIMAL},
+			           t1.modify_time                    =sysdate()
+	     where t1.id = #{dto.id}
+</update>
+   
+<!-- 主键删除 EXT_SYS_MANAGEMENT -->
+<delete id="deleteExtSysManagementByID" parameterType="java.util.Map">
+    	delete t1 from ext_sys_management t1 where t1.ID in (${ids} )
+</delete>
+<!-- 主键假删除 EXT_SYS_MANAGEMENT -->
+<update id="deleteExtSysManagementByPrimaryKey" parameterType="java.util.Map">
+	     update ext_sys_management t1
+	           set   t1.validate_state='0'	
+	     where t1.id in( ${ids})
+</update>
+</mapper>

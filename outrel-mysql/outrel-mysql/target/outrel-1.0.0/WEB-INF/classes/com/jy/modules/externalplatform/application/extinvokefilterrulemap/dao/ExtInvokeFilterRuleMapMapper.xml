@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jy.modules.externalplatform.application.extinvokefilterrulemap.dao.ExtInvokeFilterRuleMapDao">
+<resultMap id="ExtInvokeFilterRuleMapDTO" type="com.jy.modules.externalplatform.application.extinvokefilterrulemap.dto.ExtInvokeFilterRuleMapDTO">
+				<result property="id" column="ID" jdbcType="DECIMAL" />
+				<result property="ruleId" column="RULE_ID" jdbcType="DECIMAL" />
+				<result property="mapType" column="MAP_TYPE" jdbcType="VARCHAR" />
+				<result property="mapCode" column="MAP_CODE" jdbcType="VARCHAR" />
+				<result property="remark" column="REMARK" jdbcType="VARCHAR" />
+				<result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP" />
+				<result property="modifyTime" column="MODIFY_TIME" jdbcType="TIMESTAMP" />
+</resultMap>
+				
+<!-- 查询列表 EXT_INVOKE_FILTER_RULE_MAP  -->
+<select id="searchExtInvokeFilterRuleMap" parameterType="java.util.Map" resultMap="ExtInvokeFilterRuleMapDTO">
+    	     select 
+						t1.id                             ,
+						t1.rule_id                        ,
+						t1.map_type                       ,
+						t1.map_code                       ,
+						t1.create_time                    ,
+						t1.modify_time     
+				from ext_invoke_filter_rule_map 		t1
+				where 1=1
+    			<if test="dto.id != null and dto.id != ''">
+						and t1.ID = #{dto.id}
+    			</if>
+    			<if test="dto.ruleId != null and dto.ruleId != ''">
+						and t1.RULE_ID = #{dto.ruleId}
+    			</if>
+    			<if test="dto.mapType != null and dto.mapType != ''">
+						and t1.MAP_TYPE = #{dto.mapType}
+    			</if>
+    			<if test="dto.mapCode != null and dto.mapCode != ''">
+						and t1.MAP_CODE = #{dto.mapCode}
+    			</if>
+</select>
+  
+<!-- 获取指定规则的机构信息 -->
+<select id="queryOrgListByRuleId" parameterType="java.util.Map" resultType="java.util.Map">
+		select t1.id as MAP_ID,
+		       t1.rule_id,
+		       t1.map_type,
+		       o1.org_code storeCode,
+		       o1.org_name storeName,
+		       o2.org_code subsectionCode,
+		       o2.org_name subsectionName,
+		       o3.org_code branchCode,
+		       o3.org_name branchName
+		  from ext_invoke_filter_rule_map t1
+		  left join sys_org o1
+		    on t1.map_code = o1.org_code
+		  left join sys_org o2
+		    on o2.id = o1.parent_id
+		  left join sys_org o3
+		    on o3.id = o2.parent_id
+		 where t1.rule_id =  #{ruleId}
+		   and t1.map_type = #{mapType}
+</select>
+
+<select id="queryFuncListByRuleId" parameterType="java.util.Map" resultType="java.util.Map">
+         select 
+               t1.id as MAP_ID,
+		       t1.rule_id,
+		       t1.map_type,
+		       f1.func_type_code FUNC_CODE,
+		       f1.func_type_name FUNC_NAME,
+		       f2.func_type_code FUNC_TYPE_CODE,
+		       f2.func_type_name FUNC_TYPE_NAME,
+		       CASE WHEN f3.func_type_CODE='ROOT' THEN '' ELSE f3.func_type_code  END AS FUNC_MODULE_CODE,
+		       CASE WHEN f3.func_type_name='功能类型' THEN '' ELSE f3.func_type_name END AS FUNC_MODULE_NAME
+		  from ext_invoke_filter_rule_map t1
+		  left join ext_function_type f1
+		    on t1.map_code = f1.func_type_code 
+		  left join ext_function_type f2
+		    on f2.id = f1.parent_id
+		  left join ext_function_type f3
+		    on f3.id = f2.parent_id
+		 where t1.rule_id =  #{ruleId}
+		   and t1.map_type = #{mapType}
+</select>
+
+<!-- 新增对象 EXT_INVOKE_FILTER_RULE_MAP -->
+<insert id="insertExtInvokeFilterRuleMap" parameterType="java.util.Map" useGeneratedKeys="true">
+
+			insert into ext_invoke_filter_rule_map
+			(   		
+
+					rule_id                        ,
+					map_type                       ,
+					map_code                       ,
+					create_time 
+			)
+			values(#{dto.ruleId,jdbcType=DECIMAL}
+					,#{dto.mapType,jdbcType=VARCHAR}
+					,#{dto.mapCode,jdbcType=VARCHAR}
+					,sysdate()
+			)
+</insert>
+
+  
+<!-- 批量保存 -->
+<insert id="batchInsertRuleMap" parameterType="java.util.Map">
+
+		insert into ext_invoke_filter_rule_map
+			(   		
+
+					rule_id                        ,
+					map_type                       ,
+					map_code                       ,
+					create_time 
+			)
+			values
+	<foreach collection="list" item="mapCode">
+		(#{ruleId}
+					,#{mapType}
+					,#{mapCode}
+					,sysdate()
+			);
+	</foreach>
+</insert>
+   
+<delete id="deleteExtInvokeFilterRuleMapByRuleId" parameterType="java.util.Map">
+    	delete t1 from ext_invoke_filter_rule_map t1
+    	where  1=1
+    	<if test="ruleId != null and ruleId != ''">
+    	  and t1.rule_id in (${ruleId})
+    	</if> 
+    	<if test="mapType != null and mapType != ''">
+    	  and t1.map_type = #{mapType}
+    	</if> 
+</delete>
+
+<!-- 主键删除 EXT_INVOKE_FILTER_RULE_MAP -->
+<delete id="deleteExtInvokeFilterRuleMapByID" parameterType="java.util.Map">
+    	delete  from ext_invoke_filter_rule_map  where id in (${ids} )
+</delete>
+</mapper>

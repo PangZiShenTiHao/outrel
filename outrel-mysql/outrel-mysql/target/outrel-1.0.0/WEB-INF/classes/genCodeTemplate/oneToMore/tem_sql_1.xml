@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap >
+<resultMap id="${productCodeDTO.dtoClassName}" class="${productCodeDTO.dtoPackageName}.${productCodeDTO.dtoClassName}">
+			<#list dataInfoList as dataInfo>
+				<result property="${dataInfo.DTO_COLUMN_NAME?replace("dto.","")}" column="${dataInfo.COLUMN_NAME?replace(" ","")}" />
+			</#list>
+</resultMap>
+
+  <select id="query_list_of_${productCodeDTO.lower_tab_name}_by_page" parameterClass="java.util.HashMap" resultClass="java.util.HashMap" >
+   SELECT TEMP.* FROM (
+         select  ROWNUM NUM,
+                 T.*,
+                 count(1) over() totalRecordNum
+    	 from(
+    	 		select 
+			    	<#list dataInfoList as dataInfo>
+						t1.${dataInfo.FORMAT_COLUMN_NAME}
+					</#list>
+					
+				from ${productCodeDTO.lower_tab_name} 		t1
+				where t1.validate_state='1'
+				<#list dataInfoList as dataInfo>
+					<isNotEmpty property="${dataInfo.DTO_COLUMN_NAME}">
+						  <![CDATA[and t1.${dataInfo.COLUMN_NAME} =#${dataInfo.DTO_COLUMN_NAME}#]]>
+					</isNotEmpty>
+				</#list>
+				
+				order by t1.id desc
+				
+		     ) T
+		) TEMP
+		
+		<isNotNull property="pager">
+				  <![CDATA[WHERE TEMP.NUM > #pager.offset# and TEMP.NUM <= (#pager.pageSize#+#pager.offset#)]]>
+		</isNotNull>
+  </select>
+  
+  
+  <select id="query_one_${productCodeDTO.lower_tab_name}" parameterClass="java.util.HashMap" resultMap="${productCodeDTO.dtoClassName}" >
+    	 		select 
+			    	<#list dataInfoList as dataInfo>
+						t1.${dataInfo.FORMAT_COLUMN_NAME}
+					</#list>
+				from ${productCodeDTO.lower_tab_name} 		t1
+				where t1.validate_state='1'
+				<isNotEmpty property="dto.id">
+						  <![CDATA[and t1.id =#dto.id#]]>
+				</isNotEmpty>
+  </select>
+  
+  
+  <insert id="add_${productCodeDTO.lower_tab_name}" parameterClass="java.util.HashMap">
+	<selectKey resultClass="java.lang.String" keyProperty="id" >
+				select seq_${productCodeDTO.lower_tab_name}.nextval from dual
+	</selectKey>
+		<![CDATA[
+		insert into ${productCodeDTO.lower_tab_name}
+		(   		
+			<#list dataInfoList as dataInfo>
+				${dataInfo.FORMAT_COLUMN_NAME}
+			</#list>
+		)
+		values(#id#
+			<#list dataInfoList as dataInfo>
+				<#if dataInfo.TEMP_ROWNUM == 'IS_NOT_ID'>
+					,#${dataInfo.DTO_COLUMN_NAME}#
+				</#if>
+			</#list>
+		)
+		]]>
+	</insert>
+  
+  
+    <update id="update_${productCodeDTO.lower_tab_name}" parameterClass="java.util.HashMap">
+    <![CDATA[  
+       update ${productCodeDTO.lower_tab_name} t1
+       set 
+       <#list dataInfoList as dataInfo>
+      	 	<#if dataInfo.TEMP_ROWNUM == 'IS_NOT_ID'>
+		t1.${dataInfo.COLUMN_NAME}=#${dataInfo.DTO_COLUMN_NAME}#<#if dataInfo.IS_LAST == 'N'>, </#if>
+			</#if>
+		</#list>
+				
+       where t1.id=#dto.id#
+    ]]>
+  </update>
+  
+  <update id="delete_${productCodeDTO.lower_tab_name}" parameterClass="java.util.HashMap">
+    <![CDATA[  
+       update ${productCodeDTO.lower_tab_name} t1
+       set 
+       t1.validate_state='0'
+       where t1.id in ($ids$)
+    ]]>
+  </update>
+  
+</sqlMap>

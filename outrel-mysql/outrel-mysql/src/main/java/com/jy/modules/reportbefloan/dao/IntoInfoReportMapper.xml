@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jy.modules.reportbefloan.dao.IntoInfoReportDao">
+				
+<!-- 分页查询 -->	
+<select id="queryIntoInfoListByPage" parameterType="java.util.Map" resultType="java.util.Map">
+	SELECT TEMP.* FROM (
+	    SELECT  ROWNUM ROW_ID,
+	    T.*,
+	    count(1) over() totalCount
+	    FROM(
+				select to_char(t1.id) into_id,
+				       to_char(t2.id) into_cust_ref_id,
+				       to_char(t3.id) cust_id,
+				       t3.cust_code,
+				       t3.cust_name,
+				       t3.card_type,
+				       t3.card_id,
+				       to_char(t1.create_time, 'yyyy-mm-dd hh24:mi:ss') into_time,
+				       t1.app_product_type,
+				       t4.product_name,
+				       t1.loan_purpose,
+				       t1.min_app_amount,
+				       t1.max_app_amount,
+				       decode(t1.appr_type,'1','新申请','3','复议','') appr_type,
+				       t1.customer_service,
+				       t1.customer_manager,
+				       t1.accept_store,
+				       t1.loan_bank,
+				       t1.loan_bank_account,
+				       t1.receive_bank,
+				       t1.receive_bank_account
+				  from lb_t_into_info t1
+				  left join lb_t_product_conf t4
+				    on t1.app_product_type = t4.id, lb_t_into_customer_ref t2,
+				 lb_t_customter_info t3
+				 where t1.id = t2.fk_into_app_id
+				   and t3.id = t2.fk_cust_id
+				   and t2.main_or_sub = '1'
+				   and t3.validate_state = '1'
+				order by t1.id asc
+		) T
+    	) TEMP
+	    <if test="page != null" >    
+	            <![CDATA[WHERE TEMP.ROW_ID > #{beginrow} AND ROW_ID <= #{endrow}]]>
+         </if>
+</select>
+<!-- 根据进件-客户ID获取[上海资信]的报告查询信息 -->
+<select id="findPersonalReportByIntoCustRefId" parameterType="java.util.Map" resultType="java.util.Map">
+		select id, object_id, loan_count
+		  from (select id,
+		               object_id,
+		               loan_count,
+		               row_number() over(partition by object_id order by id desc) rn
+		          from lb_t_personal_report
+		         where error is null
+		           and object_id = #{intoCustRefId})
+		 where rn = 1
+</select>
+
+<!-- 根据进件-客户ID获取[百融]的报告查询信息 -->
+<select id="findBrReportByIntoCustRefId" parameterType="java.util.Map" resultType="java.util.Map">
+		select id, object_id
+		  from (select id,
+		               object_id,
+		               row_number() over(partition by object_id order by id desc) rn
+		          from lb_t_br_report
+		         where error is null
+		           and object_id = #{intoCustRefId})
+		 where rn = 1
+</select>
+<!-- 根据进件-客户ID获取[信审表]的信息 -->
+<select id="findCreditAuditByIntoCustRefId" parameterType="java.util.Map" resultType="java.util.Map">
+		select industry_name
+		  from (select si3.industry_name,
+		               cai.fk_into_cust_ref_id,
+		               row_number() over(partition by cai.fk_into_cust_ref_id order by cai.id desc) rn
+		          from lb_t_credit_audit_info cai, sys_industry si3
+		         where cai.company_industry = si3.industry_code
+		           and cai.fk_into_cust_ref_id = #{intoCustRefId})
+		 where rn = 1
+</select>
+
+<update id="deleteAll">
+	TRUNCATE TABLE RPT_INTO_INFO 
+</update>
+
+<update id="deleteRptIntoInfoByRptDate">
+	DELETE FROM RPT_INTO_INFO WHERE REPORT_DATE = #{reportDate} 
+</update>
+
+<!-- 批量插入进件基本信息报表数据 -->
+<update id="batchInsertIntoInfoReport">
+	BEGIN
+		<foreach collection="dataList" item="dto">
+			INSERT INTO RPT_INTO_INFO
+			  (ID,
+			   INTO_ID,
+			   CUST_NAME,
+			   CARD_TYPE,
+			   CARD_ID,
+			   INDUSTRY_NAME,
+			   INTO_TIME,
+			   PRODUCT_NAME,
+			   LOAN_PURPOSE,
+			   MIN_APP_AMOUNT,
+			   MAX_APP_AMOUNT,
+			   APPR_TYPE,
+			   CUSTOMER_SERVICE,
+			   CUSTOMER_MANAGER,
+			   ACCEPT_STORE,
+			   HAS_PERSONAL_REPORT,
+			   LOAN_COUNT,
+			   HAS_BR_REPORT,
+			   LOAN_BANK,
+			   LOAN_BANK_ACCOUNT,
+			   RECEIVE_BANK,
+			   RECEIVE_BANK_ACCOUNT,
+			   REPORT_DATE,
+			   CREATE_TIME
+			)
+			VALUES
+			  (SEQ_RPT_INTO_INFO.nextval,
+			   #{dto.INTO_ID,jdbcType=VARCHAR},
+			   #{dto.CUST_NAME,jdbcType=VARCHAR},
+			   #{dto.CARD_TYPE,jdbcType=VARCHAR},
+			   #{dto.CARD_ID,jdbcType=VARCHAR},
+			   #{dto.INDUSTRY_NAME,jdbcType=VARCHAR},
+			   #{dto.INTO_TIME,jdbcType=VARCHAR},
+			   #{dto.PRODUCT_NAME,jdbcType=VARCHAR},
+			   #{dto.LOAN_PURPOSE,jdbcType=VARCHAR},
+			   #{dto.MIN_APP_AMOUNT,jdbcType=VARCHAR},
+			   #{dto.MAX_APP_AMOUNT,jdbcType=VARCHAR},
+			   #{dto.APPR_TYPE,jdbcType=VARCHAR},
+			   #{dto.CUSTOMER_SERVICE,jdbcType=VARCHAR},
+			   #{dto.CUSTOMER_MANAGER,jdbcType=VARCHAR},
+			   #{dto.ACCEPT_STORE,jdbcType=VARCHAR},
+			   nvl2(#{dto.HAS_PERSONAL_REPORT,jdbcType=VARCHAR},'是','否'),
+			   nvl(#{dto.LOAN_COUNT,jdbcType=VARCHAR},0),
+			   nvl2(#{dto.HAS_BR_REPORT,jdbcType=VARCHAR},'是','否'),
+			   #{dto.LOAN_BANK,jdbcType=VARCHAR},
+			   #{dto.LOAN_BANK_ACCOUNT,jdbcType=VARCHAR},
+			   #{dto.RECEIVE_BANK,jdbcType=VARCHAR},
+			   #{dto.RECEIVE_BANK_ACCOUNT,jdbcType=VARCHAR},
+			   TO_CHAR(SYSDATE,'YYYY-MM-DD'),
+			   sysdate()
+			   );			
+		</foreach>
+	END;
+</update>
+
+
+</mapper>

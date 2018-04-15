@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jy.modules.befloan.productconf.lbtproductflowconf.dao.LbTProductFlowConfDao">
+<resultMap id="LbTProductFlowConfDTO" type="com.jy.modules.befloan.productconf.lbtproductflowconf.dto.LbTProductFlowConfDTO">
+				<result property="id" column="ID" jdbcType="DECIMAL" />
+				<result property="fkProConfId" column="FK_PRO_CONF_ID" jdbcType="VARCHAR" />
+				<result property="creditAuditFlowCode" column="CREDIT_AUDIT_FLOW_CODE" jdbcType="VARCHAR" />
+				<result property="reconsiderationFlowCode" column="RECONSIDERATION_FLOW_CODE" jdbcType="VARCHAR" />
+				<result property="auditFlowCode" column="AUDIT_FLOW_CODE" jdbcType="VARCHAR" />
+				<result property="creditApproveAutoPass" column="CREDIT_APPROVE_AUTO_PASS" jdbcType="VARCHAR" />
+				<result property="creditApproveAutoReject" column="CREDIT_APPROVE_AUTO_REJECT" jdbcType="VARCHAR" />
+				<result property="contractApproveAutoPass" column="CONTRACT_APPROVE_AUTO_PASS" jdbcType="VARCHAR" />
+				<result property="ext1" column="EXT1" jdbcType="VARCHAR" />
+				<result property="ext2" column="EXT2" jdbcType="VARCHAR" />
+				<result property="ext3" column="EXT3" jdbcType="VARCHAR" />
+				<result property="ext4" column="EXT4" jdbcType="VARCHAR" />
+				<result property="adjustMoneyPeroid" column="ADJUST_MONEY_PEROID" jdbcType="VARCHAR" />
+				<result property="ext5" column="EXT5" jdbcType="VARCHAR" />
+				<result property="adjustLargeMoney" column="ADJUST_LARGE_MONEY" jdbcType="VARCHAR" />
+				<result property="adjustLittleMoney" column="ADJUST_LITTLE_MONEY" jdbcType="VARCHAR" />
+				<result property="adjustLargePeroid" column="ADJUST_LARGE_PEROID" jdbcType="VARCHAR" />
+				<result property="adjustLittlePeroid" column="ADJUST_LITTLE_PEROID" jdbcType="VARCHAR" />
+</resultMap>
+				
+<!-- 分页查询 LB_T_PRODUCT_FLOW_CONF -->	
+<select id="searchLbTProductFlowConfByPaging" parameterType="java.util.Map" resultMap="LbTProductFlowConfDTO">
+    	 		select 
+						t1.id                             ,
+						t1.fk_pro_conf_id                 ,
+						t1.credit_audit_flow_code         ,
+						t1.reconsideration_flow_code      ,
+						t1.audit_flow_code                ,
+						t1.credit_approve_auto_pass       ,
+						t1.credit_approve_auto_reject     ,
+						t1.contract_approve_auto_pass     ,
+						t1.ext1                           ,
+						t1.ext2                           ,
+						t1.ext3                           ,
+						t1.adjust_money_peroid            ,
+						t1.ext4                           ,
+						t1.adjust_large_money             ,     
+						t1.adjust_little_money            ,     
+						t1.adjust_large_peroid            ,     
+						t1.adjust_little_peroid           ,    
+						t1.ext5                           
+					
+				from lb_t_product_flow_conf 	t1
+				where 1=1
+    			<if test="dto.id != null and dto.id != ''">
+						and t1.ID =#{dto.id}
+    			</if>
+    			<if test="dto.fkProConfId != null and dto.fkProConfId != ''">
+						and t1.FK_PRO_CONF_ID =#{dto.fkProConfId}
+    			</if>
+    			<if test="dto.creditAuditFlowCode != null and dto.creditAuditFlowCode != ''">
+						and t1.CREDIT_AUDIT_FLOW_CODE =#{dto.creditAuditFlowCode}
+    			</if>
+    			<if test="dto.reconsiderationFlowCode != null and dto.reconsiderationFlowCode != ''">
+						and t1.RECONSIDERATION_FLOW_CODE =#{dto.reconsiderationFlowCode}
+    			</if>
+    			<if test="dto.auditFlowCode != null and dto.auditFlowCode != ''">
+						and t1.AUDIT_FLOW_CODE =#{dto.auditFlowCode}
+    			</if>
+    			<if test="dto.creditApproveAutoPass != null and dto.creditApproveAutoPass != ''">
+						and t1.CREDIT_APPROVE_AUTO_PASS =#{dto.creditApproveAutoPass}
+    			</if>
+    			<if test="dto.creditApproveAutoReject != null and dto.creditApproveAutoReject != ''">
+						and t1.CREDIT_APPROVE_AUTO_REJECT =#{dto.creditApproveAutoReject}
+    			</if>
+    			<if test="dto.contractApproveAutoPass != null and dto.contractApproveAutoPass != ''">
+						and t1.CONTRACT_APPROVE_AUTO_PASS =#{dto.contractApproveAutoPass}
+    			</if>
+    			<if test="dto.ext1 != null and dto.ext1 != ''">
+						and t1.EXT1 =#{dto.ext1}
+    			</if>
+    			<if test="dto.ext2 != null and dto.ext2 != ''">
+						and t1.EXT2 =#{dto.ext2}
+    			</if>
+    			<if test="dto.ext3 != null and dto.ext3 != ''">
+						and t1.EXT3 =#{dto.ext3}
+    			</if>
+    			<if test="dto.ext4 != null and dto.ext4 != ''">
+						and t1.EXT4 =#{dto.ext4}
+    			</if>
+				<if test="dto.adjustMoneyPeroid != null and dto.adjustMoneyPeroid != ''">
+						and t1.ADJUST_MONEY_PEROID =#{dto.adjustMoneyPeroid}
+    			</if>
+    			<if test="dto.ext5 != null and dto.ext5 != ''">
+						and t1.EXT5 =#{dto.ext5}
+    			</if>
+    			<if test="dto.adjustLargeMoney != null and dto.adjustLargeMoney != ''">
+						and t1.ADJUST_LARGE_MONEY =#{dto.adjustLargeMoney}
+    			</if>
+    			<if test="dto.adjustLittleMoney != null and dto.adjustLittleMoney != ''">
+						and t1.ADJUST_LITTLE_MONEY =#{dto.adjustLittleMoney}
+    			</if>
+    			<if test="dto.adjustLargePeroid != null and dto.adjustLargePeroid != ''">
+						and t1.ADJUST_LARGE_PEROID =#{dto.adjustLargePeroid}
+    			</if>
+    			<if test="dto.adjustLittlePeroid != null and dto.adjustLittlePeroid != ''">
+						and t1.ADJUST_LITTLE_PEROID =#{dto.adjustLittlePeroid}
+    			</if>
+				order by t1.id desc
+</select>
+  
+<!-- 查询列表 LB_T_PRODUCT_FLOW_CONF  -->
+<select id="searchLbTProductFlowConf" parameterType="java.util.Map" resultMap="LbTProductFlowConfDTO">
+    	     select 
+						t1.id                             ,
+						t1.fk_pro_conf_id                 ,
+						t1.credit_audit_flow_code         ,
+						t1.reconsideration_flow_code      ,
+						t1.audit_flow_code                ,
+						t1.credit_approve_auto_pass       ,
+						t1.credit_approve_auto_reject     ,
+						t1.contract_approve_auto_pass     ,
+						t1.ext1                           ,
+						t1.ext2                           ,
+						t1.ext3                           ,
+						t1.adjust_money_peroid            ,
+						t1.ext4                           ,
+						t1.adjust_large_money             ,                 
+   						t1.adjust_little_money            ,     
+   						t1.adjust_large_peroid            ,     
+   						t1.adjust_little_peroid           , 
+						t1.ext5                           
+				from lb_t_product_flow_conf 		t1
+				where 1=1
+    			<if test="dto.id != null and dto.id != ''">
+						and t1.ID = #{dto.id}
+    			</if>
+    			<if test="dto.fkProConfId != null and dto.fkProConfId != ''">
+						and t1.FK_PRO_CONF_ID = #{dto.fkProConfId}
+    			</if>
+    			<if test="dto.creditAuditFlowCode != null and dto.creditAuditFlowCode != ''">
+						and t1.CREDIT_AUDIT_FLOW_CODE = #{dto.creditAuditFlowCode}
+    			</if>
+    			<if test="dto.reconsiderationFlowCode != null and dto.reconsiderationFlowCode != ''">
+						and t1.RECONSIDERATION_FLOW_CODE = #{dto.reconsiderationFlowCode}
+    			</if>
+    			<if test="dto.auditFlowCode != null and dto.auditFlowCode != ''">
+						and t1.AUDIT_FLOW_CODE = #{dto.auditFlowCode}
+    			</if>
+    			<if test="dto.creditApproveAutoPass != null and dto.creditApproveAutoPass != ''">
+						and t1.CREDIT_APPROVE_AUTO_PASS = #{dto.creditApproveAutoPass}
+    			</if>
+    			<if test="dto.creditApproveAutoReject != null and dto.creditApproveAutoReject != ''">
+						and t1.CREDIT_APPROVE_AUTO_REJECT = #{dto.creditApproveAutoReject}
+    			</if>
+    			<if test="dto.contractApproveAutoPass != null and dto.contractApproveAutoPass != ''">
+						and t1.CONTRACT_APPROVE_AUTO_PASS = #{dto.contractApproveAutoPass}
+    			</if>
+    			<if test="dto.ext1 != null and dto.ext1 != ''">
+						and t1.EXT1 = #{dto.ext1}
+    			</if>
+    			<if test="dto.ext2 != null and dto.ext2 != ''">
+						and t1.EXT2 = #{dto.ext2}
+    			</if>
+    			<if test="dto.ext3 != null and dto.ext3 != ''">
+						and t1.EXT3 = #{dto.ext3}
+    			</if>
+    			<if test="dto.ext4 != null and dto.ext4 != ''">
+						and t1.EXT4 = #{dto.ext4}
+    			</if>
+    			<if test="dto.adjustMoneyPeroid != null and dto.adjustMoneyPeroid != ''">
+						and t1.ADJUST_MONEY_PEROID =#{dto.adjustMoneyPeroid}
+    			</if>
+    			<if test="dto.ext5 != null and dto.ext5 != ''">
+						and t1.EXT5 =#{dto.ext5}
+    			</if>
+    			<if test="dto.adjustLargeMoney != null and dto.adjustLargeMoney != ''">              
+   						and t1.ADJUST_LARGE_MONEY =#{dto.adjustLargeMoney}                       
+       			</if>                                                                      
+       			<if test="dto.adjustLittleMoney != null and dto.adjustLittleMoney != ''">  
+   						and t1.ADJUST_LITTLE_MONEY =#{dto.adjustLittleMoney}                     
+       			</if>                                                                      
+       			<if test="dto.adjustLargePeroid != null and dto.adjustLargePeroid != ''">  
+   						and t1.ADJUST_LARGE_PEROID =#{dto.adjustLargePeroid}                     
+       			</if>                                                                      
+       			<if test="dto.adjustLittlePeroid != null and dto.adjustLittlePeroid != ''">
+   						and t1.ADJUST_LITTLE_PEROID =#{dto.adjustLittlePeroid}                   
+       			</if>
+</select>
+  
+<!-- 主键查询对象  LB_T_PRODUCT_FLOW_CONF -->
+<select id="findLbTProductFlowConfByPrimaryKey" parameterType="java.util.Map" resultMap="LbTProductFlowConfDTO">
+   	 		select 
+					t1.id                             ,
+					t1.fk_pro_conf_id                 ,
+					t1.credit_audit_flow_code         ,
+					t1.reconsideration_flow_code      ,
+					t1.audit_flow_code                ,
+					t1.credit_approve_auto_pass       ,
+					t1.credit_approve_auto_reject     ,
+					t1.contract_approve_auto_pass     ,
+					t1.ext1                           ,
+					t1.ext2                           ,
+					t1.ext3                           ,
+					t1.adjust_money_peroid            ,
+					t1.ext4                           ,
+					t1.adjust_large_money             ,                 
+					t1.adjust_little_money            ,     
+					t1.adjust_large_peroid            ,     
+					t1.adjust_little_peroid           ,   
+					t1.ext5                           
+			from lb_t_product_flow_conf 		t1
+			where 
+				t1.id = #{id}
+</select>
+
+<!-- 主键查询对象  LB_T_PRODUCT_FLOW_CONF -->
+<select id="findLbTProductFlowConfByFkProConfId" parameterType="java.util.Map" resultMap="LbTProductFlowConfDTO">
+   	 		select 
+					t1.id                             ,
+					t1.fk_pro_conf_id                 ,
+					t1.credit_audit_flow_code         ,
+					t1.reconsideration_flow_code      ,
+					t1.audit_flow_code                ,
+					t1.credit_approve_auto_pass       ,
+					t1.credit_approve_auto_reject     ,
+					t1.contract_approve_auto_pass     ,
+					t1.ext1                           ,
+					t1.ext2                           ,
+					t1.ext3                           ,
+					t1.adjust_money_peroid            ,
+					t1.ext4                           ,
+					t1.adjust_large_money             ,                 
+					t1.adjust_little_money            ,     
+					t1.adjust_large_peroid            ,     
+					t1.adjust_little_peroid           ,   
+					t1.ext5
+			from lb_t_product_flow_conf 		t1
+			where 
+				t1.fk_pro_conf_id = #{fkProConfId}
+</select>
+  
+<!-- 新增对象 LB_T_PRODUCT_FLOW_CONF -->
+<insert id="insertLbTProductFlowConf" parameterType="java.util.Map" useGeneratedKeys="true">
+
+			insert into lb_t_product_flow_conf
+			(   		
+
+					fk_pro_conf_id                 ,
+					credit_audit_flow_code         ,
+					reconsideration_flow_code      ,
+					audit_flow_code                ,
+					credit_approve_auto_pass       ,
+					credit_approve_auto_reject     ,
+					contract_approve_auto_pass     ,
+					ext1                           ,
+					ext2                           ,
+					ext3                           ,
+					adjust_money_peroid            ,
+					ext4                           ,
+					adjust_large_money             ,                 
+        			adjust_little_money            ,     
+        			adjust_large_peroid            ,     
+        			adjust_little_peroid           ,   
+					ext5                           
+			)
+			values(#{dto.fkProConfId,jdbcType=VARCHAR}
+					,#{dto.creditAuditFlowCode,jdbcType=VARCHAR}
+					,#{dto.reconsiderationFlowCode,jdbcType=VARCHAR}
+					,#{dto.auditFlowCode,jdbcType=VARCHAR}
+					,#{dto.creditApproveAutoPass,jdbcType=VARCHAR}
+					,#{dto.creditApproveAutoReject,jdbcType=VARCHAR}
+					,#{dto.contractApproveAutoPass,jdbcType=VARCHAR}
+					,#{dto.ext1,jdbcType=VARCHAR}
+					,#{dto.ext2,jdbcType=VARCHAR}
+					,#{dto.ext3,jdbcType=VARCHAR}
+					,#{dto.adjustMoneyPeroid,jdbcType=VARCHAR}
+					,#{dto.ext4,jdbcType=VARCHAR}
+					,#{dto.adjustLargeMoney,jdbcType=VARCHAR}
+					,#{dto.adjustLittleMoney,jdbcType=VARCHAR}
+					,#{dto.adjustLargePeroid,jdbcType=VARCHAR}
+					,#{dto.adjustLittlePeroid,jdbcType=VARCHAR}
+					,#{dto.ext5,jdbcType=VARCHAR}
+			)
+</insert>
+    
+<!-- 更新对象 LB_T_PRODUCT_FLOW_CONF -->
+<update id="updateLbTProductFlowConf" parameterType="java.util.Map">
+	     update lb_t_product_flow_conf t1
+	           set 
+			           t1.fk_pro_conf_id                 =#{dto.fkProConfId,jdbcType=VARCHAR},
+			           t1.credit_audit_flow_code         =#{dto.creditAuditFlowCode,jdbcType=VARCHAR},
+			           t1.reconsideration_flow_code      =#{dto.reconsiderationFlowCode,jdbcType=VARCHAR},
+			           t1.audit_flow_code                =#{dto.auditFlowCode,jdbcType=VARCHAR},
+			           t1.credit_approve_auto_pass       =#{dto.creditApproveAutoPass,jdbcType=VARCHAR},
+			           t1.credit_approve_auto_reject     =#{dto.creditApproveAutoReject,jdbcType=VARCHAR},
+			           t1.contract_approve_auto_pass     =#{dto.contractApproveAutoPass,jdbcType=VARCHAR},
+			           t1.ext1                           =#{dto.ext1,jdbcType=VARCHAR},
+			           t1.ext2                           =#{dto.ext2,jdbcType=VARCHAR},
+			           t1.ext3                           =#{dto.ext3,jdbcType=VARCHAR},
+			           t1.adjust_money_peroid            =#{dto.adjustMoneyPeroid,jdbcType=VARCHAR},
+			           t1.ext4                           =#{dto.ext4,jdbcType=VARCHAR},
+			           t1.adjust_large_money             =#{dto.adjustLargeMoney,jdbcType=VARCHAR},       
+					   t1.adjust_little_money            =#{dto.adjustLittleMoney,jdbcType=VARCHAR},       
+					   t1.adjust_large_peroid            =#{dto.adjustLargePeroid,jdbcType=VARCHAR},       
+					   t1.adjust_little_peroid           =#{dto.adjustLittlePeroid,jdbcType=VARCHAR},      
+			           t1.ext5                           =#{dto.ext5,jdbcType=VARCHAR}
+	     where t1.id = #{dto.id}
+</update>
+   
+<!-- 主键删除 LB_T_PRODUCT_FLOW_CONF -->
+<delete id="deleteLbTProductFlowConfByID" parameterType="java.util.Map">
+    	delete from lb_t_product_flow_conf t1 where t1.ID in (${ids} )
+</delete>
+<!-- 主键假删除 LB_T_PRODUCT_FLOW_CONF -->
+<update id="deleteLbTProductFlowConfByPrimaryKey" parameterType="java.util.Map">
+	     update lb_t_product_flow_conf t1
+	           set   t1.validate_state='0'	
+	     where t1.id in( ${ids})
+</update>
+</mapper>

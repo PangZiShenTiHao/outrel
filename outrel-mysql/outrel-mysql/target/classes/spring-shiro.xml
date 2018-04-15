@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+    
+	<!-- 通过单点登录 -->
+	<bean id="casAuthRealm" class="com.fintech.modules.platform.sysauth.service.shiro.CasAuthRealm" >
+	    <!-- 添加一个默认cas访问首页角色,roleOrFilter过滤时才会进行授权操作-->
+		<property name="defaultRoles" value="cas_home"/>
+		<property name="orgAPI" ref="orgAPI"/>
+		<property name="sysAuthAPI" ref="sysAuthAPI"/>
+		<!-- 开发环境CAS地址配置 -->
+		<property name="casServerUrlPrefix" value="${cas.service.server}"/>
+        <!-- 客户端的回调地址设置，必须和下面的cas过滤器拦截的地址一致 -->
+        <property name="casService" value="${cas.service.client}"/>
+	</bean>
+	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+		<property name="realm" ref="dbAuthRealm" /><!-- 开发环境登录时： dbAuthRealm ，CAS登录时：casAuthRealm-->
+		<property name="subjectFactory" ref="casSubjectFactory"/>  
+		<property name="sessionManager" ref="defaultWebSessionManager" />
+		<!-- <property name="cacheManager" ref="shiroCacheManager" /> -->
+	</bean>
+	<!-- 会话验证调度器 -->  
+	<bean id="customSessionValidationScheduler" class="org.apache.shiro.session.mgt.ExecutorServiceSessionValidationScheduler"> 
+		<property name="interval" value="1000000"/>
+		<property name="sessionManager" ref="defaultWebSessionManager" />
+	</bean>
+	<bean id="defaultWebSessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
+        <property name="globalSessionTimeout" value="18000000"/>
+        <!-- 使用redis存储session信息 -->
+        <property name="sessionDAO" ref="customShiroSessionDAO"/>
+        <property name="sessionIdCookie" ref="simpleCookie"/>
+        <property name="sessionValidationScheduler" ref="customSessionValidationScheduler"/>
+    </bean>
+    <bean id="simpleCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+        <constructor-arg index="0" value="JSESSIONID_COOKIE"/>
+        <property name="httpOnly" value="true"/>
+        <property name="maxAge" value="-1"/>
+    </bean>
+    <bean id="customShiroSessionDAO" class="com.fintech.modules.platform.sysauth.session.CustomShiroSessionDAO">
+		<property name="shiroSessionRepository" ref="jedisShiroSessionRepository" />
+	</bean>
+	<bean id="jedisShiroSessionRepository" class="com.fintech.modules.platform.sysauth.session.JedisShiroSessionRepository">
+		<property name="jedisManager" ref="jedisManager" />
+	</bean>
+	<bean id="jedisManager" class="com.fintech.modules.platform.sysauth.session.JedisManager">
+		<property name="jedisSentinelPool" ref="jedisSentinelPool" />
+	</bean>
+    
+	<bean id="casSubjectFactory" class="org.apache.shiro.cas.CasSubjectFactory"/>  
+    <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">  
+        <property name="staticMethod" value="org.apache.shiro.SecurityUtils.setSecurityManager"/>  
+        <property name="arguments" ref="securityManager"/>  
+    </bean> 
+    
+	<!-- 配置 shiro filter 与cas 整合 -->
+    <!-- <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean" >
+        <property name="securityManager" ref="securityManager"/>
+        <property name="loginUrl" value="${cas.login.url}"/>
+        <property name="successUrl" value="/user/home"/>
+        <property name="unauthorizedUrl" value="/unauthorized.jsp"/>
+        <property name="filterChainDefinitions" value="#{shiroAuthService.loadFilterChainDefinitions()}"/>   
+        <property name="filters">
+           <map>
+           	  <entry key="cauthc">
+           	   <bean id="casFormAuthenticationFilter" class="com.fintech.modules.platform.sysauth.service.shiro.CasFormAuthenticationFilter" lazy-init="true"/>
+           	  </entry>
+           	  <entry key="roleOrFilter">
+           	   <bean id="roleOrFilter" class="com.fintech.modules.platform.sysauth.service.shiro.RolesOrFilter" lazy-init="true"/>
+           	  </entry>
+              <entry key="forceLogout">
+				     <bean id="forceLogoutFilter" class="com.fintech.modules.platform.sysauth.service.shiro.ForceLogoutFilter">
+						    <property name="forceUrl" value="${cas.force.url}"/>
+						    <property name="sysConfigParam" value="isRefuseLogin"/>
+						    <property name="sameSessionSet" value="false"/>
+						    <property name="simpleCookie" ref="simpleCookie" />
+						    <property name="longLinkAccess" >
+						    <list>
+								<value>${cas.long.link}</value>
+							</list>
+							</property>
+					   </bean>
+           	  </entry>
+           	  <entry key="cas">
+           	  	<bean id="casFilter" class="org.apache.shiro.cas.CasFilter" lazy-init="true">
+			        <property name="failureUrl" value="/casFailure.jsp"/>
+			    </bean>
+           	  </entry>
+           </map>
+        </property>
+    </bean> -->
+    
+	<!-- 开发环境通过连接DB登录 -->
+	<bean id="dbAuthRealm" class="com.fintech.modules.platform.sysauth.service.shiro.DbAuthRealm" >
+		<property name="orgAPI" ref="orgAPI"/>
+		<property name="sysAuthAPI" ref="sysAuthAPI"/>
+	</bean>
+	
+    <!-- 开发环境时 非CAS 登录时配置  -->
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean" >
+        <property name="securityManager" ref="securityManager"/>
+        <property name="loginUrl" value="/user/toLogin"/>
+        <property name="successUrl" value="/user/home"/>
+        <property name="unauthorizedUrl" value="/unauthorized.jsp"/>
+        <property name="filterChainDefinitions" value="#{shiroAuthService.loadFilterChainDefinitions()}"/>   
+        <property name="filters">
+           <map>
+           	  <entry key="cauthc">
+           	   <bean id="casFormAuthenticationFilter" class="com.fintech.modules.platform.sysauth.service.shiro.CasFormAuthenticationFilter" lazy-init="true"/>
+           	  </entry>
+           	  <entry key="roleOrFilter">
+           	   <bean id="roleOrFilter" class="com.fintech.modules.platform.sysauth.service.shiro.RolesOrFilter" lazy-init="true"/>
+           	  </entry>
+              <entry key="forceLogout">
+				    <bean id="forceLogoutFilterV0" class="com.fintech.modules.platform.sysauth.service.shiro.ForceLogoutFilterV0" lazy-init="true">
+					    <property name="forceUrl" value="http://127.0.0.1:8080/portal/forceLogin.jsp"/>
+					    <property name="sysConfigParam" value="isRefuseLogin"/>
+				    </bean>
+           	  </entry>
+           	  <entry key="cas">
+           	  	<bean id="casFilter" class="org.apache.shiro.cas.CasFilter" lazy-init="true">
+			        <property name="failureUrl" value="/casFailure.jsp"/>
+			    </bean>
+           	  </entry>
+           </map>
+        </property>
+    </bean>
+    
+	<!-- 保证实现了Shiro内部lifecycle函数的bean执行 -->
+	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
+</beans>

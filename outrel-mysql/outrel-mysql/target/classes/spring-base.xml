@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:aop="http://www.springframework.org/schema/aop"  xmlns:jdbc="http://www.springframework.org/schema/jdbc"  
+	xmlns:jee="http://www.springframework.org/schema/jee" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+		http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.0.xsd
+		http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.0.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+		http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa-1.3.xsd"
+	default-lazy-init="true">
+
+	<description>Spring公共配置 </description> 
+	<aop:aspectj-autoproxy/>
+	
+	
+	<!-- 使用annotation 自动注册bean, 并保证@Required、@Autowired的属性被注入 -->
+	<context:component-scan base-package="com.fintech,com.portal,com.jy">
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+		<context:exclude-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
+	</context:component-scan>
+	<bean class="com.fintech.modules.tools.pwd.ConvertPropertyConfigurer">
+		<property name="key" value="密匙" />
+		<property name="locations">
+			<list>
+				<value>classpath*:/biz_app.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <!-- 基本属性 url、user、password -->
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.user}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <!-- 配置初始化大小、最小、最大 -->
+        <property name="initialSize" value="${druid.initialSize}"/>
+        <property name="minIdle" value="${druid.minIdle}"/>
+        <property name="maxActive" value="${druid.maxActive}"/>
+        <!-- 配置获取连接等待超时的时间 -->
+        <property name="maxWait" value="${druid.maxWait}"/>
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+        <property name="timeBetweenEvictionRunsMillis" value="${druid.timeBetweenEvictionRunsMillis}" />
+        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+        <property name="minEvictableIdleTimeMillis" value="${druid.minEvictableIdleTimeMillis}" />
+        <!-- <property name="validationQuery" value="${druid.validationQuery}" /> -->
+        <property name="testWhileIdle" value="${druid.testWhileIdle}" />
+        <property name="testOnBorrow" value="${druid.testOnBorrow}" />
+        <property name="testOnReturn" value="${druid.testOnReturn}" />
+        <!-- 打开PSCache，并且指定每个连接上PSCache的大小  如果用Oracle，则把poolPreparedStatements配置为true，mysql可以配置为false。-->
+        <property name="poolPreparedStatements" value="${druid.poolPreparedStatements}" />
+        <property name="maxPoolPreparedStatementPerConnectionSize" value="${druid.maxPoolPreparedStatementPerConnectionSize}" />
+        <!-- 配置监控统计拦截的filters -->
+        <property name="filters" value="${druid.filters}" />
+    </bean>
+
+    <!-- MyBatis配置 -->
+    <bean id="pageInterceptor" class="com.fintech.platform.restservice.mybatis.PageInterceptor"></bean>  
+	<bean id="sqlSessionFactory" class="com.fintech.platform.restservice.mybatis.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="plugins">  
+            <ref bean="pageInterceptor"/>  
+        </property>  
+		<!-- 自动扫描domain目录, 配置包的基路径即可，多个包用;分割 -->
+		<property name="typeAliasesPackage" value="com.fintech;com.portal;com.jy" />
+		<!-- 显式指定Mapper文件位置 -->	
+		<property name="mapperLocations" >
+			<list>
+				<value>classpath*:com/fintech/**/dao/*Mapper.xml</value>
+				<value>classpath*:com/portal/**/dao/*Mapper.xml</value>
+				<value>classpath*:com/jy/**/dao/*Mapper.xml</value>
+				<value>classpath*:mybatis/*Mapper.xml</value>
+			</list>
+		</property>
+	</bean>
+	<!-- 扫描basePackage下所有以@MyBatisRepository标识的 接口-->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.fintech;com.portal;com.jy" />
+		<property name="annotationClass" value="com.fintech.platform.core.mybatis.MyBatisRepository"/>
+	</bean>
+	
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+
+	<!-- 使用annotation 定义 注解事务 优先 使用注解事务 order="0" -->
+    <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true" order="0" />
+	<!-- 用注解来实现事务管理 -->
+	
+	<!-- 以AspectJ方式 定义 AOP 用于事务拦截 -->
+	<aop:config proxy-target-class="true">
+		<aop:advisor pointcut="execution(* com.fintech..service..*.*(..))" advice-ref="txAdvice" order="1"/>
+		<aop:advisor pointcut="execution(* com.jy..service..*.*(..))" advice-ref="txAdvice" order="2"/>
+		<aop:advisor pointcut="execution(* com.portal..service..*.*(..))" advice-ref="txAdvice" order="3"/>
+	</aop:config>
+	<!-- 基本事务定义,使用transactionManager作事务管理 -->
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="insert*" propagation="REQUIRED" rollback-for="Exception,RuntimeException" />
+			<tx:method name="save*" propagation="REQUIRED" rollback-for="Exception,RuntimeException" />	
+			<tx:method name="create*" propagation="REQUIRED" rollback-for="Exception,RuntimeException" />
+			<tx:method name="delete*" propagation="REQUIRED" rollback-for="Exception,RuntimeException" />
+			<tx:method name="update*" propagation="REQUIRED" rollback-for="Exception,RuntimeException"/>
+			<tx:method name="modify*" propagation="REQUIRED" rollback-for="Exception,RuntimeException" />
+			<tx:method name="do*" propagation="REQUIRED" rollback-for="Exception,RuntimeException" />
+			<tx:method name="find*" propagation="SUPPORTS" read-only="true" />
+			<tx:method name="get*" propagation="SUPPORTS" />
+			<tx:method name="*" propagation="SUPPORTS"/>
+		</tx:attributes>
+	</tx:advice>
+	<!-- 事务管理 end -->
+	
+	<!-- 定义检测执行时间的拦截器start -->
+	<bean id="performanceInterceptor" class="com.fintech.modules.platform.syslog.interceptor.PerformanceInterceptor">
+		<property name="maxAllowedTimeMillis" value="10000"></property>
+		<!-- <property name="log" value="true"></property> -->
+	</bean>
+	<aop:config proxy-target-class="true">
+		<aop:advisor pointcut="execution(* com.fintech..*.service.*Service*.*(..))" advice-ref="performanceInterceptor" />
+		<aop:advisor pointcut="execution(* com.jy..*.service.*Service*.*(..))" advice-ref="performanceInterceptor" />
+		<aop:advisor pointcut="execution(* com.portal..*.service.*Service*.*(..))" advice-ref="performanceInterceptor" />
+	</aop:config>
+ 	<!-- 定义检测执行时间的拦截器end -->
+ 	
+   
+
+	<!-- 加载异常定义文件 并拦截start -->
+   	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basename" value="messages" />
+	</bean>
+	<bean id="exceptionResolver" class="com.fintech.platform.restservice.exception.handler.AbaboonHandlerExceptionResolver"/>  
+	<!-- 加载异常定义文件 并拦截end -->
+	
+	<!-- JSR303 Validator定义 -->
+ 	<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
+	<bean id="sessionAPI" class="com.fintech.modules.platform.sysauth.service.shiro.SessionAPImpl" />
+	<bean id="orgAPI" class="com.fintech.modules.platform.sysorg.impl.OrgAPImpl" />
+	<bean id="sysAuthAPI" class="com.fintech.modules.platform.sysauth.impl.SysAuthAPImpl" />
+	<bean id="sysDictAPI" class="com.fintech.modules.platform.sysdict.impl.SysDictAPImpl" />
+	<bean id="sysAreaAPI" class="com.fintech.modules.platform.sysarea.impl.SysAreaAPImpl" />
+	<bean id="dataPrvAPI" class="com.fintech.modules.platform.dataprv.sysprvbizuser.impl.DataPrvAPImpl" />
+	<bean id="sysConfigAPI" class="com.fintech.modules.platform.sysconfig.impl.SysConfigAPImpl" />
+	<bean id="sysRoleAPI" class="com.fintech.modules.platform.sysauth.impl.SysRoleAPImpl" />
+	<bean id="sysIndustryAPI" class="com.fintech.modules.platform.sysindustry.impl.SysIndustryImpl" />
+	
+	<!-- 单文件上传服务 -->
+    <!-- 文件上傳處理器 -->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">  
+        <property name="defaultEncoding" value="UTF-8"/>  
+        <!-- 指定所上传文件的总大小不能超过200KB。注意maxUploadSize属性的限制不是针对单个文件，而是所有文件的容量之和 -->  
+        <property name="maxUploadSize" value="200000000"/>  
+    </bean>
+    
+  	<import resource="classpath*:spring/*-spring.xml" />
+  	<import resource="classpath*:spring-redis.xml" />
+  	<import resource="classpath*:spring-shiro.xml" />
+ 	<!--  不启用 定时任务 -->
+ 	 <!-- <import resource="classpath*:quartz/*-spring.xml" /> -->
+
+ 		 
+</beans>

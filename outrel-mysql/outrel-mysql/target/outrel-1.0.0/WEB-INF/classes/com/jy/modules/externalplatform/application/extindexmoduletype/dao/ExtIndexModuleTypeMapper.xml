@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jy.modules.externalplatform.application.extindexmoduletype.dao.ExtIndexModuleTypeDao">
+<resultMap id="ExtIndexModuleTypeDTO" type="com.jy.modules.externalplatform.application.extindexmoduletype.dto.ExtIndexModuleTypeDTO">
+				<result property="id" column="ID" jdbcType="DECIMAL" />
+				<result property="moduleType" column="MODULE_TYPE" jdbcType="VARCHAR" />
+				<result property="moduleTypeCode" column="MODULE_TYPE_CODE" jdbcType="VARCHAR" />
+				<result property="moduleTypeName" column="MODULE_TYPE_NAME" jdbcType="VARCHAR" />
+				<result property="parentId" column="PARENT_ID" jdbcType="DECIMAL" />
+				<result property="validateState" column="VALIDATE_STATE" jdbcType="VARCHAR" />
+				<result property="showOrder" column="SHOW_ORDER" jdbcType="DECIMAL" />
+				<result property="typeLevel" column="TYPE_LEVEL" jdbcType="DECIMAL" />
+				<result property="createBy" column="CREATE_BY" jdbcType="DECIMAL" />
+				<result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP" />
+				<result property="modifyBy" column="MODIFY_BY" jdbcType="DECIMAL" />
+				<result property="modifyTime" column="MODIFY_TIME" jdbcType="TIMESTAMP" />
+</resultMap>
+				
+<!-- 分页查询 ext_index_MODULE_TYPE -->	
+<select id="searchExtIndexModuleTypeByPaging" parameterType="java.util.Map" resultMap="ExtIndexModuleTypeDTO">
+    	 		select 
+						t1.id                             ,
+						t1.module_type                    ,
+						t1.module_type_code               ,
+						t1.module_type_name               ,
+						t1.parent_id                      ,
+						t1.validate_state                 ,
+						t1.show_order                     ,
+						t1.type_level                     ,
+						t1.create_by                      ,
+						t1.create_time                    ,
+						t1.modify_by                      ,  
+						t1.modify_time    
+					
+				from ext_index_module_type 	t1
+				where 1=1
+				and t1.validate_state='1'
+    			<if test="dto.id != null and dto.id != ''">
+						and t1.ID =#{dto.id}
+    			</if>
+    			<if test="dto.moduleType != null and dto.moduleType != ''">
+						and t1.MODULE_TYPE =#{dto.moduleType}
+    			</if>
+    			<if test="dto.moduleTypeCode != null and dto.moduleTypeCode != ''">
+						and t1.MODULE_TYPE_CODE =#{dto.moduleTypeCode}
+    			</if>
+    			<if test="dto.moduleTypeName != null and dto.moduleTypeName != ''">
+						and t1.MODULE_TYPE_NAME =#{dto.moduleTypeName}
+    			</if>
+    			<if test="dto.parentId != null and dto.parentId != ''">
+						and t1.PARENT_ID =#{dto.parentId}
+    			</if>
+    			<if test="dto.validateState != null and dto.validateState != ''">
+						and t1.VALIDATE_STATE =#{dto.validateState}
+    			</if>
+    			<if test="dto.showOrder != null and dto.showOrder != ''">
+						and t1.SHOW_ORDER =#{dto.showOrder}
+    			</if>
+    			<if test="dto.typeLevel != null and dto.typeLevel != ''">
+						and t1.TYPE_LEVEL =#{dto.typeLevel}
+    			</if>
+    			<if test="dto.createTime != null and dto.createTime != ''">
+						and t1.CREATE_TIME =#{dto.createTime}
+    			</if>
+				
+				order by t1.id desc
+</select>
+  
+<!-- 查询列表 ext_index_MODULE_TYPE  -->
+<select id="searchExtIndexModuleType" parameterType="java.util.Map" resultMap="ExtIndexModuleTypeDTO">
+    	     select 
+						t1.id                             ,
+						t1.module_type                    ,
+						t1.module_type_code               ,
+						t1.module_type_name               ,
+						t1.parent_id                      ,
+						t1.validate_state                 ,
+						t1.show_order                     ,
+						t1.type_level                     ,
+						t1.create_by                      ,
+						t1.create_time                    ,
+						t1.modify_by                      ,  
+						t1.modify_time                       
+				from ext_index_module_type 		t1
+				where 1=1
+    			<if test="dto.id != null and dto.id != ''">
+						and t1.ID = #{dto.id}
+    			</if>
+    			<if test="dto.moduleType != null and dto.moduleType != ''">
+						and t1.MODULE_TYPE = #{dto.moduleType}
+    			</if>
+    			<if test="dto.moduleTypeCode != null and dto.moduleTypeCode != ''">
+						and t1.MODULE_TYPE_CODE = #{dto.moduleTypeCode}
+    			</if>
+    			<if test="dto.moduleTypeName != null and dto.moduleTypeName != ''">
+						and t1.MODULE_TYPE_NAME = #{dto.moduleTypeName}
+    			</if>
+    			<if test="dto.parentId != null and dto.parentId != ''">
+						and t1.PARENT_ID = #{dto.parentId}
+    			</if>
+    			<if test="dto.validateState != null and dto.validateState != ''">
+						and t1.VALIDATE_STATE = #{dto.validateState}
+    			</if>
+    			<if test="dto.showOrder != null and dto.showOrder != ''">
+						and t1.SHOW_ORDER = #{dto.showOrder}
+    			</if>
+    			<if test="dto.typeLevel != null and dto.typeLevel != ''">
+						and t1.TYPE_LEVEL = #{dto.typeLevel}
+    			</if>
+    			<if test="dto.createTime != null and dto.createTime != ''">
+						and t1.CREATE_TIME = #{dto.createTime}
+    			</if>
+</select>
+
+<!-- 查询对象 ext_index_MODULE_TYPE -->
+<select id="searchExtIndexModuleTypeAllList"  resultMap="ExtIndexModuleTypeDTO">
+   	 		select 
+					t1.id                             ,
+					t1.module_type                    ,
+					t1.module_type_code               ,
+					t1.module_type_name               ,
+					t1.parent_id                      ,
+					t1.validate_state                 ,
+					t1.show_order                     ,
+					t1.type_level                     ,
+					t1.create_by                      ,
+					t1.create_time                    ,
+					t1.modify_by                      ,  
+					t1.modify_time    
+			from ext_index_module_type 		t1
+			where 1=1
+				and t1.validate_state='1'
+    			order by t1.show_order asc
+</select>
+ 
+<!-- 主键查询对象  ext_index_MODULE_TYPE -->
+<select id="findExtIndexModuleTypeByPrimaryKey" parameterType="java.util.Map" resultMap="ExtIndexModuleTypeDTO">
+   	 		select 
+					t1.id                             ,
+					t1.module_type                    ,
+					t1.module_type_code               ,
+					t1.module_type_name               ,
+					t1.parent_id                      ,
+					t1.validate_state                 ,
+					t1.show_order                     ,
+					t1.type_level                     ,
+					t1.create_by                      ,
+					t1.create_time                    ,
+					t1.modify_by                      ,  
+					t1.modify_time                   
+			from ext_index_module_type 		t1
+			where 
+				t1.id = #{id}
+</select>
+  
+<!-- 新增对象 ext_index_MODULE_TYPE -->
+<insert id="insertExtIndexModuleType" parameterType="java.util.Map" useGeneratedKeys="true" keyProperty="dto.id">
+
+			insert into ext_index_module_type
+			(   		
+
+					module_type                    ,
+					module_type_code               ,
+					module_type_name               ,
+					parent_id                      ,
+					validate_state                 ,
+					show_order                     ,
+					type_level                     ,
+					create_time                    ,
+					create_by
+			)
+			values(#{dto.moduleType,jdbcType=VARCHAR}
+					,#{dto.moduleTypeCode,jdbcType=VARCHAR}
+					,#{dto.moduleTypeName,jdbcType=VARCHAR}
+					,#{dto.parentId,jdbcType=DECIMAL}
+					,'1'
+					,#{dto.showOrder,jdbcType=DECIMAL}
+					,#{dto.typeLevel,jdbcType=DECIMAL}
+					,sysdate()
+					,#{dto.createBy,jdbcType=DECIMAL}
+			)
+</insert>
+    
+<!-- 更新对象 ext_index_MODULE_TYPE -->
+<update id="updateExtIndexModuleType" parameterType="java.util.Map">
+	     update ext_index_module_type t1
+	           set 
+			           t1.module_type                    =#{dto.moduleType,jdbcType=VARCHAR},
+			           t1.module_type_code               =#{dto.moduleTypeCode,jdbcType=VARCHAR},
+			           t1.module_type_name               =#{dto.moduleTypeName,jdbcType=VARCHAR},
+			           t1.parent_id                      =#{dto.parentId,jdbcType=DECIMAL},
+			           t1.validate_state                 ='1',
+			           t1.show_order                     =#{dto.showOrder,jdbcType=DECIMAL},
+			           t1.type_level                     =#{dto.typeLevel,jdbcType=DECIMAL},
+			           t1.modify_by                      =#{dto.modifyBy,jdbcType=DECIMAL},
+			           t1.modify_time                    =sysdate()
+	     where t1.id = #{dto.id}
+</update>
+   
+<!-- 主键删除 ext_index_MODULE_TYPE -->
+<delete id="deleteExtIndexModuleTypeByID" parameterType="java.util.Map">
+    	delete t1 from ext_index_module_type t1 where t1.ID in (${ids} )
+</delete>
+<!-- 主键假删除 ext_index_MODULE_TYPE -->
+<update id="deleteExtIndexModuleTypeByPrimaryKey" parameterType="java.util.Map">
+	     delete t1 from ext_index_module_type t1 where t1.ID in (${ids} )
+</update>
+
+<!-- 下拉框：查询对象指标模型类型列表-->
+<select id="searchExtIndexModuleTypeByCondition" parameterType="java.util.Map" resultMap="ExtIndexModuleTypeDTO">
+	   select 
+	            t1.id                             ,
+				t1.module_type                    ,
+				t1.module_type_code               ,
+				t1.module_type_name               ,
+				t1.parent_id                      
+		from ext_index_module_type t1
+		where t1.validate_state = '1'
+		 and  t1.parent_id=#{parentId}
+		 order by t1.show_order 
+</select>
+
+<!-- 下拉框：通过模块类型唯一编码查询对象指标模型类型列表 -->
+<select id="searchExtIndexModuleTypeByCode" parameterType="java.util.Map" resultMap="ExtIndexModuleTypeDTO">
+	   	    select 
+	            t1.id                             ,
+				t1.module_type                    ,
+				t1.module_type_code               ,
+				t1.module_type_name               ,
+				t1.parent_id                      
+		    from ext_index_module_type t1
+		    where t1.validate_state = '1'
+			  and t1.module_type_code = #{moduleTypeCode} 
+</select>
+
+</mapper>

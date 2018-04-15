@@ -1,0 +1,50 @@
+.ui-tooltip, .tp_arrow:after {
+    background: #fff;
+    border: 1px solid #FF8C00;
+
+}
+.ui-tooltip {
+    padding:5px
+    color: #000;
+    border-radius:6px;
+    box-shadow: none;
+    width: auto;
+ /*   max-width: none;*/
+ /*   word-break: break-all;*/
+    word-wrap: break-word;
+    white-space: normal;
+}
+.ui-tooltip .tdInner{
+    width: auto !important;
+}
+.tp_arrow {
+    width: 70px;
+    height: 16px;
+    overflow: hidden;
+    position: absolute;
+    left:50%;
+    margin-left: -35px;
+    bottom: -16px;
+}
+.tp_arrow.top {
+    top: -16px;
+    bottom: auto;
+}
+.tp_arrow.left {
+    left: 20%;
+}
+.tp_arrow:after {
+    content: "";
+    position: absolute;
+    left: 20px;
+    top: -20px;
+    width: 25px;
+    height: 25px;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+.tp_arrow.top:after {
+    bottom: -20px;
+    top: auto;
+}

@@ -1,0 +1,463 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jy.modules.befloan.productconf.lbtproductconf.dao.LbTProductConfDao">
+<resultMap id="LbTProductConfDTO" type="com.jy.modules.befloan.productconf.lbtproductconf.dto.LbTProductConfDTO">
+				<result property="id" column="ID" jdbcType="VARCHAR" />
+				<result property="productName" column="PRODUCT_NAME" jdbcType="VARCHAR" />
+				<result property="maxTerm" column="MAX_TERM" jdbcType="VARCHAR" />
+				<result property="minTerm" column="MIN_TERM" jdbcType="VARCHAR" />
+				<result property="yearRate" column="YEAR_RATE" jdbcType="DECIMAL" />
+				<result property="dayPenaltyInterest" column="DAY_PENALTY_INTEREST" jdbcType="DECIMAL" />
+				<result property="comprehensiveRate" column="COMPREHENSIVE_RATE" jdbcType="DECIMAL" />
+				<result property="refundMaxTerm" column="REFUND_MAX_TERM" jdbcType="DECIMAL" />
+				<result property="validateState" column="VALIDATE_STATE" jdbcType="VARCHAR" />
+				<result property="parentId" column="PARENT_ID" jdbcType="DECIMAL" />
+				<result property="loanRate" column="LOAN_RATE" jdbcType="DECIMAL" />
+				
+				<result property="productType" column="PRODUCT_TYPE" jdbcType="VARCHAR" />
+				<result property="productId" column="PRODUCT_ID" jdbcType="DECIMAL" />
+				<result property="productCode" column="PRODUCT_CODE" jdbcType="VARCHAR" />
+				<result property="version" column="VERSION" jdbcType="VARCHAR" />
+				<result property="productState" column="PRODUCT_STATE" jdbcType="DECIMAL" />
+				<result property="sortnum" column="SORTNUM" jdbcType="DECIMAL" />
+</resultMap>
+				
+<!-- 分页查询 lb_t_product_conf -->	
+<select id="searchLbTProductConfByPaging" parameterType="java.util.Map" resultMap="LbTProductConfDTO">
+    	 		select 
+						t1.id                             ,
+						t1.product_name                   ,
+						t1.max_term                       ,
+						t1.min_term                       ,
+						t1.year_rate                      ,
+						t1.day_penalty_interest           ,
+						t1.comprehensive_rate             ,
+						t1.refund_max_term                ,
+						t1.validate_state                 ,
+						t1.parent_id                 	  ,
+						t1.product_id                	  ,
+						t1.product_code              	  ,
+						t1.version              	  	  ,
+						t1.product_state        	  	  ,
+						t1.product_type
+					
+				from lb_t_product_conf 	t1
+				where 1=1
+				
+    			<if test="dto.id != null and dto.id != ''">
+						and t1.ID =#{dto.id}
+    			</if>
+    			<if test="dto.productName != null and dto.productName != ''">
+						and t1.PRODUCT_NAME like '%'||#{dto.productName}||'%'
+    			</if>
+    			<if test="dto.maxTerm != null and dto.maxTerm != ''">
+						and t1.MAX_TERM =#{dto.maxTerm}
+    			</if>
+    			<if test="dto.minTerm != null and dto.minTerm != ''">
+						and t1.MIN_TERM =#{dto.minTerm}
+    			</if>
+    			<if test="yearRate_start != null and yearRate_start != ''">
+						and t1.YEAR_RATE &gt;= #{yearRate_start}
+    			</if>
+    			<if test="yearRate_end != null and yearRate_end != ''">
+						and t1.YEAR_RATE &lt;= #{yearRate_end}
+    			</if>
+    			<if test="dto.dayPenaltyInterest != null and dto.dayPenaltyInterest != ''">
+						and t1.DAY_PENALTY_INTEREST =#{dto.dayPenaltyInterest}
+    			</if>
+    			<if test="comprehensiveRate_start != null and comprehensiveRate_start != ''">
+						and t1.COMPREHENSIVE_RATE &gt;= #{comprehensiveRate_start}
+    			</if>
+    			<if test="comprehensiveRate_end != null and comprehensiveRate_end != ''">
+						and t1.COMPREHENSIVE_RATE &lt;= #{comprehensiveRate_end}
+    			</if>
+    			<if test="dto.refundMaxTerm != null and dto.refundMaxTerm != ''">
+						and t1.REFUND_MAX_TERM =#{dto.refundMaxTerm}
+    			</if>
+    			<if test="dto.validateState != null and dto.validateState != ''">
+						and t1.VALIDATE_STATE =#{dto.validateState}
+    			</if>
+				order by t1.validate_state DESC, t1.SORTNUM ASC NULLS LAST,t1.product_id
+</select>
+  
+<!-- 查询列表 lb_t_product_conf  -->
+<select id="searchLbTProductConf" parameterType="java.util.Map" resultMap="LbTProductConfDTO">
+    	     select 
+						t1.id                             ,
+						t1.product_name                   ,
+						t1.max_term                       ,
+						t1.min_term                       ,
+						t1.year_rate                      ,
+						t1.day_penalty_interest           ,
+						t1.comprehensive_rate             ,
+						t1.refund_max_term                ,
+						t1.validate_state 				  ,
+						t1.parent_id                 	  ,
+						t1.product_id                 	  ,
+						t1.product_code              	  ,
+						t1.version              	  	  ,
+						t1.product_state        	  	  ,
+						t1.product_type                
+				from lb_t_product_conf 		t1
+				where 1=1
+				
+				<if test="dto.id != null and dto.id != ''">
+						and t1.ID =#{dto.id}
+    			</if>
+    			<if test="dto.productName != null and dto.productName != ''">
+						and t1.PRODUCT_NAME = #{dto.productName}
+    			</if>
+    			<if test="dto.maxTerm != null and dto.maxTerm != ''">
+						and t1.MAX_TERM = #{dto.maxTerm}
+    			</if>
+    			<if test="dto.minTerm != null and dto.minTerm != ''">
+						and t1.MIN_TERM = #{dto.minTerm}
+    			</if>
+    			<if test="dto.yearRate != null and dto.yearRate != ''">
+						and t1.YEAR_RATE = #{dto.yearRate}
+    			</if>
+    			<if test="dto.dayPenaltyInterest != null and dto.dayPenaltyInterest != ''">
+						and t1.DAY_PENALTY_INTEREST = #{dto.dayPenaltyInterest}
+    			</if>
+    			<if test="dto.comprehensiveRate != null and dto.comprehensiveRate != ''">
+						and t1.COMPREHENSIVE_RATE = #{dto.comprehensiveRate}
+    			</if>
+    			<if test="dto.refundMaxTerm != null and dto.refundMaxTerm != ''">
+						and t1.REFUND_MAX_TERM = #{dto.refundMaxTerm}
+    			</if>
+    			order by t1.validate_state DESC, t1.SORTNUM ASC NULLS LAST,t1.product_id
+</select>
+
+<!-- 通过产品编号查询 lb_t_product_conf的综合费率  -->
+<select id="searchProductConf" parameterType="java.util.Map" resultMap="LbTProductConfDTO">
+                select *   from lb_t_product_conf 	t1 where 1=1
+				<if test="dto.productCode != null and dto.productCode != ''">
+						and t1.PRODUCT_CODE = #{dto.productCode}
+    			</if>
+</select>
+
+  
+<!-- 主键查询对象  lb_t_product_conf -->
+<select id="findLbTProductConfByPrimaryKey" parameterType="java.util.Map" resultMap="LbTProductConfDTO">
+   	 		select 
+					t1.id                             ,
+					t1.product_name                   ,
+					t1.max_term                       ,
+					t1.min_term                       ,
+					t1.year_rate                      ,
+					t1.day_penalty_interest           ,
+					t1.comprehensive_rate             ,
+					t1.refund_max_term                ,
+					t1.validate_state                 	  ,
+					t1.product_id                 ,
+					t1.product_code              	  ,
+					t1.version              	  	  ,
+					t1.product_state        	  	  ,
+					t1.product_type
+			from lb_t_product_conf 		t1
+			where 
+				t1.id = #{id}
+</select>
+  
+<!-- 根据核心产品ID获取本地产品明细 -->
+<select id="findLbTProductConfByCoreProductId" parameterType="java.util.Map" resultMap="LbTProductConfDTO">
+   	 		select 
+					t1.id                             ,
+					t1.product_name                   ,
+					t1.max_term                       ,
+					t1.min_term                       ,
+					t1.year_rate                      ,
+					t1.day_penalty_interest           ,
+					t1.comprehensive_rate             ,
+					t1.refund_max_term                ,
+					t1.validate_state                 ,
+					t1.product_id                 	  ,
+					t1.product_code              	  ,
+					t1.version              	  	  ,
+					t1.product_state        	  	  ,
+					t1.product_type
+			from lb_t_product_conf 		t1
+			where 
+				t1.product_id = #{productId}
+</select>
+  
+<!-- 根据核心产品编码获取产品集合 -->
+<select id="findLbTProductConfByCoreProductCode" parameterType="java.util.Map" resultMap="LbTProductConfDTO">
+   	 		select 
+					t1.id                             ,
+					t1.product_name                   ,
+					t1.max_term                       ,
+					t1.min_term                       ,
+					t1.year_rate                      ,
+					t1.day_penalty_interest           ,
+					t1.comprehensive_rate             ,
+					t1.refund_max_term                ,
+					t1.validate_state                 	  ,
+					t1.product_id                 ,
+					t1.product_code              	  ,
+					t1.version              	  	  ,
+					t1.product_state        	  	  ,
+					t1.product_type
+			from lb_t_product_conf 		t1
+			where 
+				t1.product_code = #{productCode}
+</select>
+  
+<!-- 新增对象 lb_t_product_conf -->
+<insert id="insertLbTProductConf" parameterType="java.util.Map" useGeneratedKeys="true">
+			insert into lb_t_product_conf
+			(   		
+
+					product_name                   ,
+					max_term                       ,
+					min_term                       ,
+					year_rate                      ,
+					day_penalty_interest           ,
+					comprehensive_rate             ,
+					service_rate                   ,
+					refund_max_term                ,
+					validate_state                 ,
+					product_type        	  	   ,
+					product_id                 	   ,
+					product_code              	   ,
+					version              	  	   ,
+					product_state				   ,
+					parent_id                      ,
+					loan_rate           
+			)
+			values(#{dto.productName,jdbcType=VARCHAR}
+					,#{dto.maxTerm,jdbcType=VARCHAR}
+					,#{dto.minTerm,jdbcType=VARCHAR}
+					,#{dto.yearRate,jdbcType=DECIMAL}
+					,#{dto.dayPenaltyInterest,jdbcType=DECIMAL}
+					,#{dto.comprehensiveRate,jdbcType=DECIMAL}
+					,#{dto.serviceRate,jdbcType=DECIMAL}
+					,#{dto.refundMaxTerm,jdbcType=DECIMAL}
+					,'1'
+					,#{dto.productType,jdbcType=DECIMAL}
+					,#{dto.productId,jdbcType=DECIMAL}
+					,#{dto.productCode,jdbcType=VARCHAR}
+					,#{dto.version,jdbcType=VARCHAR}
+					,#{dto.productState,jdbcType=DECIMAL}
+					,#{dto.parentId,jdbcType=DECIMAL}
+					,#{dto.loanRate,jdbcType=VARCHAR}
+			)
+</insert>
+    
+<!-- 更新对象 lb_t_product_conf -->
+<update id="updateLbTProductConf" parameterType="java.util.Map">
+	     update lb_t_product_conf t1
+	           set 
+			           t1.product_name                   =#{dto.productName,jdbcType=VARCHAR},
+			           t1.validate_state                 =#{dto.validateState,jdbcType=VARCHAR},
+					   t1.product_code              	 =#{dto.productCode,jdbcType=VARCHAR},
+					   t1.version						 =#{dto.version,jdbcType=VARCHAR},
+					   t1.product_state					 =#{dto.productState,jdbcType=DECIMAL},
+					   t1.comprehensive_rate             =#{dto.comprehensiveRate,jdbcType=DECIMAL},
+					   t1.service_rate                   =#{dto.serviceRate,jdbcType=DECIMAL},
+					   t1.loan_rate                      =#{dto.loanRate,jdbcType=DECIMAL},
+					   t1.product_type					 =#{dto.productType,jdbcType=DECIMAL}
+	     where t1.id = #{dto.id}
+</update>
+   
+<!-- 主键删除 lb_t_product_conf -->
+<delete id="deleteLbTProductConfByID" parameterType="java.util.Map">
+    	delete from lb_t_product_conf where ID in (${ids} )
+</delete>
+<!-- 主键假删除 lb_t_product_conf -->
+<update id="deleteLbTProductConfByPrimaryKey" parameterType="java.util.Map">
+	     update lb_t_product_conf t1
+	           set   t1.validate_state='0'	
+	     where t1.id in( ${ids})
+</update>
+    
+<!-- 根据核心产品ID更新本地产品明细 -->
+<update id="updateLbTProductByCoreProductId" parameterType="java.util.Map">
+	     update lb_t_product_conf t1
+	           set 
+			           t1.product_name                   =#{dto.productName,jdbcType=VARCHAR},
+			           t1.validate_state                 ='1',
+					   t1.product_code              	 =#{dto.productCode,jdbcType=VARCHAR},
+					   t1.version						 =#{dto.version,jdbcType=VARCHAR},
+					   t1.product_state					 =#{dto.productState,jdbcType=DECIMAL}
+	     where t1.product_id = #{dto.productId,jdbcType=DECIMAL}
+</update>
+
+<!-- 查询 提前提醒流程 -->
+<select id="queryRemindProcessList" parameterType="java.util.HashMap" resultType="java.util.HashMap" >
+	select  b.pro_instance_id         proInstId
+	       ,case when a.activity_name_ like '稽核审批%' and a.execution_id_ like 'creditAuditKey.%' then
+		            to_char(a.create_ ,'yyyy-MM-dd HH24:mi:ss')
+		       else
+			        to_char(b.create_time ,'yyyy-MM-dd hh24:mi:ss')  
+		       end as startTime
+	       ,b.biz_inf_id                       bizInfId
+	       ,b.biz_type
+	       ,b.biz_inf_name
+            ,b.start_pro_userid
+            ,to_char(b.remind_time ,'yyyy-MM-dd hh24:mi:ss')   remindTime
+            ,to_char(b.over_time ,'yyyy-MM-dd hh24:mi:ss')     overTime
+            ,a.activity_name_                   actName
+            ,a.assignee_                     performerId
+            ,to_char(b.id)                    biz_tab_id
+            ,a.lock_state
+  from 
+      jbpm4_biz_tab     b,
+      jbpm4_task        a
+  where 1=1 
+     and b.pro_instance_id = a.execution_id_
+     and b.remind_time is not null
+     and b.over_time is not null 
+	 and a.execution_id_ like '${proDefKey}.%'
+	 and b.task_state is null
+	<![CDATA[
+     and b.remind_time<=sysdate
+	]]>
+	order by b.id asc
+</select> 
+<!-- 查询超时流程 -->
+<select id="queryOvertimeProcessList" parameterType="java.util.HashMap" resultType="java.util.HashMap" >
+	select  b.pro_instance_id         proInstId
+		   ,to_char(a.dbid_)   		  taskId
+		   ,a.lock_state
+	       ,case when a.activity_name_ like '稽核审批%' and a.execution_id_ like 'creditAuditKey.%' then
+		            to_char(a.create_ ,'yyyy-MM-dd HH24:mi:ss')
+		       else
+			        to_char(b.create_time ,'yyyy-MM-dd hh24:mi:ss')  
+		       end as startTime
+	       ,b.biz_inf_id                       bizInfId
+	       ,b.biz_type
+	       ,b.biz_inf_name
+	       ,b.start_pro_userid
+	       ,to_char(b.remind_time ,'yyyy-MM-dd hh24:mi:ss')   remindTime
+	       ,to_char(b.over_time ,'yyyy-MM-dd hh24:mi:ss')     overTime
+	       ,a.activity_name_                   actName
+	       ,a.assignee_                     performerId
+	       ,to_char(b.id)                    biz_tab_id
+  from 
+      jbpm4_biz_tab     b,
+      jbpm4_task        a
+  where 1=1 
+     and b.pro_instance_id = a.execution_id_
+     and b.remind_time is not null
+     and b.over_time is not null 
+	 and a.execution_id_ like '${proDefKey}.%'
+	 and b.task_state='1'<!-- 一般 -->
+	<![CDATA[
+     and b.over_time <=sysdate 
+	]]>
+	order by b.id asc
+</select> 
+<!-- 查询需要计算超时提醒的流程实例 -->
+<select id="queryNeedCalOverTimeProcesses" parameterType="java.util.HashMap" resultType="java.util.HashMap" >
+	select 
+	     b.id
+	    ,case when (select count(1) from jbpm4_task t where t.activity_name_ like '稽核审批%' and t.execution_id_ like 'creditAuditKey.%' and t.execution_id_ = b.pro_instance_id) > 0 then
+	         (select to_char(a.create_ ,'yyyy-MM-dd HH24:mi:ss') from jbpm4_task a where a.execution_id_ = b.pro_instance_id )
+	       else
+		        to_char(b.create_time ,'YYYY-MM-DD HH24:MI:SS') 
+	       end as create_time
+	    ,b.biz_type
+	    ,b.biz_inf_id
+	    ,b.biz_tab_name
+	    ,(select t1.app_product_type from lb_t_into_info t1 where t1.id = b.biz_inf_name) product_id
+	    ,case when (select count(1) from jbpm4_task t where t.activity_name_ like '稽核审批%' and t.execution_id_ like 'creditAuditKey.%' and t.execution_id_ = b.pro_instance_id) > 0 then
+	          replace(b.pro_instance_id, 'creditAuditKey.', 'auditOnlineKey.') 
+	       else
+		        b.pro_instance_id
+	       end as pro_instance_id
+	from jbpm4_biz_tab b where b.validate_state='1'
+		and b.biz_type in('1000','1002','1012','1015')
+		and b.biz_inf_id is not null 
+		and b.over_time is null
+		and b.remind_time is null
+		and exists (select t.* from jbpm4_execution t where t.id_=b.pro_instance_id )
+		and exists (select t1.app_product_type from lb_t_into_info t1 where t1.id = b.biz_inf_name and t1.app_product_type is not null)
+	union all
+	select 
+	    b.id
+	    ,to_char(b.create_time ,'YYYY-MM-DD HH24:MI:SS') create_time
+	    ,b.biz_type
+	    ,b.biz_inf_id
+	    ,b.biz_tab_name
+	    ,(select t1.OLD_APP_PRODUCT_TYPE from LB_T_RECONSIDERATION t1 where t1.id = b.biz_inf_id) product_id
+	    ,b.pro_instance_id
+	from jbpm4_biz_tab b where b.validate_state='1'
+		and b.biz_type in('1001')
+		and b.biz_inf_id is not null 
+		and b.over_time is null
+		and b.remind_time is null
+		and exists (select t.* from jbpm4_execution t where t.id_=b.pro_instance_id )
+		and exists (select t1.OLD_APP_PRODUCT_TYPE from LB_T_RECONSIDERATION t1 where t1.id = b.biz_inf_id and t1.OLD_APP_PRODUCT_TYPE is not null)
+</select>
+<!-- 查询 需要 系统结束 目前只有 客服补充资料 的流程信息 及业务信息 -->
+<select id="queryNeedSysEndBizProInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap" >
+	select 
+	     to_char(b.id)	id
+	    ,to_char(b.create_time ,'YYYY-MM-DD HH24:MI:SS') create_time
+	    ,b.biz_type
+	    ,b.biz_inf_id
+	    ,b.biz_tab_name
+	    ,(select t1.app_product_type from lb_t_into_info t1 where t1.id = b.biz_inf_name) product_id
+	    ,b.pro_instance_id
+	    ,(select to_char(t.dbid_) from jbpm4_task t where t.execution_id_ = b.pro_instance_id )	task_id
+	    ,(select t.name_ from jbpm4_task t where t.execution_id_ = b.pro_instance_id ) task_act_name
+	    ,(select to_char(t.create_ ,'yyyy-MM-dd HH24:mi:ss') from jbpm4_task t where t.execution_id_ = b.pro_instance_id ) task_start
+	    ,b.biz_inf_name
+	from jbpm4_biz_tab b where b.validate_state='1'
+		and b.biz_type in('1000')
+		and b.biz_inf_id is not null 
+		and exists (select t.dbid_ from jbpm4_task t where t.activity_name_ like '客服补充资料%' and t.execution_id_ = b.pro_instance_id  )
+		and exists (select t1.app_product_type from lb_t_into_info t1 where t1.id = b.biz_inf_name and t1.app_product_type is not null)
+</select> 
+<!-- 查询 需要 系统结束  稽核审批 的流程信息 及业务信息 -->
+<select id="queryNeedSysEndAuditBizProInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap" >
+	select 
+	     to_char(b.id)	id
+	    ,to_char(b.create_time ,'YYYY-MM-DD HH24:MI:SS') create_time
+	    ,b.biz_type
+	    ,b.biz_inf_id
+	    ,b.biz_tab_name
+	    ,(select t1.app_product_type from lb_t_into_info t1 where t1.id = b.biz_inf_name) product_id
+	    ,b.pro_instance_id
+	    ,(select to_char(t.dbid_) from jbpm4_task t where t.execution_id_ = b.pro_instance_id )	task_id
+	    ,(select t.name_ from jbpm4_task t where t.execution_id_ = b.pro_instance_id ) task_act_name
+	    ,(select to_char(t.create_ ,'yyyy-MM-dd HH24:mi:ss') from jbpm4_task t where t.execution_id_ = b.pro_instance_id ) task_start
+	    ,b.biz_inf_name
+	    ,(select lock_state from jbpm4_task a where a.execution_id_ = b.pro_instance_id) lock_state
+	from jbpm4_biz_tab b where b.validate_state='1'
+		and b.biz_type in('1000')
+		and b.biz_inf_id is not null 
+		and exists (select t.dbid_ from jbpm4_task t where t.activity_name_ like '稽核审批%' and t.execution_id_ = b.pro_instance_id  ) 
+		and exists (select t1.app_product_type from lb_t_into_info t1 where t1.id = b.biz_inf_name and t1.app_product_type is not null)
+</select> 
+
+
+
+<!--  查询贷款产品编码对应产品名称 -->
+<select id="queryQutoProInfo" parameterType="java.util.HashMap" resultType="java.util.HashMap" >
+	 select 
+	  	product_code as proCode,
+	    product_name as proValue
+	  from (
+	       select 
+	          product_name,
+	          product_code,
+	          row_number() OVER(PARTITION BY product_name ORDER BY version desc) as row_flg
+	       from lb_t_product_conf) temp
+	  where temp.row_flg  = '1'
+</select> 
+
+<update id="updateProductSortNum" parameterType="java.util.Map">
+     begin
+     <foreach collection="dtoList" item="dto">  
+         update lb_t_product_conf t1   
+         <set>  
+               t1.sortnum	=#{dto.sortnum}
+         </set>   
+         where t1.product_code = #{dto.productCode};
+     </foreach> 
+     end;
+</update>
+
+</mapper>

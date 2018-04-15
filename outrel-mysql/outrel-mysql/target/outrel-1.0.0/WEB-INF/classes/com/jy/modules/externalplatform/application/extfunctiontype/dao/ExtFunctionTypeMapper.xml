@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jy.modules.externalplatform.application.extfunctiontype.dao.ExtFunctionTypeDao">
+<resultMap id="ExtFunctionTypeDTO" type="com.jy.modules.externalplatform.application.extfunctiontype.dto.ExtFunctionTypeDTO">
+				<result property="id" column="ID" jdbcType="DECIMAL" />
+				<result property="funcType" column="FUNC_TYPE" jdbcType="VARCHAR" />
+				<result property="funcTypeCode" column="FUNC_TYPE_CODE" jdbcType="VARCHAR" />
+				<result property="funcTypeName" column="FUNC_TYPE_NAME" jdbcType="VARCHAR" />
+				<result property="parentId" column="PARENT_ID" jdbcType="DECIMAL" />
+				<result property="validateState" column="VALIDATE_STATE" jdbcType="VARCHAR" />
+				<result property="showOrder" column="SHOW_ORDER" jdbcType="DECIMAL" />
+				<result property="typeLevel" column="TYPE_LEVEL" jdbcType="DECIMAL" />
+				<result property="sysCode" column="SYS_CODE" jdbcType="VARCHAR" />
+				<result property="createBy" column="CREATE_BY" jdbcType="DECIMAL" />
+				<result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP" />
+				<result property="modifyBy" column="MODIFY_BY" jdbcType="DECIMAL" />
+				<result property="modifyTime" column="MODIFY_TIME" jdbcType="TIMESTAMP" />
+</resultMap>
+				
+<!-- 分页查询 ext_function_TYPE -->	
+<select id="searchExtFunctionTypeByPaging" parameterType="java.util.Map" resultMap="ExtFunctionTypeDTO">
+    	 		select 
+						t1.id                             ,
+						t1.func_type                      ,
+						t1.func_type_code                 ,
+						t1.func_type_name                 ,
+						t1.parent_id                      ,
+						t1.validate_state                 ,
+						t1.show_order                     ,
+						t1.type_level                     ,
+						t1.sys_code                       ,
+						t1.create_by                      ,
+						t1.create_time                    ,
+						t1.modify_by                      ,  
+						t1.modify_time       
+					
+				from ext_function_type 	t1
+				where 1=1
+				and t1.validate_state='1'
+    			<if test="dto.id != null and dto.id != ''">
+						and t1.ID =#{dto.id}
+    			</if>
+    			<if test="dto.funcType != null and dto.funcType != ''">
+						and t1.FUNC_TYPE =#{dto.funcType}
+    			</if>
+    			<if test="dto.funcTypeCode != null and dto.funcTypeCode != ''">
+						and t1.FUNC_TYPE_CODE =#{dto.funcTypeCode}
+    			</if>
+    			<if test="dto.funcTypeName != null and dto.funcTypeName != ''">
+						and t1.FUNC_TYPE_NAME =#{dto.funcTypeName}
+    			</if>
+    			<if test="dto.parentId != null and dto.parentId != ''">
+						and t1.PARENT_ID =#{dto.parentId}
+    			</if>
+    			<if test="dto.validateState != null and dto.validateState != ''">
+						and t1.VALIDATE_STATE =#{dto.validateState}
+    			</if>
+    			<if test="dto.showOrder != null and dto.showOrder != ''">
+						and t1.SHOW_ORDER =#{dto.showOrder}
+    			</if>
+    			<if test="dto.typeLevel != null and dto.typeLevel != ''">
+						and t1.TYPE_LEVEL =#{dto.typeLevel}
+    			</if>
+    			<if test="dto.createTime != null and dto.createTime != ''">
+						and t1.CREATE_TIME =#{dto.createTime}
+    			</if>
+    			<if test="dto.sysCode != null and dto.sysCode != ''">
+						and t1.SYS_CODE = #{dto.sysCode}
+    			</if>
+				
+				order by t1.sys_code,t1.func_type,t1.func_type_code  desc
+</select>
+  
+<!-- 查询列表 ext_function_TYPE  -->
+<select id="searchExtFunctionType" parameterType="java.util.Map" resultMap="ExtFunctionTypeDTO">
+    	     select 
+						t1.id                             ,
+						t1.func_type                      ,
+						t1.func_type_code                 ,
+						t1.func_type_name                 ,
+						t1.parent_id                      ,
+						t1.validate_state                 ,
+						t1.show_order                     ,
+						t1.type_level                     ,
+						t1.sys_code                       ,
+						t1.create_by                      ,
+						t1.create_time                    ,
+						t1.modify_by                      ,  
+						t1.modify_time       
+				from ext_function_type 		t1
+				where 1=1
+				and t1.validate_state='1'
+    			<if test="dto.id != null and dto.id != ''">
+						and t1.ID = #{dto.id}
+    			</if>
+    			<if test="dto.funcType != null and dto.funcType != ''">
+						and t1.FUNC_TYPE = #{dto.funcType}
+    			</if>
+    			<if test="dto.funcTypeCode != null and dto.funcTypeCode != ''">
+						and t1.FUNC_TYPE_CODE = #{dto.funcTypeCode}
+    			</if>
+    			<if test="dto.funcTypeName != null and dto.funcTypeName != ''">
+						and t1.FUNC_TYPE_NAME = #{dto.funcTypeName}
+    			</if>
+    			<if test="dto.parentId != null and dto.parentId != ''">
+						and t1.PARENT_ID = #{dto.parentId}
+    			</if>
+    			<if test="dto.validateState != null and dto.validateState != ''">
+						and t1.VALIDATE_STATE = #{dto.validateState}
+    			</if>
+    			<if test="dto.showOrder != null and dto.showOrder != ''">
+						and t1.SHOW_ORDER = #{dto.showOrder}
+    			</if>
+    			<if test="dto.typeLevel != null and dto.typeLevel != ''">
+						and t1.TYPE_LEVEL = #{dto.typeLevel}
+    			</if>
+    			<if test="dto.createTime != null and dto.createTime != ''">
+						and t1.CREATE_TIME = #{dto.createTime}
+    			</if>
+    			<if test="dto.sysCode != null and dto.sysCode != ''">
+						and (t1.SYS_CODE = #{dto.sysCode} OR t1.FUNC_TYPE_CODE = 'ROOT')
+    			</if>
+    			<if test="sysNo != null and sysNo != ''">
+						and (t1.SYS_CODE = #{sysNo} )
+    			</if>
+    			ORDER BY t1.SHOW_ORDER ASC
+</select>
+
+<!-- 分页查询 ext_function_TYPE -->	
+<select id="searchExtFunctionTypeInfoAllList" parameterType="java.util.Map" resultMap="ExtFunctionTypeDTO">
+    	 		select 
+						t1.id                             ,
+						t1.func_type                      ,
+						t1.func_type_code                 ,
+						t1.func_type_name                 ,
+						t1.parent_id                      ,
+						t1.validate_state                 ,
+						t1.show_order                     ,
+						t1.type_level                     ,
+						t1.sys_code                       ,
+						t1.create_by                      ,
+						t1.create_time                    ,
+						t1.modify_by                      ,  
+						t1.modify_time       
+					
+				from ext_function_type 	t1
+				where 1=1
+				and t1.validate_state='1'
+				and t1.func_type not in ('BASE')
+    			ORDER BY t1.SHOW_ORDER ASC
+</select>
+
+  
+<!-- 主键查询对象  ext_function_TYPE -->
+<select id="findExtFunctionTypeByPrimaryKey" parameterType="java.util.Map" resultMap="ExtFunctionTypeDTO">
+   	 		select 
+					t1.id                             ,
+					t1.func_type                      ,
+					t1.func_type_code                 ,
+					t1.func_type_name                 ,
+					t1.parent_id                      ,
+					t1.validate_state                 ,
+					t1.show_order                     ,
+					t1.type_level                     ,
+					t1.sys_code                       ,
+					t1.create_by                      ,
+					t1.create_time                    ,
+					t1.modify_by                      ,  
+					t1.modify_time       
+			from ext_function_type 		t1
+			where 
+				t1.id = #{id}
+</select>
+
+<select id="searchExtFunctionTypeBySysCode" parameterType="java.util.Map" resultMap="ExtFunctionTypeDTO">
+        select 
+					t1.id                             ,
+					t1.func_type                      ,
+					t1.func_type_code                 ,
+					t1.func_type_name                 ,
+					t1.parent_id                      ,
+					t1.validate_state                 ,
+					t1.show_order                     ,
+					t1.type_level                     ,
+					t1.create_time                    ,
+					t1.sys_code
+	   from ext_function_type t1 
+       where t1.VALIDATE_STATE = '1'
+         <if test="sysCode != null and sysCode != ''">
+         and t1.sys_code = #{sysCode}
+         </if>
+         <if test="parentId != null and parentId != ''">
+           and t1.parent_Id = #{parentId}
+         </if>
+</select>
+
+<!--按功能类型编码查询功能类型对象 -->
+<select id="findExtFunctionTypeByFuncType" parameterType="java.util.Map" resultMap="ExtFunctionTypeDTO">
+           select 
+				t1.id                             ,
+				t1.func_type                      ,
+				t1.func_type_code                 ,
+				t1.func_type_name                 ,
+				t1.parent_id                      ,
+				t1.validate_state                 ,
+				t1.show_order                     ,
+				t1.type_level                     ,
+				t1.create_time                    ,
+				t1.sys_code
+		  from ext_function_type 		t1
+		  where 
+			t1.func_type_code = #{funcTypeCode}
+</select>
+
+
+<!-- 新增对象 ext_function_TYPE -->
+<insert id="insertExtFunctionType" parameterType="java.util.Map" useGeneratedKeys="true">
+			insert into ext_function_type
+			(   		
+				
+					func_type                      ,
+					func_type_code                 ,
+					func_type_name                 ,
+					parent_id                      ,
+					validate_state                 ,
+					show_order                     ,
+					type_level                     ,
+					sys_code                       ,
+					create_by                      ,
+					create_time  
+			)
+			values( #{dto.funcType,jdbcType=VARCHAR}
+					,#{dto.funcTypeCode,jdbcType=VARCHAR}
+					,#{dto.funcTypeName,jdbcType=VARCHAR}
+					,#{dto.parentId,jdbcType=DECIMAL}
+					,'1'
+					,#{dto.showOrder,jdbcType=DECIMAL}
+					,#{dto.typeLevel,jdbcType=DECIMAL}
+					,#{dto.sysCode,jdbcType=VARCHAR}
+					,#{dto.createBy,jdbcType=DECIMAL}
+					,sysdate()
+			)
+</insert>
+
+    
+<!-- 更新对象 ext_function_TYPE -->
+<update id="updateExtFunctionType" parameterType="java.util.Map">
+	     update ext_function_type t1
+	           set 
+			           t1.func_type                      =#{dto.funcType,jdbcType=VARCHAR},
+			           t1.func_type_code                 =#{dto.funcTypeCode,jdbcType=VARCHAR},
+			           t1.func_type_name                 =#{dto.funcTypeName,jdbcType=VARCHAR},
+			           t1.parent_id                      =#{dto.parentId,jdbcType=DECIMAL},
+			           t1.validate_state                 =#{dto.validateState,jdbcType=VARCHAR},
+			           t1.show_order                     =#{dto.showOrder,jdbcType=DECIMAL},
+			           t1.type_level                     =#{dto.typeLevel,jdbcType=DECIMAL},
+			           t1.sys_code                       =#{dto.sysCode,jdbcType=VARCHAR},
+			           t1.modify_by                      =#{dto.modifyBy,jdbcType=DECIMAL},
+			           t1.modify_time                    =sysdate()
+	     where t1.id = #{dto.id}
+</update>
+   
+<!-- 主键删除 ext_function_TYPE -->
+<delete id="deleteExtFunctionTypeByID" parameterType="java.util.Map">
+    	delete t1 from ext_function_type t1 where t1.ID in (${ids} )
+</delete>
+
+
+<!-- 主键假删除 ext_function_TYPE -->
+<update id="deleteExtFunctionTypeByPrimaryKey" parameterType="java.util.Map">
+	     update ext_function_type t1
+	           set   t1.validate_state='0'	
+	     where t1.id in( ${ids})
+</update>
+</mapper>

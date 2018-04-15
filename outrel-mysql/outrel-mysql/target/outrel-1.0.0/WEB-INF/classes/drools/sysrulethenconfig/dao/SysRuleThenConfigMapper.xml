@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jy.modules.externalplatform.drools.sysrulethenconfig.dao.SysRuleThenConfigDao">
+<resultMap id="SysRuleThenConfigDTO" type="com.jy.modules.externalplatform.drools.sysrulethenconfig.dto.SysRuleThenConfigDTO">
+				<result property="id" column="ID" jdbcType="DECIMAL" />
+				<result property="excutionCode" column="EXCUTION_CODE" jdbcType="VARCHAR" />
+				<result property="ruleCode" column="RULE_CODE" jdbcType="VARCHAR" />
+				<result property="remark" column="REMARK" jdbcType="VARCHAR" />
+				<result property="createUser" column="CREATE_USER" jdbcType="VARCHAR" />
+				<result property="createDate" column="CREATE_DATE" jdbcType="DATE" />
+				<result property="updateUser" column="UPDATE_USER" jdbcType="VARCHAR" />
+				<result property="updateDate" column="UPDATE_DATE" jdbcType="DATE" />
+				<result property="versionNum" column="VERSION_NUM" jdbcType="VARCHAR" />
+				<result property="newVersionIsUpdate" column="NEW_VERSION_IS_UPDATE" jdbcType="DECIMAL" />
+				<result property="help" column="HELP" jdbcType="VARCHAR" />
+				<result property="validateState" column="VALIDATE_STATE" jdbcType="VARCHAR" />
+				<result property="parentCode" column="PARENT_CODE" jdbcType="VARCHAR" />
+</resultMap>
+				
+<!-- 分页查询 SYS_RULE_THEN_CONFIG -->	
+<select id="searchSysRuleThenConfigByPaging" parameterType="java.util.Map" resultMap="SysRuleThenConfigDTO">
+    	 		select 
+						t1.id                             ,
+						t1.excution_code                  ,
+						t1.rule_code                      ,
+						t1.remark                         ,
+						t1.create_user                    ,
+						t1.create_date                    ,
+						t1.update_user                    ,
+						t1.update_date                    ,
+						t1.version_num                    ,
+						t1.new_version_is_update          ,
+						t1.help                           ,
+						t1.validate_state                 ,
+						t1.parent_code                    
+					
+				from sys_rule_then_config 	t1
+				where 1=1
+				and t1.validate_state='1'
+    			<if test="dto.id != null and dto.id != ''">
+						and t1.ID =#{dto.id}
+    			</if>
+    			<if test="dto.excutionCode != null and dto.excutionCode != ''">
+						and t1.EXCUTION_CODE =#{dto.excutionCode}
+    			</if>
+    			<if test="dto.ruleCode != null and dto.ruleCode != ''">
+						and t1.RULE_CODE =#{dto.ruleCode}
+    			</if>
+    			<if test="dto.remark != null and dto.remark != ''">
+						and t1.REMARK =#{dto.remark}
+    			</if>
+    			<if test="dto.createUser != null and dto.createUser != ''">
+						and t1.CREATE_USER =#{dto.createUser}
+    			</if>
+    			<if test="dto.createDate != null and dto.createDate != ''">
+						and t1.CREATE_DATE =#{dto.createDate}
+    			</if>
+    			<if test="dto.updateUser != null and dto.updateUser != ''">
+						and t1.UPDATE_USER =#{dto.updateUser}
+    			</if>
+    			<if test="dto.updateDate != null and dto.updateDate != ''">
+						and t1.UPDATE_DATE =#{dto.updateDate}
+    			</if>
+    			<if test="dto.versionNum != null and dto.versionNum != ''">
+						and t1.VERSION_NUM =#{dto.versionNum}
+    			</if>
+    			<if test="dto.newVersionIsUpdate != null and dto.newVersionIsUpdate != ''">
+						and t1.NEW_VERSION_IS_UPDATE =#{dto.newVersionIsUpdate}
+    			</if>
+    			<if test="dto.help != null and dto.help != ''">
+						and t1.HELP =#{dto.help}
+    			</if>
+    			<if test="dto.validateState != null and dto.validateState != ''">
+						and t1.VALIDATE_STATE =#{dto.validateState}
+    			</if>
+    			<if test="dto.parentCode != null and dto.parentCode != ''">
+						and t1.PARENT_CODE =#{dto.parentCode}
+    			</if>
+				
+				order by t1.id desc
+</select>
+  
+<!-- 查询列表 SYS_RULE_THEN_CONFIG  -->
+<select id="searchSysRuleThenConfig" parameterType="java.util.Map" resultMap="SysRuleThenConfigDTO">
+    	     select 
+						t1.id                             ,
+						t1.excution_code                  ,
+						t1.rule_code                      ,
+						t1.remark                         ,
+						t1.create_user                    ,
+						t1.create_date                    ,
+						t1.update_user                    ,
+						t1.update_date                    ,
+						t1.version_num                    ,
+						t1.new_version_is_update          ,
+						t1.help                           ,
+						t1.validate_state                 ,
+						t1.parent_code                    
+				from sys_rule_then_config 		t1
+				where 1=1
+    			<if test="dto.id != null and dto.id != ''">
+						and t1.ID = #{dto.id}
+    			</if>
+    			<if test="dto.excutionCode != null and dto.excutionCode != ''">
+						and t1.EXCUTION_CODE = #{dto.excutionCode}
+    			</if>
+    			<if test="dto.ruleCode != null and dto.ruleCode != ''">
+						and t1.RULE_CODE = #{dto.ruleCode}
+    			</if>
+    			<if test="dto.remark != null and dto.remark != ''">
+						and t1.REMARK = #{dto.remark}
+    			</if>
+    			<if test="dto.createUser != null and dto.createUser != ''">
+						and t1.CREATE_USER = #{dto.createUser}
+    			</if>
+    			<if test="dto.createDate != null and dto.createDate != ''">
+						and t1.CREATE_DATE = #{dto.createDate}
+    			</if>
+    			<if test="dto.updateUser != null and dto.updateUser != ''">
+						and t1.UPDATE_USER = #{dto.updateUser}
+    			</if>
+    			<if test="dto.updateDate != null and dto.updateDate != ''">
+						and t1.UPDATE_DATE = #{dto.updateDate}
+    			</if>
+    			<if test="dto.versionNum != null and dto.versionNum != ''">
+						and t1.VERSION_NUM = #{dto.versionNum}
+    			</if>
+    			<if test="dto.newVersionIsUpdate != null and dto.newVersionIsUpdate != ''">
+						and t1.NEW_VERSION_IS_UPDATE = #{dto.newVersionIsUpdate}
+    			</if>
+    			<if test="dto.help != null and dto.help != ''">
+						and t1.HELP = #{dto.help}
+    			</if>
+    			<if test="dto.validateState != null and dto.validateState != ''">
+						and t1.VALIDATE_STATE = #{dto.validateState}
+    			</if>
+    			<if test="dto.parentCode != null and dto.parentCode != ''">
+						and t1.PARENT_CODE = #{dto.parentCode}
+    			</if>
+</select>
+  
+<!-- 主键查询对象  SYS_RULE_THEN_CONFIG -->
+<select id="findSysRuleThenConfigByPrimaryKey" parameterType="java.util.Map" resultMap="SysRuleThenConfigDTO">
+   	 		select 
+					t1.id                             ,
+					t1.excution_code                  ,
+					t1.rule_code                      ,
+					t1.remark                         ,
+					t1.create_user                    ,
+					t1.create_date                    ,
+					t1.update_user                    ,
+					t1.update_date                    ,
+					t1.version_num                    ,
+					t1.new_version_is_update          ,
+					t1.help                           ,
+					t1.validate_state                 ,
+					t1.parent_code                    
+			from sys_rule_then_config 		t1
+			where 
+				t1.id = #{id}
+</select>
+  
+
+<!-- 新增对象 SYS_RULE_THEN_CONFIG -->
+<insert id="insertSysRuleThenConfig" parameterType="java.util.Map" useGeneratedKeys="true">
+	<selectKey resultType="java.lang.Long" keyProperty="dto.id" order="BEFORE">
+				select seq_SYS_RULE_THEN_CONFIG.nextval as id from dual
+	</selectKey>
+			insert into sys_rule_then_config
+			(   		
+					id                             ,
+					excution_code                  ,
+					rule_code                      ,
+					remark                         ,
+					version_num                    ,
+					help                           ,
+					create_user                    ,
+					create_date                    
+			)
+			values(#{dto.id}
+					,#{dto.excutionCode,jdbcType=VARCHAR}
+					,#{dto.ruleCode,jdbcType=VARCHAR}
+					,#{dto.remark,jdbcType=VARCHAR}
+					,'1'
+					,#{dto.help,jdbcType=VARCHAR}
+					,#{dto.createUser,jdbcType=VARCHAR}
+					,sysdate
+			)
+</insert>
+    
+<!-- 更新对象 SYS_RULE_THEN_CONFIG -->
+<update id="updateSysRuleThenConfig" parameterType="java.util.Map">
+	     update sys_rule_then_config t1
+	           set 
+			           t1.excution_code                  =#{dto.excutionCode,jdbcType=VARCHAR},
+			           t1.rule_code                      =#{dto.ruleCode,jdbcType=VARCHAR},
+			           t1.remark                         =#{dto.remark,jdbcType=VARCHAR},
+			           t1.version_num                    ='1',
+			           t1.new_version_is_update          ='1',
+			           t1.help                           =#{dto.help,jdbcType=VARCHAR},
+			           t1.update_user                    =#{dto.updateUser,jdbcType=VARCHAR},
+			           t1.update_date                    = sysdate
+	     where t1.id = #{dto.id}
+</update>
+   
+<!-- 主键假删除 SYS_RULE_THEN_CONFIG -->
+<update id="deleteSysRuleThenConfigByPrimaryKey" parameterType="java.util.Map">
+	   delete from sys_rule_then_config t1 where t1.rule_code = ${code} 
+</update>
+
+<select id="findSysRuleThenConfigDTOByCode" parameterType="java.lang.String" resultMap="SysRuleThenConfigDTO">
+	select * from sys_rule_then_config where rule_code = #{code}
+</select>
+</mapper>

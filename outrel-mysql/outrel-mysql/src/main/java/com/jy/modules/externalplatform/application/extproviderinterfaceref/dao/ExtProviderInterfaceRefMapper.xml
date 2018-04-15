@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jy.modules.externalplatform.application.extproviderinterfaceref.dao.ExtProviderInterfaceRefDao">
+<resultMap id="ExtProviderInterfaceRefDTO" type="com.jy.modules.externalplatform.application.extproviderinterfaceref.dto.ExtProviderInterfaceRefDTO">
+				<result property="id" column="ID" jdbcType="DECIMAL" />
+				<result property="providerCode" column="PROVIDER_CODE" jdbcType="VARCHAR" />
+				<result property="interfaceNo" column="INTERFACE_NO" jdbcType="VARCHAR" />
+				<result property="interfaceName" column="INTERFACE_NAME" jdbcType="VARCHAR" />
+				<result property="validateState" column="VALIDATE_STATE" jdbcType="VARCHAR" />
+				<result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP" />
+				<result property="createBy" column="CREATE_BY" jdbcType="VARCHAR" />
+				<result property="modifyTime" column="MODIFY_TIME" jdbcType="TIMESTAMP" />
+				<result property="modifyBy" column="MODIFY_BY" jdbcType="VARCHAR" />
+</resultMap>
+				
+<!-- 分页查询 EXT_PROVIDER_INTERFACE_REF -->	
+<select id="searchExtProviderInterfaceRefByPaging" parameterType="java.util.Map" resultMap="ExtProviderInterfaceRefDTO">
+    	 		select 
+						t1.id                             ,
+						t1.provider_code                  ,
+						t1.interface_no                   ,
+						t2.interface_name                  ,
+						t1.validate_state                 ,
+						t1.create_time                    ,
+						t1.create_by                      ,
+						t1.modify_time                    ,
+						t1.modify_by                      
+				from ext_provider_interface_ref t1,ext_interface_info  t2
+				where 1=1 
+				and t1.interface_no=t2.interface_no
+				and t1.validate_state='1'
+				and t2.validate_state='1'
+    			<if test="dto.id != null and dto.id != ''">
+						and t1.ID =#{dto.id}
+    			</if>
+    			<if test="dto.providerCode != null and dto.providerCode != ''">
+						and t1.PROVIDER_CODE =#{dto.providerCode}
+    			</if>
+    			<if test="dto.interfaceNo != null and dto.interfaceNo != ''">
+						and t1.INTERFACE_NO =#{dto.interfaceNo}
+    			</if>
+    			<if test="dto.validateState != null and dto.validateState != ''">
+						and t1.VALIDATE_STATE =#{dto.validateState}
+    			</if>
+    			<if test="dto.createTime != null and dto.createTime != ''">
+						and t1.CREATE_TIME =#{dto.createTime}
+    			</if>
+    			<if test="dto.createBy != null and dto.createBy != ''">
+						and t1.CREATE_BY =#{dto.createBy}
+    			</if>
+				
+				order by t1.id desc
+</select>
+  
+<!-- 查询列表 EXT_PROVIDER_INTERFACE_REF  -->
+<select id="searchExtProviderInterfaceRef" parameterType="java.util.Map" resultMap="ExtProviderInterfaceRefDTO">
+    	     select 
+						t1.id                             ,
+						t1.provider_code                  ,
+						t1.interface_no                   ,
+						t1.validate_state                 ,
+						t1.create_time                    ,
+						t1.create_by                      ,
+						t1.modify_time                    ,
+						t1.modify_by 
+				from ext_provider_interface_ref 		t1
+				where 1=1
+    			<if test="dto.id != null and dto.id != ''">
+						and t1.ID = #{dto.id}
+    			</if>
+    			<if test="dto.providerCode != null and dto.providerCode != ''">
+						and t1.PROVIDER_CODE = #{dto.providerCode}
+    			</if>
+    			<if test="dto.interfaceNo != null and dto.interfaceNo != ''">
+						and t1.INTERFACE_NO = #{dto.interfaceNo}
+    			</if>
+    			<if test="dto.validateState != null and dto.validateState != ''">
+						and t1.VALIDATE_STATE = #{dto.validateState}
+    			</if>
+    			<if test="dto.createTime != null and dto.createTime != ''">
+						and t1.CREATE_TIME = #{dto.createTime}
+    			</if>
+    			<if test="dto.createBy != null and dto.createBy != ''">
+						and t1.CREATE_BY = #{dto.createBy}
+    			</if>
+</select>
+
+<!-- 查询列表 EXT_PROVIDER_INTERFACE_REF  -->
+<select id="searchExtProviderAllInterfaceRef" parameterType="java.util.Map" resultMap="ExtProviderInterfaceRefDTO">
+    	     select 
+						t1.id                             ,
+						t1.provider_code                  ,
+						t1.interface_no                   ,
+						t2.interface_name                  ,
+						t1.validate_state                 ,
+						t1.create_time                    ,
+						t1.create_by                      ,
+						t1.modify_time                    ,
+						t1.modify_by 
+				from ext_provider_interface_ref t1,ext_interface_info  t2
+				where 1=1 
+				and t1.interface_no=t2.interface_no
+				and t1.validate_state='1'
+				and t2.validate_state='1'
+    			<if test="dto.id != null and dto.id != ''">
+						and t1.ID = #{dto.id}
+    			</if>
+    			<if test="dto.providerCode != null and dto.providerCode != ''">
+						and t1.PROVIDER_CODE = #{dto.providerCode}
+    			</if>
+    			<if test="dto.interfaceNo != null and dto.interfaceNo != ''">
+						and t1.INTERFACE_NO = #{dto.interfaceNo}
+    			</if>
+    			<if test="dto.validateState != null and dto.validateState != ''">
+						and t1.VALIDATE_STATE = #{dto.validateState}
+    			</if>
+    			<if test="dto.createTime != null and dto.createTime != ''">
+						and t1.CREATE_TIME = #{dto.createTime}
+    			</if>
+    			<if test="dto.createBy != null and dto.createBy != ''">
+						and t1.CREATE_BY = #{dto.createBy}
+    			</if>
+</select>
+  
+<!-- 主键查询对象  EXT_PROVIDER_INTERFACE_REF -->
+<select id="findExtProviderInterfaceRefByPrimaryKey" parameterType="java.util.Map" resultMap="ExtProviderInterfaceRefDTO">
+   	 		select 
+					t1.id                             ,
+					t1.provider_code                  ,
+					t1.interface_no                   ,
+					t1.validate_state                 ,
+					t1.create_time                    ,
+					t1.create_by                      ,
+					t1.modify_time                    ,
+					t1.modify_by 
+			from ext_provider_interface_ref 		t1
+			where 
+				t1.id = #{id}
+</select>
+  
+<!-- 新增对象 EXT_PROVIDER_INTERFACE_REF -->
+<insert id="insertExtProviderInterfaceRef" parameterType="java.util.Map" useGeneratedKeys="true">
+
+			insert into ext_provider_interface_ref
+			(   		
+
+					provider_code                  ,
+					interface_no                   ,
+					validate_state                 ,
+					create_time                    ,
+					create_by                      
+			)
+			values(#{dto.providerCode,jdbcType=VARCHAR}
+					,#{dto.interfaceNo,jdbcType=VARCHAR}
+					,'1'
+					,sysdate()
+					,#{dto.createBy,jdbcType=VARCHAR}
+			)
+</insert>
+    
+<!-- 更新对象 EXT_PROVIDER_INTERFACE_REF -->
+<update id="updateExtProviderInterfaceRef" parameterType="java.util.Map">
+	     update ext_provider_interface_ref t1
+	           set 
+			           t1.provider_code                  =#{dto.providerCode,jdbcType=VARCHAR},
+			           t1.interface_no                   =#{dto.interfaceNo,jdbcType=VARCHAR},
+			           t1.validate_state                 ='1',
+			           t1.modify_time                    =sysdate(),
+			           t1.modify_by                      =#{dto.modifyBy,jdbcType=VARCHAR}
+	     where t1.id = #{dto.id}
+</update>
+   
+<!-- 主键删除 EXT_PROVIDER_INTERFACE_REF -->
+<delete id="deleteExtProviderInterfaceRefByID" parameterType="java.util.Map">
+    	delete t1 from ext_provider_interface_ref t1 where t1.ID in (${ids} )
+</delete>
+<!-- 主键假删除 EXT_PROVIDER_INTERFACE_REF -->
+<update id="deleteExtProviderInterfaceRefByPrimaryKey" parameterType="java.util.Map">
+	     update ext_provider_interface_ref t1
+	           set   t1.validate_state='0'	
+	     where t1.id in( ${ids})
+</update>
+<!-- 删除 EXT_PROVIDER_INTERFACE_REF -->
+<delete id="deleteExtProviderInterfaceRefByProviderCode" parameterType="java.util.Map">
+    	delete t1 from ext_provider_interface_ref t1 where t1.provider_code =#{providerCode}
+</delete>
+<!-- 批量保存 -->
+<insert id="batchInsertExtProviderInterfaceRef" parameterType="java.util.Map">
+
+
+		insert into ext_provider_interface_ref
+			(   		
+
+					provider_code  ,
+					interface_no   ,
+					validate_state ,
+					create_time    ,
+					create_by                 
+			)
+			values
+	    <foreach collection="list" item="interfaceNo">
+			(#{providerCode}
+					,#{interfaceNo}
+					,'1'
+					,sysdate()
+					,#{createBy}
+			);
+	</foreach>
+
+</insert>
+</mapper>

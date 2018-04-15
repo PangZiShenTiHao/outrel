@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<auth>
+	<authlist>
+		<authinfo appid = "ptpt" apppwd = "xx" validtime="2099-12-01" desc="系统" />
+	</authlist>
+</auth>

@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"  
+	xmlns:mvc="http://www.springframework.org/schema/mvc"  
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop-3.0.xsd 
+	http://www.springframework.org/schema/tx 
+	http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+	http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-3.0.xsd
+	http://www.springframework.org/schema/mvc
+    http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
+    
+<context:annotation-config />
+<context:component-scan base-package="com.portal.demo.dao.quartzJob" />
+
+    <!-- 总管理类 如果将lazy-init='false'那么容器启动就会执行调度程序  -->
+     <bean id="startQuertz" lazy-init="false" autowire="no" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+          <property name="applicationContextSchedulerContextKey" value="applicationContextKey"/>
+          
+          <!-- 启用 quartz 实例化到数据库start  默认关闭   -->
+            <property name="dataSource" ref ="dataSource" />       
+            <property name="configLocation" value="classpath:quartz.properties"/> 
+          <!-- 启用 quartz 实例化到数据库end -->
+          
+          <!-- Spring 配置文件定义实例化定时器 -->
+          <property name="triggers">
+          	<list>
+          		<!-- <ref bean="testTrigger"/> -->
+          		<!-- <ref bean="excSysAsynJobTaskTrigger"/> -->
+          		<!-- <ref bean="excSMSAsynJobTaskTrigger"/> -->
+          	</list>
+          </property>
+          <!-- Spring 配置定时器结束 -->
+     </bean>
+     
+     
+     <!-- 定时任务的定义 -->
+      <!-- cron表达式
+        0 0/1 * * * ?   每隔一分钟
+    秒 分 小时 日 月 周几 年
+    每季的第3个月第15天23点30分调度的表达式0 30 23 15 3,6,9,12 ? *
+     0 00 02 * * ?如下为每天0 00 02 * * ?开始执行  暂时停止定时任务 -->
+    
+    <bean id="扫描获取业务系统错误日志" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail">
+            <ref bean="ExcuteAppErrorInfoTask"/>
+        </property>
+        <property name="cronExpression">
+            <value>0 0/2 * * * ?</value>
+        </property>
+    </bean>
+    <bean name="ExcuteAppErrorInfoTask" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+    	<property name="durability" value="true" />
+        <property name="jobClass">
+            <value>com.portal.modules.logmonitor.sysapperrorinfo.job.ExcuteAppErrorInfoTask</value>
+        </property>
+    </bean>
+    
+   	<bean id="发送错误日志邮件" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail">
+            <ref bean="ExcuteAppSendErrorInfoTask"/>
+        </property>
+        <property name="cronExpression">
+            <value>0 0/5 * * * ?</value>
+        </property>
+    </bean>
+    <bean name="ExcuteAppSendErrorInfoTask" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+    	<property name="durability" value="true" />
+        <property name="jobClass">
+            <value>com.portal.modules.logmonitor.sysapperrorinfo.job.ExcuteAppSendErrorInfoTask</value>
+        </property>
+    </bean> 
+    
+    <!-- 扫描日中任务分组定义-->
+     <bean id="扫描日中任务分组定义" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail">
+        	<ref bean="QueryJobGroupDefTask"/>
+        </property>
+        <property name="cronExpression">
+            <value>0 0/5 * * * ?</value>
+        </property>
+    </bean>
+	<bean id="QueryJobGroupDefTask" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+		<property name="durability" value="true" />
+        <property name="jobClass">
+            <value>com.fintech.modules.quartzJob.core.job.QueryJobGroupDefTask</value>
+        </property>
+    </bean>
+    <!-- 扫描日中任务组实例 -->
+    <bean id="扫描日中任务组实例" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail">
+        	<ref bean="ExcuteGroupInstanceTask"/>
+        </property>
+        <property name="cronExpression">
+            <value>0 0/5 * * * ?</value>
+        </property>
+    </bean>
+	<bean id="ExcuteGroupInstanceTask " class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+	<property name="durability" value="true" />
+        <property name="jobClass">
+            <value>com.fintech.modules.quartzJob.core.job.ExcuteGroupInstanceTask</value>
+        </property>
+    </bean>
+	 <!-- 工作流历史数据归档 -->
+    <bean id="archiveTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail">
+        	<ref bean="archiveTaskJob"/>
+        </property>
+        <property name="cronExpression">
+            <value>0 1 1 * * ?</value><!-- 0 1 1 * * ? -->
+        </property>
+    </bean>
+	<bean id="archiveTaskJob" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+	<property name="durability" value="true" />
+        <property name="jobClass" >
+            <value>com.portal.modules.archive.timer.ArchiveTask</value>
+        </property>
+    </bean>
+    
+    <!-- 统一异步发送短信 -->
+    <bean id="excSMSAsynJobTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail">
+        	<ref bean="excSMSAsynJobTask"/>
+        </property>
+        <property name="cronExpression">
+            <value>0/30 * * ? * * *</value>
+        </property>
+    </bean>
+    <bean id="excSMSAsynJobTask" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+	<property name="durability" value="true" />
+        <property name="jobClass" >
+            <value>com.fintech.modules.platform.sysasynjob.service.ExcSMSAsynJobTask</value>
+        </property>
+    </bean>
+    
+	<!-- 统一异步接口任务调用  -->
+	<bean id="excSysAsynJobTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail">
+        	<ref bean="excSysAsynJobTask"/>
+        </property>
+        <property name="cronExpression">
+            <value>0 0/1 * * * ?</value>
+        </property>
+    </bean>
+	<bean id="excSysAsynJobTask" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+	<property name="durability" value="true" />
+        <property name="jobClass" >
+            <value>com.fintech.modules.platform.sysasynjob.service.ExcSysAsynJobTask</value>
+        </property>
+    </bean>
+    
+    <aop:aspectj-autoproxy />
+    
+	<!-- 配置异步任务接口统一处理AOP -->
+	
+	<bean id="asynJobTaskAspect" class="com.fintech.modules.platform.sysasynjob.service.SysAsynJobAspect"/>
+	<aop:config>
+		<aop:aspect ref="asynJobTaskAspect">
+			<aop:pointcut expression="execution(* com.portal.modules.biz.callthirdbiz.*.executeAsynJob(..))" id="serviceMethod"/>
+			<aop:around method="logAround" pointcut-ref="serviceMethod"/>
+		</aop:aspect>
+	</aop:config>
+	
+	<bean id="jobTaskAspect" class="com.fintech.modules.quartzJob.core.service.JobTaskAspect"/>
+	<aop:config>
+		<aop:aspect ref="jobTaskAspect">
+			<aop:pointcut expression="execution(* com.portal.modules.biz.bizJob.*.execute(..))" id="serviceMethods"/>
+			<aop:around method="logAround" pointcut-ref="serviceMethods"/>
+		</aop:aspect>
+	</aop:config>
+</beans>

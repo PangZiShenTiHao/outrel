@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jy.modules.externalplatform.drools.sysrulelist.dao.SysRuleListDao">
+<resultMap id="SysRuleListDTO" type="com.jy.modules.externalplatform.drools.sysrulelist.dto.SysRuleListDTO">
+				<result property="id" column="ID" jdbcType="DECIMAL" />
+				<result property="ruleType" column="RULE_TYPE" jdbcType="VARCHAR" />
+				<result property="chName" column="CH_NAME" jdbcType="VARCHAR" />
+				<result property="enName" column="EN_NAME" jdbcType="VARCHAR" />
+				<result property="eftectTime" column="EFTECT_TIME" jdbcType="DATE" />
+				<result property="validateState" column="VALIDATE_STATE" jdbcType="VARCHAR" />
+				<result property="ruleCode" column="RULE_CODE" jdbcType="VARCHAR" />
+				<result property="remark" column="REMARK" jdbcType="VARCHAR" />
+				<result property="createUser" column="CREATE_USER" jdbcType="VARCHAR" />
+				<result property="createDate" column="CREATE_DATE" jdbcType="DATE" />
+				<result property="updateUser" column="UPDATE_USER" jdbcType="VARCHAR" />
+				<result property="updateDate" column="UPDATE_DATE" jdbcType="DATE" />
+				<result property="newVersionIsUpdate" column="NEW_VERSION_IS_UPDATE" jdbcType="DECIMAL" />
+				<result property="expiresTime" column="EXPIRES_TIME" jdbcType="DATE" />
+				<result property="ruleResource" column="RULE_RESOURCE" jdbcType="VARCHAR" />
+				<result property="resourceType" column="RESOURCE_TYPE" jdbcType="VARCHAR" />
+				<result property="version" column="VERSION" jdbcType="DECIMAL" />
+				<result property="ruleBaseName" column="RULE_BASE_NAME" jdbcType="VARCHAR" />
+				<result property="ruleBaseCode" column="RULE_BASE_CODE" jdbcType="VARCHAR" />				
+				<result property="ruleGroupName" column="RULE_GROUP_NAME" jdbcType="VARCHAR" />
+				<result property="ruleGroupCode" column="RULE_GROUP_CODE" jdbcType="VARCHAR" />
+				<result property="ruleName" column="RULE_NAME" jdbcType="VARCHAR" />
+</resultMap>
+				 
+<!-- 查询列表 SYS_RULE_LIST  -->
+<select id="searchSysRuleList" parameterType="java.util.Map" resultMap="SysRuleListDTO">
+    	       select 
+						t1.id                             ,
+						t1.rule_type                      ,
+						t1.ch_name                        ,
+						t1.en_name                        ,
+						t1.eftect_time                    ,
+						t1.validate_state                 ,
+						t1.rule_code                      ,
+						t1.remark                         ,
+						t1.create_user                    ,
+						t1.create_date                    ,
+						t1.update_user                    ,
+						t1.update_date                    ,
+						t1.new_version_is_update          ,
+						t1.expires_time                   ,
+					    t1.rule_resource                  ,
+						t1.resource_type                  ,
+						t1.version                   
+				from sys_rule_list 		t1
+				where t1.validate_state = 1
+				<if test="dto.enName != null and dto.enName != ''">
+					 and t1.en_name =#{dto.enName}
+    			</if>
+    			<if test="dto.ruleType != null and dto.ruleType != ''">
+					 and t1.rule_type =#{dto.ruleType}
+    			</if>
+</select>
+
+<select id="searchChildRuleListByRuleCode" parameterType="string" resultMap="SysRuleListDTO">
+    	     select 
+						t1.id                             ,
+						t1.rule_type                      ,
+						t1.ch_name                        ,
+						t1.en_name                        ,
+						t1.eftect_time                    ,
+						t1.validate_state                 ,
+						t1.rule_code                      ,
+						t1.remark                         ,
+						t1.create_user                    ,
+						t1.create_date                    ,
+						t1.update_user                    ,
+						t1.update_date                    ,
+						t1.new_version_is_update          ,
+						t1.EXPIRES_TIME                   ,
+						t1.rule_resource                  ,
+						t1.resource_type                  ,
+						t1.version                   
+				from sys_rule_list 		t1
+				where 
+					t1.rule_code like #{0} 
+					and t1.rule_type = #{1} 
+				order by 
+					t1.priority desc
+</select>
+  
+<!-- 主键查询对象  SYS_RULE_LIST -->
+<select id="findSysRuleListByPrimaryKey" parameterType="java.util.Map" resultMap="SysRuleListDTO">
+   	 		select 
+					t1.id                             ,
+					t1.rule_type                      ,
+					t1.ch_name                        ,
+					t1.en_name                        ,
+					t1.eftect_time                    ,
+					t1.validate_state                 ,
+					t1.rule_code                      ,
+					t1.remark                         ,
+					t1.create_user                    ,
+					t1.create_date                    ,
+					t1.update_user                    ,
+					t1.update_date                    ,
+					t1.new_version_is_update          ,
+					t1.EXPIRES_TIME                   ,
+					t1.rule_resource                  ,
+				    t1.resource_type                  ,
+				    t1.version                   
+			from sys_rule_list 		t1
+			where 
+				t1.id = #{id}
+</select>
+
+<!-- 主键查询对象  SYS_RULE_LIST -->
+<select id="findSysRuleListByCode" parameterType="java.util.Map" resultMap="SysRuleListDTO">
+   	 		select 
+					t1.id                             ,
+					t1.rule_type                      ,
+					t1.ch_name                        ,
+					t1.en_name                        ,
+					t1.eftect_time                    ,
+					t1.validate_state                 ,
+					t1.rule_code                      ,
+					t1.remark                         ,
+					t1.create_user                    ,
+					t1.create_date                    ,
+					t1.update_user                    ,
+					t1.update_date                    ,
+					t1.new_version_is_update          ,
+					t1.expires_time                   ,
+					t1.rule_resource                  ,
+					t1.resource_type                  ,
+					t1.version                   
+			from sys_rule_list 		t1
+			where 
+				t1.rule_code = #{code}
+</select>
+  
+<!-- 主键查询对象  SYS_RULE_LIST -->
+<select id="queryMaxCodeByParentCode" parameterType="java.util.Map" resultType="java.lang.String">
+   	 		select max(t1.rule_code) mCode                
+			from sys_rule_list t1
+			where  t1.rule_code like #{pCode}||'%'
+			and length(t1.rule_code)=#{length}
+</select>
+  
+  
+<!-- 新增对象 SYS_RULE_LIST -->
+<insert id="insertSysRuleList" parameterType="java.util.Map" useGeneratedKeys="true">
+	<selectKey resultType="java.lang.Long" keyProperty="dto.id" order="BEFORE">
+				select seq_SYS_RULE_LIST.nextval as id from dual
+	</selectKey>
+			insert into sys_rule_list
+			(   		
+					id                             ,
+					rule_type                      ,
+					ch_name                        ,
+					en_name                        ,
+					eftect_time                    ,
+					validate_state                 ,
+					rule_code                      ,
+					remark                         ,
+					create_user                    ,
+					create_date                    ,
+					new_version_is_update          ,
+					expires_time                   ,
+					rule_resource                  ,
+					resource_type                  ,
+					version                   
+			)
+			values(#{dto.id}
+					,#{dto.ruleType,jdbcType=VARCHAR}
+					,#{dto.chName,jdbcType=VARCHAR}
+					,#{dto.enName,jdbcType=VARCHAR}
+					,#{dto.eftectTime,jdbcType=DATE}
+					,'1'
+					,#{dto.ruleCode,jdbcType=VARCHAR}
+					,#{dto.remark,jdbcType=VARCHAR}
+					,#{dto.createUser,jdbcType=VARCHAR}
+					,sysdate
+					,#{0,jdbcType=DECIMAL}
+					,#{dto.expiresTime,jdbcType=DATE}
+					,#{dto.ruleResource,jdbcType=VARCHAR}
+					,#{dto.resourceType,jdbcType=VARCHAR}
+					,'0'
+			)
+</insert>
+    
+<!-- 更新对象 SYS_RULE_LIST -->
+<update id="updateSysRuleList" parameterType="java.util.Map">
+	    update sys_rule_list t1
+	           set 
+			           t1.rule_type                      =#{dto.ruleType,jdbcType=VARCHAR},
+			           t1.ch_name                        =#{dto.chName,jdbcType=VARCHAR},
+			           t1.en_name                        =#{dto.enName,jdbcType=VARCHAR},
+			           t1.eftect_time                    =#{dto.eftectTime,jdbcType=DATE},
+			           t1.expires_time                   =#{dto.expiresTime,jdbcType=DATE},
+			           t1.validate_state                 ='1',
+			           t1.rule_code                      =#{dto.ruleCode,jdbcType=VARCHAR},
+			           t1.remark                         =#{dto.remark,jdbcType=VARCHAR},
+			           t1.update_user                    =#{dto.updateUser,jdbcType=VARCHAR},
+			           t1.update_date                    = sysdate,
+			           t1.new_version_is_update          =#{dto.newVersionIsUpdate,jdbcType=DECIMAL},
+			           t1.rule_resource                  =#{dto.ruleResource,jdbcType=VARCHAR},
+					   t1.resource_type                  =#{dto.resourceType,jdbcType=VARCHAR},
+					   t1.version                        = t1.version+1
+	     where  t1.id = #{dto.id}
+	        and t1.version = #{dto.version}
+</update>
+   
+<!-- 主键删除 SYS_RULE_LIST -->
+<delete id="deleteSysRuleListByID" parameterType="java.util.Map">
+    	delete from sys_rule_list t1 where t1.rule_code in (${code})
+</delete>
+<!-- 主键假删除 SYS_RULE_LIST -->
+<update id="deleteSysRuleListByPrimaryKey" parameterType="java.util.Map">
+	     update sys_rule_list t1
+	           set   t1.validate_state='0'	
+	     where t1.rule_code in( ${code})
+</update>
+
+<!-- 更新SYS_RULE_LIST 的是否修改的状态-->
+<update id="updateSysRuleListByCode" parameterType="java.util.Map">
+	     update sys_rule_list t1
+	           set   t1.new_version_is_update='1'	
+	     where t1.rule_code = ${code}
+</update>
+<!-- 查询对象  SYS_RULE_LIST -->
+<select id="querySysRuleListByPaging" parameterType="java.util.Map" resultMap="SysRuleListDTO">
+  	     select s1.ch_name rule_base_name,
+  	     		s1.rule_code rule_base_code,
+		        s2.ch_name rule_group_name,
+		        s2.rule_code rule_group_code,
+		        s3.ch_name rule_name,
+		        s3.rule_code,
+		        s3.remark,
+		        s3.validate_state,
+		        s2.eftect_time,
+		        s2.expires_time,
+		        s3.id  
+		from sys_rule_list s3 
+		left join sys_rule_list s2 on s2.rule_code=substr(s3.rule_code,0,6) and s3.rule_type='4' and s2.rule_type='2'
+		left join sys_rule_list s1 on s1.rule_code=substr(s2.rule_code,0,3) and s2.rule_type='2' and s1.rule_type='1'
+		where s3.rule_type='4' 
+		<if test="dto.validateState != null and dto.validateState != '' ">
+			and s3.validate_state=#{dto.validateState}
+		</if>
+		<if test="dto.ruleBaseCode != null and dto.ruleBaseCode != '' ">
+			 and s1.rule_code =#{dto.ruleBaseCode}
+  		</if>
+  		<if test="dto.ruleGroupCode != null and dto.ruleGroupCode != '' ">
+			 and s2.rule_code =#{dto.ruleGroupCode}
+  		</if>
+  		<if test="dto.ruleCode != null and dto.ruleCode != '' ">
+			 and s3.rule_code =#{dto.ruleCode}
+  		</if>
+</select>
+<!-- 查询对象  SYS_RULE_LIST -->
+<select id="querySysRuleGroupList" parameterType="java.util.Map" resultMap="SysRuleListDTO">
+  	      select ch_name rule_group_name,
+		        rule_code rule_group_code
+            from sys_rule_list 
+            where rule_type='2'
+            and substr(rule_code,0,3)=#{dto.ruleBaseCode}
+</select>
+</mapper>

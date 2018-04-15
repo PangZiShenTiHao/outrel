@@ -1,0 +1,122 @@
+*{
+  font-size: 14px;
+}
+a:hover{
+	text-decoration:none;
+}
+#leftMenu{
+	overflow:visible;
+}
+#all-btn{
+    height: 30px;
+    line-height: 30px;
+    padding: 0 10px;
+    color: #fff;
+    font-size: 14px;
+    cursor: default;
+    text-align: center;
+    display: inline-block;
+    border: 1px solid #51f9bb;
+    border-radius: 4px;
+    background: #5dadb8;
+}
+.active{
+  display: block!important;
+}
+.nav-dropdown{
+  color: #fff;
+  height: 400px;
+  /*display: none;*/
+  min-width: 1080px;
+  position: relative;
+  z-index: 998;
+}
+.nav-dropdown .level1-nav,.nav-dropdown .level2-nav,.nav-dropdown .level3-nav{
+    background: #272b2e;
+    width: 200px;
+    height: 100%;
+    box-sizing: border-box;
+    border-right: 1px solid hsla(331, 32%, 80%, 0.44);
+    padding: 20px 0;
+    position: absolute;
+    z-index: 4;
+    display: none;
+    overflow: hidden;
+}
+.nav-dropdown .level1-content,.nav-dropdown .level2-content{
+  display: none;
+  width: 200px;
+  height: 100%;
+  padding: 20px 0;
+  box-sizing: border-box;
+  background: #32393d;
+  position: absolute;
+  left: 200px;
+  z-index: 3;
+  overflow: hidden;
+}
+.nav-dropdown .level2-content{
+  left:400px;
+  background: #4a4f52;
+  z-index: 2;
+}
+.nav-dropdown .level-inner{
+    margin-right: -40px;
+    padding-right: 40px;
+    overflow-y: scroll;
+    height: 100%;
+}
+.nav-dropdown .level-inner ul{
+  width:200px;
+}
+.nav-dropdown .level-inner .inner-text{
+    display: block;
+    height: 34px;
+    line-height: 34px;
+    font-size: 14px;
+    padding: 0px 20px;
+    cursor: pointer;
+}
+.nav-dropdown .level-inner .inner-text a{
+	display:block;
+	color:#fff;
+}
+.nav-dropdown .level-inner .inner-text a:hover{
+	color:#42c6e3;
+}
+.nav-dropdown .level-inner .inner-text:hover,.nav-dropdown .level-inner .inner-text.active{
+  color:#42c6e3;
+}
+.nav-dropdown .level-inner .inner-text:hover .icon,.nav-dropdown .level-inner .inner-text.active .icon{
+  border-left-color:#42c6e3;
+}
+.nav-dropdown .level-inner .inner-text:first-child{
+    padding-top: 0;
+}
+.nav-dropdown .icon{
+    float: right;
+    margin-top: 12px;
+}
+.nav-dropdown .icon-arrow-right{
+    width:0;
+   height:0;
+   border-top:5px solid transparent;
+   border-bottom: 5px solid transparent;
+   border-left: 5px solid #FFF;
+}
+.level1-nav.slide-in{animation:level1NavSlidein .6s cubic-bezier(0,0,.2,1)}
+.level1-nav.slide-out{animation:level1NavSlideout .2s cubic-bezier(0,0,.2,1)}
+.level2-nav.slide-in{animation:leve1ContentSlidein .4s cubic-bezier(0,0,.2,1)}
+.level2-nav.slide-out{animation:leve1ContentSlideout .2s cubic-bezier(0,0,.2,1)}
+.level1-content.slide-in{animation:leve1ContentSlideinExpand .6s cubic-bezier(0,0,.2,1)}
+.level1-content.slide-out{animation:leve1ContentSlideoutExpand .1s cubic-bezier(0,0,.2,1)}
+.level2-content.slide-out{animation:level2ContentSlideout .1s cubic-bezier(0,0,.2,1)}
+.level2-content.slide-in{animation:level2ContentSlidein .6s cubic-bezier(0,0,.2,1)}
+@keyframes level1NavSlidein{0%{left:-200px}50%{left:-200px}to{left:0}}
+@keyframes level1NavSlideout{0%{left:0}to{left:-200px}}
+@keyframes leve1ContentSlidein{0%{left:0}50%{left:0}to{left:200px}}
+@keyframes leve1ContentSlideout{0%{left:200px}to{left:0}}
+@keyframes leve1ContentSlideinExpand{0%{left:0px}50%{left:0}to{left:200px}}
+@keyframes leve1ContentSlideoutExpand{0%{left:200px}to{left:0px}}
+@keyframes level2ContentSlideout{0%{left:400px}to{left:0}}
+@keyframes level2ContentSlidein{0%{left:0}50%{left:0}to{left:400px}}

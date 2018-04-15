@@ -1,0 +1,35 @@
+.publicToolbar{
+	display: inline-block;
+	background: #d9edf7;
+	border: 1px solid #cdcdcd;
+	background: #F8F8F8;
+	background: -moz-linear-gradient(top, #F8F8F8 0%, #EFEFEF 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #F8F8F8), color-stop(100%, #EFEFEF));
+	background: -webkit-linear-gradient(top, #F8F8F8 0%, #EFEFEF 100%);
+	background: -o-linear-gradient(top, #F8F8F8 0%, #EFEFEF 100%);
+	background: -ms-linear-gradient(top, #F8F8F8 0%, #EFEFEF 100%);
+	background: linear-gradient(top, #F8F8F8 0%, #EFEFEF 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f8f8f8', endColorstr='#efefef',GradientType=0 );
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	box-shadow:0px 0px 2px #ECECEC;
+}
+.publicToolbar a{
+	display: block;
+	padding: 10px 15px;
+	bor1der: 1px solid #ff0000;
+	/* margin: 0px 5px; */
+	border-right: 1px solid #c3c3c3;
+	float: left;
+	color:#362b36;
+}
+
+.publicToolbar .rightMenu{
+	display: block;
+	padding: 10px 15px;
+	bor1der: 1px solid #ff0000;
+	border-right: 0px;
+	float: left;
+	color:#362b36;
+}

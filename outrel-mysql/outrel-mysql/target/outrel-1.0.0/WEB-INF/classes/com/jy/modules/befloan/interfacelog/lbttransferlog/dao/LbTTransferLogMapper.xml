@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jy.modules.befloan.interfacelog.lbttransferlog.dao.LbTTransferLogDao">
+<resultMap id="LbTTransferLogDTO" type="com.jy.modules.befloan.interfacelog.lbttransferlog.dto.LbTTransferLogDTO">
+				<result property="id" column="ID" jdbcType="DECIMAL" />
+				<result property="reqTransNo" column="REQ_TRANS_NO" jdbcType="VARCHAR" />
+				<result property="interfaceNo" column="INTERFACE_NO" jdbcType="VARCHAR" />
+				<result property="businessCode" column="BUSINESS_CODE" jdbcType="VARCHAR" />
+				<result property="reqTime" column="REQ_TIME" jdbcType="TIMESTAMP" />
+				<result property="retTransNo" column="RET_TRANS_NO" jdbcType="VARCHAR" />
+				<result property="retCode" column="RET_CODE" jdbcType="VARCHAR" />
+				<result property="retMsg" column="RET_MSG" jdbcType="VARCHAR" />
+				<result property="retTime" column="RET_TIME" jdbcType="TIMESTAMP" />
+				<result property="reqBody" column="REQ_BODY" jdbcType="VARCHAR" />
+				<result property="retBody" column="RET_BODY" jdbcType="VARCHAR" />
+</resultMap>
+				
+<!-- 分页查询 LB_T_TRANSFER_LOG -->	
+<select id="searchLbTTransferLogByPage" parameterType="java.util.Map" resultMap="LbTTransferLogDTO">
+   SELECT TEMP.* FROM (
+    SELECT  ROWNUM ROW_ID,
+    T.*
+    FROM(
+     	 		select 
+						t1.*
+						, count(1) over() totalCount
+				from lb_t_transfer_log 	t1
+				where 1=1
+    			<if test="dto.id != null and dto.id != ''">
+						and t1.ID =#{dto.id}
+    			</if>
+    			<if test="dto.interfaceNo != null and dto.interfaceNo != ''">
+						and t1.INTERFACE_NO =#{dto.interfaceNo}
+    			</if>
+    			<if test="dto.businessCode != null and dto.businessCode != ''">
+						and t1.BUSINESS_CODE =#{dto.businessCode}
+    			</if>
+    			<if test="dto.retCode != null and dto.retCode != ''">
+						and t1.RET_CODE =#{dto.retCode}
+    			</if>
+    			
+    			<if test="dto.retMsg != null and dto.retMsg != ''">
+						and t1.RET_MSG like '%'||#{dto.retMsg}||'%'
+    			</if>
+    			<if test="dto.reqBody != null and dto.reqBody != ''">
+						and t1.REQ_BODY like '%'||#{dto.reqBody}||'%'
+    			</if>
+    			<if test="dto.retBody != null and dto.retBody != ''">
+						and t1.RET_BODY like '%'||#{dto.retBody}||'%'
+    			</if>
+    			<if test="startTime != null and startTime != ''" >    
+		            and  <![CDATA[  t1.req_time >= to_date(#{startTime},'yyyy-MM-dd') ]]>
+		        </if>
+		        <if test="endTime != null and endTime != ''" >    
+		            and  <![CDATA[  t1.req_time <=  to_date(#{endTime},'yyyy-MM-dd')+1 ]]>
+		        </if>
+				
+				order by t1.id desc
+		) T
+    	) TEMP
+	    <if test="page != null" >    
+	            <![CDATA[WHERE TEMP.ROW_ID > #{beginrow} AND ROW_ID <= #{endrow}]]>
+         </if>
+</select>
+
+<select id="searchLbTTransferLogByPage_old" parameterType="java.util.Map" resultMap="LbTTransferLogDTO">
+   SELECT T.* FROM (
+    			select 
+						t1.*
+						<!-- ,count(1) over() totalCount -->
+						,row_number() over (order by id desc) ROW_ID
+				from lb_t_transfer_log 	t1
+				where 1=1
+    			<if test="dto.id != null and dto.id != ''">
+						and t1.ID =#{dto.id}
+    			</if>
+    			<if test="dto.interfaceNo != null and dto.interfaceNo != ''">
+						and t1.INTERFACE_NO =#{dto.interfaceNo}
+    			</if>
+    			<if test="dto.businessCode != null and dto.businessCode != ''">
+						and t1.BUSINESS_CODE =#{dto.businessCode}
+    			</if>
+    			<if test="dto.retCode != null and dto.retCode != ''">
+						and t1.RET_CODE =#{dto.retCode}
+    			</if>
+    			
+    			<if test="dto.retMsg != null and dto.retMsg != ''">
+						and t1.RET_MSG like '%'||#{dto.retMsg}||'%'
+    			</if>
+    			<if test="dto.reqBody != null and dto.reqBody != ''">
+						and t1.REQ_BODY like '%'||#{dto.reqBody}||'%'
+    			</if>
+    			<if test="dto.retBody != null and dto.retBody != ''">
+						and t1.RET_BODY like '%'||#{dto.retBody}||'%'
+    			</if>
+    			<if test="startTime != null and startTime != ''" >    
+		            and  <![CDATA[  t1.req_time >= to_date(#{startTime},'yyyy-MM-dd') ]]>
+		        </if>
+		        <if test="endTime != null and endTime != ''" >    
+		            and  <![CDATA[  t1.req_time <=  to_date(#{endTime},'yyyy-MM-dd')+1 ]]>
+		        </if>
+				
+				<!-- order by t1.id desc -->
+		) T
+	    <if test="page != null" >    
+	            <![CDATA[WHERE T.ROW_ID > #{beginrow} AND T.ROW_ID <= #{endrow}]]>
+         </if>
+</select>
+  
+<!-- 查询列表 LB_T_TRANSFER_LOG  -->
+<select id="searchLbTTransferLog" parameterType="java.util.Map" resultMap="LbTTransferLogDTO">
+    	     select 
+						t1.*
+				from lb_t_transfer_log 		t1
+				where 1=1
+    			<if test="dto.id != null and dto.id != ''">
+						and t1.ID = #{dto.id}
+    			</if>
+    			<if test="dto.reqTransNo != null and dto.reqTransNo != ''">
+						and t1.REQ_TRANS_NO = #{dto.reqTransNo}
+    			</if>
+    			<if test="dto.interfaceNo != null and dto.interfaceNo != ''">
+						and t1.INTERFACE_NO = #{dto.interfaceNo}
+    			</if>
+    			<if test="dto.businessCode != null and dto.businessCode != ''">
+						and t1.BUSINESS_CODE = #{dto.businessCode}
+    			</if>
+    			<if test="dto.reqTime != null and dto.reqTime != ''">
+						and t1.REQ_TIME = #{dto.reqTime}
+    			</if>
+    			<if test="dto.retTransNo != null and dto.retTransNo != ''">
+						and t1.RET_TRANS_NO = #{dto.retTransNo}
+    			</if>
+    			<if test="dto.retCode != null and dto.retCode != ''">
+						and t1.RET_CODE = #{dto.retCode}
+    			</if>
+    			<if test="dto.retMsg != null and dto.retMsg != ''">
+						and t1.RET_MSG = #{dto.retMsg}
+    			</if>
+    			<if test="dto.retTime != null and dto.retTime != ''">
+						and t1.RET_TIME = #{dto.retTime}
+    			</if>
+</select>
+  
+<!-- 主键查询对象  LB_T_TRANSFER_LOG -->
+<select id="findLbTTransferLogByPrimaryKey" parameterType="java.util.Map" resultMap="LbTTransferLogDTO">
+   	 		select 
+					t1.*
+			from lb_t_transfer_log 		t1
+			where 
+				t1.id = #{id}
+</select>
+  
+<!-- 新增对象 LB_T_TRANSFER_LOG -->
+<insert id="insertLbTTransferLog" parameterType="java.util.Map" useGeneratedKeys="true">
+	
+			insert into lb_t_transfer_log
+			(   		
+					req_trans_no                   ,
+					interface_no                   ,
+					business_code                  ,
+					req_time                       ,
+					ret_trans_no                   ,
+					ret_code                       ,
+					ret_msg                        ,
+					ret_time                       ,
+					req_body					   ,
+					ret_body						
+			)
+			values(
+					#{dto.reqTransNo,jdbcType=VARCHAR}
+					,#{dto.interfaceNo,jdbcType=VARCHAR}
+					,#{dto.businessCode,jdbcType=VARCHAR}
+					,#{dto.reqTime,jdbcType=TIMESTAMP}
+					,#{dto.retTransNo,jdbcType=VARCHAR}
+					,#{dto.retCode,jdbcType=VARCHAR}
+					,#{dto.retMsg,jdbcType=VARCHAR}
+					,#{dto.retTime,jdbcType=TIMESTAMP}
+					,#{dto.reqBody,jdbcType=VARCHAR}
+					,#{dto.retBody,jdbcType=VARCHAR}
+			)
+</insert>
+    
+<!-- 更新对象 LB_T_TRANSFER_LOG -->
+<update id="updateLbTTransferLog" parameterType="java.util.Map">
+	     update lb_t_transfer_log t1
+	           set 
+			           t1.req_trans_no                   =#{dto.reqTransNo,jdbcType=VARCHAR},
+			           t1.interface_no                   =#{dto.interfaceNo,jdbcType=VARCHAR},
+			           t1.business_code                  =#{dto.businessCode,jdbcType=VARCHAR},
+			           t1.req_time                       =#{dto.reqTime,jdbcType=TIMESTAMP},
+			           t1.ret_trans_no                   =#{dto.retTransNo,jdbcType=VARCHAR},
+			           t1.ret_code                       =#{dto.retCode,jdbcType=VARCHAR},
+			           t1.ret_msg                        =#{dto.retMsg,jdbcType=VARCHAR},
+			           t1.ret_time                       =#{dto.retTime,jdbcType=TIMESTAMP}
+	     where t1.id = #{dto.id}
+</update>
+   
+<!-- 主键删除 LB_T_TRANSFER_LOG -->
+<delete id="deleteLbTTransferLogByID" parameterType="java.util.Map">
+    	delete from lb_t_transfer_log t1 where t1.ID in (${ids} )
+</delete>
+<!-- 主键假删除 LB_T_TRANSFER_LOG -->
+<update id="truncateTableBySql" parameterType="java.util.Map">
+	     truncate table lb_t_transfer_log
+</update>
+</mapper>

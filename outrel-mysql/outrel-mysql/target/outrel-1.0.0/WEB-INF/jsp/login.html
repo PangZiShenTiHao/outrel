@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>用户登录</title>
+    <link rel="stylesheet" href="login.css"/>
+</head>
+<body>
+<div class="page">
+
+        <div class="center">
+
+            <div class="info">
+                <div class="info-up">
+                    <div class="login-content">
+                        <div class="txt-wap">&nbsp;<input type="text" id="userName" class="txt" value="用户名"  ></div>
+                        <div class="txt-wap">&nbsp;<input type="password" id="pwd" class="txt" value="密码" ></div>
+                        <button type="button" class="login-btn">登录</button>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+</div>
+</body>
+<script >
+    var user=document.getElementById("userName");
+    user.onfocus=function(){if(this.value==this.defaultValue)this.value=''};
+    user.onblur=function (){if(/^\s*$/.test(this.value)){this.value=this.defaultValue;this.style.color='#b3b3b3'}}
+    user.onkeydown=function(){this.style.color='#000'}
+    var pwd=document.getElementById("pwd");
+    pwd.onfocus=function(){if(this.value==this.defaultValue)this.value=''};
+    pwd.onblur=function (){if(/^\s*$/.test(this.value)){this.value=this.defaultValue;this.style.color='#b3b3b3'}}
+    pwd.onkeydown=function(){this.style.color='#000'}
+</script>
+</html>

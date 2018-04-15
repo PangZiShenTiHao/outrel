@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jy.modules.externalplatform.domain.basicinfo.dao.ExtBasicInfoQueryDao">
+
+	<!-- 查询虚拟树 门店 -->
+	<select id="queryLbtVmtreeOrgInfo" parameterType="java.util.Map" resultType="java.util.Map">
+	 	select listagg(temp.org_id,',') within GROUP (order by temp.org_id) org_id 
+	 	from (select distinct v.org_id
+			  from vmtree_info v where  v.org_type = 'LOAN' and v.source_type = 'HR' and v.end_flag = 1
+			 start with v.org_id in (${orgId})
+			connect by  prior v.org_id = v.parent_id ) temp 	
+	</select> 
+
+</mapper>

@@ -1,0 +1,209 @@
+/*基本元素样式定义*/
+*{word-wrap:-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	word-break: keep-all;
+	word-wrap: break-word;}
+body{background:#f2f2f2; text-align:center; }
+body, td, input, textarea, select, button{ color:#666; font-family:"microsoft yahei",Arial,'SimSun'; font-size:12px; }
+dl, dd, p, h1, h2, h3, h4, h5, h6, form, fieldset,div,body { margin:0px; padding:0px; }
+h1, h2, h3, h4, h5, h6{ font-size:12px; font-weight:normal;}
+a{ color:#2366A8; text-decoration:none; }
+a:hover { text-decoration:none; }
+a img{ border:none; }
+em, cite, strong, th{ font-style:normal; font-weight:normal;}
+table{ border-collapse:collapse; }
+ul {list-style-type: none; -webkit-padding-start: 0px; margin:0px; padding:0px; }
+
+.login_logo{
+    font-size:30px;
+    background: url("images/logo.png") no-repeat;
+    height:150px;
+    line-height:80px;
+    width:800px;
+    margin-left:40%;
+    position: relative;
+    left:-225px;
+}
+.bg_banner{
+	width:100%;
+	color:#fff;
+	min-width:1100px;
+	background: url(images/bg_banner.png) no-repeat center #05a09c;
+	height:200px;
+	line-height:150px;
+	padding-top:100px;
+    }
+ .bg_banner h1{
+	font-size:40px;			
+	line-height:80px;
+	padding-top:40px;
+	font-family:"思源黑体 CN Medium";
+ }
+ .bg_banner h1 span{
+	position:relative;
+	font-size:70px;
+	font-family:"Bookman Old Style";
+	margin-right:20px;
+ }
+ .bg_banner h1 span:after{
+	position:absolute;
+	top:-30px;
+	right:-20px;
+	font-size: 14px;
+	/* content: "TM"; */
+ }
+ .bg_banner h3{
+	font-size:28px;	
+	background: url(images/bg_banner.png) no-repeat center 0;
+	padding-left:70px;
+			
+ }
+ .bg_banner p{
+   font-size:16px;
+   font-family:"MicrosoftYaHeiLight";
+   line-height:26px;
+   color:#d1f0f0;
+ }
+ .container{
+    width: 100%;
+    min-width: 1100px;
+    background-color: #fff;
+    position: absolute;
+    bottom: 106px;
+    top: 200px;
+    z-index:100;
+    
+ }
+ .container .cardNumber{
+    width: 451px;
+	margin:20px auto;
+	position:relative;
+ }
+ .container .cardNumber input{					
+	width: 100%;
+	outline: none;
+	border: 0px;
+	color: #3f3f3f;
+	font-size: 1.2rem;
+	-webkit-appearance: none;
+	border:2px solid  #d0d2d2;
+	height:60px;
+	line-height:60px;
+	border-radius:5px;
+	font-size:18px;
+	padding-left:30px;
+}
+.container .cardNumber label{
+	position:absolute;
+	display:block;
+	top:50%;
+	margin-top:-15.5px;
+	right:10px;					
+}
+.container .cardNumber.user label{
+	width:28px;
+	height:31px;
+    background:url(images/sc_1.png) no-repeat 0px 0px;
+}
+ .container .cardNumber.pwd label{		
+	width:24px;
+	height:31px;	
+	background:url(images/sc_1.png) no-repeat -38px -2px;
+}
+.container .cardNumber input:focus{
+	border:2px solid #019898;
+}
+::-webkit-input-placeholder { /* WebKit browsers */
+	color:    #d0d2d2;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+   color:    #d0d2d2;
+   opacity:  1;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+   color:    #d0d2d2;
+   opacity:  1;
+}
+.remeberme{
+	width: 451px;
+	margin:8px auto;		
+	color:#d0d2d2;
+	font-size:18px;		
+}
+.remeberme>li{
+  display:inline-block;
+  text-align:left;
+  width:49%;
+}
+.remeberme>li .border{	
+	display:inline-block;		
+	width:18px;
+	height:18px; 
+	border:2px solid #d0d2d2;
+	vertical-align:bottom;
+	margin-bottom:3px;
+	margin-right:5px;			
+}
+.remeberme>li:last-child{
+	text-align:right;
+	
+}
+.container .btn_login{
+	display:block;
+	width:451px;
+	height:60px;
+	line-height:60px;
+	background-color:#009b97;
+	color:#fff;
+	font-size:30px;
+	margin:28px auto;
+	border-radius:5px;
+}
+footer{
+      width: 100%;
+    position: absolute;
+    min-width: 1100px;
+    background: url(images/bg_footer.png);
+    bottom: 0px;
+    height: 106px;
+    border-top: 3px solid #009b97;
+}
+footer ul{
+	width:1100px;
+	margin:0px auto;
+	padding:10px 0px;
+}
+footer ul>li{
+	position:relative;
+	width:32%;
+	display:inline-block;
+	text-align:left;
+}
+footer ul>li:after{
+	position:absolute;
+	top:50%;
+	margin-top:-20px;
+	right:50px;
+	display:block;
+	border-right:1px solid #c5c6c8;
+	content:'';
+	width:1px ;
+	height:50px;	
+}
+footer ul>li:last-child:after{
+    content:'';
+	border-right:0px;
+}
+footer ul>li span{
+	font-size:18px;
+	color:#696a6a;
+	display:block;
+	line-height:30px;
+}
+footer ul>li p{
+	font-size:13px;
+	color:#bebfc1;
+	font-family:"MicrosoftYaHeiLight";
+	line-height:20px;
+}

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE taglib PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN" "http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd">
+
+<taglib>
+	<tlib-version>1.0</tlib-version>
+	<jsp-version>1.2</jsp-version>
+	<short-name>industry</short-name>
+	<uri>/industry</uri>
+	<description>
+        <![CDATA["行业职位自定义标签"]]>
+	</description>
+	<tag>
+		<name>search</name>
+		<tag-class>com.fintech.platform.restservice.web.tag.SysIndustryTag</tag-class>
+		<body-content>JSP</body-content>
+		<!-- 行业下拉列表ID -->
+		<attribute>
+			<name>industryDomId</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<!-- 职位下拉列表ID -->
+		<attribute>
+			<name>positionDomId</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<!-- 默认行业值 -->
+		<attribute>
+			<name>defaultIndustry</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<!-- 默认职位值 -->
+		<attribute>
+			<name>defaultPosition</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<!-- 返回的数据类型，目前只支持html -->
+		<attribute>
+			<name>displayFormat</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<!-- 空文本值，默认：请选择 -->
+		<attribute>
+			<name>emptyText</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<!-- 显示级别，默认2级 -->
+		<attribute>
+			<name>level</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<!-- 下拉类别引入的样式名称 -->
+		<attribute>
+			<name>className</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<!-- 是否显示空文本 -->
+		<attribute>
+			<name>hasBlank</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<!-- 是否显示label -->
+		<attribute>
+			<name>hasLable</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<!-- 行业显示label -->
+		<attribute>
+			<name>industryLableName</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<!-- 职业显示label -->
+		<attribute>
+			<name>positionLableName</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<!-- 是否单独显示 -->
+		<attribute>
+			<name>single</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<!-- 扩展属性 extendProperty=" notNull=true" -->
+		<attribute>
+			<name>extendProperty</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+</taglib>
